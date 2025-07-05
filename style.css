@@ -1287,7 +1287,7 @@ footer {
 }
 
 .details-list li::before {
-  content: "\25B6\FE0E";  /* ▶ (U+25B6) + VS15 (U+FE0E) forces text style */
+  content: "\25B8";  /* ▸ – no emoji version */
   position: absolute;
   left: 0;
   top: 0;
