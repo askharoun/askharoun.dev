@@ -30,12 +30,12 @@
 --duration:0.55s;
 }
 
-/* ---------- RESET & GLOBAL ---------- */
+/* --- RESET & GLOBAL --- */
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth}
 body{font-family:'Roboto',sans-serif;background:var(--dark);color:var(--white);overflow-x:hidden;line-height:1.6;position:relative}
 
-/* subtle drifting hex grid */
+/* drifting grid */
 body::before{
 content:"";position:fixed;inset:0;z-index:-2;pointer-events:none;opacity:.55;
 background:
@@ -49,40 +49,31 @@ animation:bgDrift 80s linear infinite;
 /* progress bar */
 #progress{position:fixed;top:0;left:0;height:4px;width:0;background:var(--gold);z-index:1002}
 
-/* ---------- HERO (now guaranteed centered) ---------- */
+/* --- HERO --- */
 .hero{
-height:80vh;
-display:flex;flex-direction:column;justify-content:center;align-items:center;
-text-align:center;padding:0 1rem; /* small side padding */
-position:relative;
+height:80vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;
+padding:0 1rem;position:relative;
 }
 .hero::after{content:"";position:absolute;inset:0;background:rgba(0,0,0,.62)}
 .hero h1{
-position:relative;z-index:1;
-font-family:'Bowlby One SC',sans-serif;
-font-size:clamp(2.8rem,6vw,4.5rem);
-text-shadow:0 0 14px rgba(0,0,0,.6);
-display:inline-block;max-width:100%;word-break:break-word;
+position:relative;z-index:1;font-family:'Bowlby One SC',sans-serif;
+font-size:clamp(2.8rem,6vw,4.5rem);text-shadow:0 0 14px rgba(0,0,0,.6);
 }
 .hero h1 .white{color:var(--white)}
 .hero h1 .red{color:var(--red);text-shadow:0 0 18px var(--red)}
-.hero p{
-position:relative;z-index:1;
-max-width:800px;font-size:1.05rem;margin-top:1.2rem;
-text-align:center;padding:0 1rem;
-}
+.hero p{position:relative;z-index:1;max-width:800px;font-size:1.05rem;margin-top:1.2rem;text-align:center}
 
-/* ---------- NAV ---------- */
+/* --- NAV --- */
 nav{position:sticky;top:0;z-index:999;background:rgba(11,14,19,.92);backdrop-filter:blur(6px);border-bottom:2px solid var(--gold);display:flex;gap:2rem;justify-content:center;flex-wrap:wrap;padding:.9rem}
 nav a{color:var(--white);text-decoration:none;font-weight:500;font-size:.95rem;transition:.3s var(--ease)}
 nav a:hover{color:var(--gold)}
 
-/* ---------- SECTIONS ---------- */
+/* --- SECTIONS --- */
 section{padding:4.5rem 1rem 4rem;max-width:1040px;margin:auto}
 .alt{background:var(--panel)}
 h2{font-family:'Bowlby One SC',sans-serif;font-size:clamp(1.9rem,4.5vw,2.6rem);color:var(--gold);text-align:center;margin-bottom:2.2rem}
 
-/* ---------- ACCORDION ---------- */
+/* --- ACCORDION --- */
 .accordion details{background:var(--card);border-radius:var(--radius);margin:1.4rem 0;overflow:hidden;box-shadow:0 8px 22px rgba(0,0,0,.5);position:relative}
 .accordion details::before{content:"";position:absolute;left:0;top:0;width:6px;height:100%;background:var(--gold);opacity:.5;transition:opacity .3s}
 .accordion details[open]::before{opacity:1}
@@ -94,18 +85,18 @@ h2{font-family:'Bowlby One SC',sans-serif;font-size:clamp(1.9rem,4.5vw,2.6rem);c
 .accordion details[open] .content{opacity:1;transform:translateY(0);max-height:1200px;padding:1rem 2.4rem 1.6rem}
 .accordion p{margin:.55rem 0;font-size:1rem}
 
-/* ---------- OPPOSING CLAN CARD ---------- */
+/* --- OPPOSING CARD --- */
 .opposing{margin:2.8rem auto 0;padding:2.2rem 2.1rem 3.5rem;max-width:900px;background:linear-gradient(135deg,#581017,#2d0a0d);border:3px solid var(--red);border-radius:var(--radius);box-shadow:0 0 34px rgba(226,29,45,.7);position:relative;color:#ffb3b8;font-weight:500}
 .opposing::before{content:"🗡️";font-size:3rem;position:absolute;bottom:-30px;left:50%;transform:translateX(-50%) rotate(-15deg);color:var(--red);text-shadow:0 0 20px var(--red)}
 
-/* ---------- CTA ---------- */
+/* --- CTA --- */
 #join-btn{position:fixed;bottom:26px;right:26px;z-index:1001;background:var(--gold);color:#000;font-weight:700;font-size:1rem;border:none;border-radius:50px;padding:1rem 2.2rem;cursor:pointer;box-shadow:0 0 26px var(--gold);transition:.35s var(--ease)}
 #join-btn:hover{background:var(--red);color:#fff;box-shadow:0 0 30px var(--red);transform:scale(1.08)}
 
-/* ---------- MODAL ---------- */
+/* --- MODAL --- */
 #modal{position:fixed;inset:0;display:flex;justify-content:center;align-items:center;background:rgba(0,0,0,.85);backdrop-filter:blur(4px);opacity:0;visibility:hidden;transition:.3s var(--ease);z-index:1000}
 #modal.show{opacity:1;visibility:visible}
-.modal-box{background:var(--card);padding:2.6rem 2.9rem;border-radius:var(--radius);border:3px solid var(--gold);text-align:center;max-width:440px;color:var(--white);animation:pop .45s var(--ease) forwards;position:relative}
+.modal-box{background:var(--card);padding:2.6rem 2.9rem;border-radius:var(--radius);border:3px solid var(--gold);text-align:center;max-width:440px;width:90vw;color:var(--white);animation:pop .45s var(--ease) forwards;position:relative}
 @keyframes pop{from{transform:scale(.8)}to{transform:scale(1)}}
 .modal-box h3{color:var(--gold);font-size:1.35rem;margin-bottom:1.1rem}
 .modal-box button{background:var(--red);color:#fff;border:none;padding:.8rem 1.8rem;border-radius:var(--radius);font-size:1rem;font-weight:500;cursor:pointer;margin-top:1.4rem;transition:.3s var(--ease)}
@@ -113,7 +104,7 @@ h2{font-family:'Bowlby One SC',sans-serif;font-size:clamp(1.9rem,4.5vw,2.6rem);c
 .modal-close{position:absolute;top:10px;right:16px;font-size:1.6rem;color:var(--gold);cursor:pointer;transition:.3s}
 .modal-close:hover{color:#fff;transform:rotate(90deg)}
 
-/* ---------- FOOTER ---------- */
+/* --- FOOTER --- */
 footer{text-align:center;padding:2.5rem 1rem;margin-top:4rem;border-top:2px solid var(--gold);font-size:.9rem}
 footer a{color:var(--gold);text-decoration:none}
 
@@ -126,7 +117,7 @@ footer a{color:var(--gold);text-decoration:none}
 
 <header class="hero">
 <h1><span class="white">CLAN</span> <span class="red">War</span> <span class="white">Lords</span></h1>
-<p>We are a demanding clan, 100% Fairplay with zero tolerance for cheaters and we are unapologetic about that. The core members of this clan have worked hard to create the smart, strategic and successful clan we have today.</p>
+<p>We are a demanding clan, 100% Fairplay with zero tolerance for cheaters and we are unapologetic about that. The core members of this clan have worked hard to create the smart, strategic and successful clan we have today. As a war based clan, we have certain expectations regarding the adherence to our strategies and leaving your pride at the door.</p>
 </header>
 
 <nav>
@@ -139,6 +130,7 @@ footer a{color:var(--gold);text-decoration:none}
 <section id="war">
 <h2>War Rules</h2>
 <div class="accordion">
+
 <details>
 <summary>Be 100% War Ready <span class="arrow"></span></summary>
 <div class="content">
@@ -146,7 +138,29 @@ footer a{color:var(--gold);text-decoration:none}
 </div>
 </details>
 
-<!-- (Repeat other details blocks exactly as before, text unchanged) -->
+<details>
+<summary>Follow War Strategy <span class="arrow"></span></summary>
+<div class="content">
+<p>Each war strategy will vary based on our opponent. Leadership will send out the war strategy via clan mail before the start of each war. It is your responsibility to know who your target is; ignorance is no excuse! Good communication is required. Second attack is for clean with target to be assigned by co leader or elder. If you don't feel you can get a minimum 2 star on your opponent, let clan leadership know and you will be reassigned appropriately. We do not do loot attacks, if everything is cleared do a practice attack on a base higher than you would normally attack.</p>
+</div>
+</details>
+
+<details>
+<summary>Use Both Attacks <span class="arrow"></span></summary>
+<div class="content">
+<p>After using your first attack on your assigned target, your second attack will typically be used for cleanup on a new target which was not 3 starred on the first attack. Do not fail to use both of your war attacks! Failure to do so will guarantee being benched for the next war and possibly your removal from the clan. Use your
+
+first attack within the first 3 hours if possible; definitely within the first 12 hours unless you have a really good reason and communicate to clan leadership first. If you take too long, your target will be taken/reassigned.</p>
+</div>
+</details>
+
+<details>
+<summary>Clan Castle Troops <span class="arrow"></span></summary>
+<div class="content">
+<p>War clan castle requests will be filled by max troops. Only donate troops if you are able to give max. When requesting troops for a clan war attack, put “war” in front of the troops you’re requesting and you will get max troops. Don’t be afraid to ask for attack advice (don't go in blind) and be prepared to receive constructive feedback on your attack.</p>
+</div>
+</details>
+
 </div>
 </section>
 
@@ -154,6 +168,7 @@ footer a{color:var(--gold);text-decoration:none}
 <section id="other" class="alt">
 <h2>Other Clan Rules</h2>
 <div class="accordion">
+
 <details>
 <summary>Donations <span class="arrow"></span></summary>
 <div class="content">
@@ -167,6 +182,7 @@ footer a{color:var(--gold);text-decoration:none}
 <p>Quite self explanatory, if you need to ask questions about this one your time with us will be brief. Don't be that guy that impatiently asks for troops they can't make just for farming. We like each other as a clan and we have a ton of fun and rag on each other heavily.</p>
 </div>
 </details>
+
 </div>
 </section>
 
@@ -194,7 +210,7 @@ Opposing clan this message is for you. Our goal is to destroy you. It’s nothin
 
 <footer>
 <p>&copy; <span id="year"></span> Clan War Lords — All rights reserved.</p>
-<p style="margin-top:.45rem">Made by <a href="https://askharoun.dev" target="_blank">Tom</a></p>
+<p style="margin-top:.45rem">Made by <a href="https://askharoun.dev" target="_blank" rel="noopener">Tom</a></p>
 </footer>
 
 <script>
@@ -208,7 +224,7 @@ function closeModal(){modal.classList.remove('show')}
 modal.addEventListener('click',e=>{if(e.target===modal)closeModal()});
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal()});
 
-/* accordion keep auto-height */
+/* accordion auto-height */
 document.querySelectorAll('.accordion details').forEach(det=>{
 const box=det.querySelector('.content');
 det.addEventListener('toggle',()=>{
@@ -224,10 +240,10 @@ box.style.maxHeight='0';box.style.opacity='0';
 });
 
 /* progress bar */
-const progress=document.getElementById('progress');
+const prog=document.getElementById('progress');
 window.addEventListener('scroll',()=>{
 const h=document.documentElement;
-progress.style.width=(h.scrollTop)/(h.scrollHeight-h.clientHeight)*100+'%';
+prog.style.width=(h.scrollTop)/(h.scrollHeight-h.clientHeight)*100+'%';
 });
 </script>
 
