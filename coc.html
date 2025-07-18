@@ -75,30 +75,26 @@ font-family:'Bowlby One SC',sans-serif;font-size:clamp(1.9rem,4.5vw,2.6rem);
 color:var(--gold);text-align:center;margin-bottom:2.2rem;
 }
 
-/* ---------- “ASKHAROUN-STYLE” ACCORDION ---------- */
+/* ---------- ACCORDION (Askharoun style) ---------- */
 .accordion details{
 background:var(--card);border-radius:var(--radius);margin:1.4rem 0;overflow:hidden;
 box-shadow:0 8px 22px rgba(0,0,0,.5);position:relative;
 }
-/* gold accent bar */
 .accordion details::before{
 content:"";position:absolute;left:0;top:0;height:100%;width:6px;background:var(--gold);
 transition:opacity .35s var(--ease);opacity:.5;
 }
 .accordion details[open]::before{opacity:1;}
-/* summary button */
 .accordion summary{
 cursor:pointer;list-style:none;padding:1.4rem 1.9rem 1.4rem 2.4rem;
 display:flex;justify-content:space-between;align-items:center;font-weight:500;
 }
 .accordion summary:hover{background:rgba(255,255,255,.03);}
 .arrow{
-width:32px;height:32px;border:2px solid var(--gold);border-radius:50%;
-display:flex;justify-content:center;align-items:center;font-size:1.2rem;color:var(--gold);
-transition:.4s var(--ease);
+width:12px;height:12px;border-right:2px solid var(--gold);border-bottom:2px solid var(--gold);
+transform:rotate(45deg);transition:.35s var(--ease);margin-left:1rem;
 }
-.accordion details[open] .arrow{transform:rotate(90deg);background:var(--gold);color:#000;}
-/* content */
+.accordion details[open] .arrow{transform:rotate(-135deg);}
 .content{
 overflow:hidden;opacity:0;max-height:0;padding:0 2.4rem;
 transition:max-height var(--fade),opacity var(--fade),padding var(--fade);
@@ -116,8 +112,7 @@ border:3px solid var(--red);border-radius:var(--radius);position:relative;
 box-shadow:0 0 34px rgba(226,29,45,.7);color:#ffb3b8;font-weight:500;
 }
 .opposing::before{
-content:"🗡️"; /* prettier sword emoji */
-font-size:3rem;position:absolute;bottom:-28px;left:50%;
+content:"🗡️";font-size:3rem;position:absolute;bottom:-30px;left:50%;
 transform:translateX(-50%) rotate(-15deg);color:var(--red);
 text-shadow:0 0 20px var(--red);
 }
@@ -137,7 +132,7 @@ position:fixed;inset:0;display:flex;justify-content:center;align-items:center;
 background:rgba(0,0,0,.85);backdrop-filter:blur(4px);
 opacity:0;visibility:hidden;transition:.3s var(--ease);z-index:1000;
 }
-#modal.show{opacity:1;visibility:visible}
+#modal.show{opacity:1;visibility:visible;}
 .modal-box{
 background:var(--card);padding:2.6rem 2.9rem;border-radius:var(--radius);
 border:3px solid var(--gold);text-align:center;max-width:440px;color:var(--white);
@@ -189,14 +184,14 @@ nav{gap:1rem}
 <h2>War Rules</h2>
 <div class="accordion">
 <details>
-<summary>Be 100% War Ready<span class="arrow">+</span></summary>
+<summary>Be 100% War Ready <span class="arrow"></span></summary>
 <div class="content">
 <p>We expect each war participant to be at 100% when the war starts. If you have something upgrading (spell factory, both dark barracks, barb king, archer queen, etc…) or a real life event which would prevent you from being at 100%, we require you to opt out of war until you are back to 100%. You may not opt out of war until you’ve spent at least 3 wars with us and if you have/will be opted out for more than 7 days speak to an elder or co.</p>
 </div>
 </details>
 
 <details>
-<summary>Follow War Strategy<span class="arrow">+</span></summary>
+<summary>Follow War Strategy <span class="arrow"></span></summary>
 <div class="content">
 <p>Each war strategy will vary based on our opponent. Leadership will send out the war strategy via clan mail before the start of each war. It is your responsibility to know who your target is; ignorance is no excuse! Good communication is required. Second attack is for clean with target to be assigned by co leader or elder. If you don't feel you can get a minimum 2 star on your opponent, let clan leadership know and you will be reassigned appropriately.</p>
 <p>We do not do loot attacks, if everything is cleared do a practice attack on a base higher than you would normally attack.</p>
@@ -204,14 +199,14 @@ nav{gap:1rem}
 </details>
 
 <details>
-<summary>Use Both Attacks<span class="arrow">+</span></summary>
+<summary>Use Both Attacks <span class="arrow"></span></summary>
 <div class="content">
 <p>After using your first attack on your assigned target, your second attack will typically be used for cleanup on a new target which was not 3 starred on the first attack. Do not fail to use both of your war attacks! Failure to do so will guarantee being benched for the next war and possibly your removal from the clan. Use your first attack within the first 3 hours if possible; definitely within the first 12 hours unless you have a really good reason and communicate to clan leadership first. If you take too long, your target will be taken/reassigned.</p>
 </div>
 </details>
 
 <details>
-<summary>Clan Castle Troops<span class="arrow">+</span></summary>
+<summary>Clan Castle Troops <span class="arrow"></span></summary>
 <div class="content">
 <p>War clan castle requests will be filled by max troops. Only donate troops if you are able to give max. When requesting troops for a clan war attack, put “war” in front of the troops you’re requesting and you will max troops. Don’t be afraid to ask for attack advice (don't go in blind) and be prepared to receive constructive feedback on your attack.</p>
 </div>
@@ -224,14 +219,14 @@ nav{gap:1rem}
 <h2>Other Clan Rules</h2>
 <div class="accordion">
 <details>
-<summary>Donations<span class="arrow">+</span></summary>
+<summary>Donations <span class="arrow"></span></summary>
 <div class="content">
 <p>Donate only what is requested (no exceptions without requesting player approval). You must be an active player in donating, requesting and chat. Limit your non-war troop requests to those you can make. If a higher level guy is on, they will likely give you something higher; our high level guys are very generous so be appreciative. Do NOT call out any specific member to ask for a specific troop; put your request out there and be patient.</p>
 </div>
 </details>
 
 <details>
-<summary>Don't be annoying<span class="arrow">+</span></summary>
+<summary>Don't be annoying <span class="arrow"></span></summary>
 <div class="content">
 <p>Quite self explanatory, if you need to ask questions about this one your time with us will be brief. Don't be that guy that impatiently asks for troops they can't make just for farming. We like each other as a clan and we have a ton of fun and rag on each other heavily.</p>
 </div>
@@ -242,7 +237,7 @@ nav{gap:1rem}
 <!-- PROMOTIONS -->
 <section id="promotions">
 <h2>Promotions & Joining</h2>
-<p style="text-align:center;max-width:780px;margin:0 auto 2rem">Don't ask for elder or Co-leader! Elders are all highly respected folks and it will take a while to earn it...</p>
+<p style="text-align:center;max-width:780px;margin:0 auto 2rem">Don't ask for elder or Co-leader! Elders are all highly respected folks...</p>
 <p style="text-align:center;max-width:780px;margin:0 auto">If you want to join us and stay long term, show us you have read and understood these rules by typing the confirmation phrase <strong>‘cwl rules are my rules’</strong>...</p>
 
 <div class="opposing">
@@ -280,36 +275,30 @@ function closeModal(){modal.classList.remove('show')}
 modal.addEventListener('click',e=>{if(e.target===modal)closeModal()});
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal()});
 
-/* accordion: slide & fade every time */
+/* accordion: slide + fade, keeps auto-height after opening */
 document.querySelectorAll('.accordion details').forEach(det=>{
-const content=det.querySelector('.content');
-const arrow=det.querySelector('.arrow');
+const box=det.querySelector('.content');
 det.addEventListener('toggle',()=>{
-/* swap + / – sign inside arrow circle */
-arrow.textContent = det.open ? '–' : '+';
-
-const full=content.scrollHeight;
+const speed=550; // ms (match CSS var --fade)
 if(det.open){
-content.style.opacity='0';content.style.maxHeight='0';
-requestAnimationFrame(()=>{
-content.style.transition='none';content.offsetHeight;
-content.style.transition='max-height var(--fade),opacity var(--fade),padding var(--fade)';
-content.style.maxHeight=full+'px';content.style.opacity='1';
-});
+box.style.maxHeight=box.scrollHeight+'px';
+box.style.opacity='1';
+setTimeout(()=>box.style.maxHeight='none',speed);
 }else{
-content.style.maxHeight=full+'px';
-requestAnimationFrame(()=>{
-content.style.maxHeight='0';content.style.opacity='0';
-});
+if(getComputedStyle(box).maxHeight==='none'){
+box.style.maxHeight=box.scrollHeight+'px';
+box.offsetHeight;
+}
+box.style.maxHeight='0';box.style.opacity='0';
 }
 });
 });
 
-/* progress bar */
-const progress=document.getElementById('progress');
+/* scroll progress bar */
+const prog=document.getElementById('progress');
 window.addEventListener('scroll',()=>{
 const h=document.documentElement;
-progress.style.width=(h.scrollTop)/(h.scrollHeight-h.clientHeight)*100+'%';
+prog.style.width=(h.scrollTop)/(h.scrollHeight-h.clientHeight)*100+'%';
 });
 </script>
 
