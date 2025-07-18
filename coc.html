@@ -30,14 +30,10 @@
 --duration:0.55s;
 }
 
-/* ------------ RESET & GLOBAL ------------ */
+/* ---------- RESET & GLOBAL ---------- */
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth}
-body{
-font-family:'Roboto',sans-serif;
-background:var(--dark);color:var(--white);
-overflow-x:hidden;position:relative;line-height:1.6;
-}
+body{font-family:'Roboto',sans-serif;background:var(--dark);color:var(--white);overflow-x:hidden;line-height:1.6;position:relative}
 
 /* subtle drifting hex grid */
 body::before{
@@ -50,108 +46,74 @@ animation:bgDrift 80s linear infinite;
 }
 @keyframes bgDrift{to{transform:translate(-240px,-240px)}}
 
-/* scroll-progress bar */
+/* progress bar */
 #progress{position:fixed;top:0;left:0;height:4px;width:0;background:var(--gold);z-index:1002}
 
-/* ------------ HERO (clean background) ------------ */
+/* ---------- HERO (now guaranteed centered) ---------- */
 .hero{
-height:80vh;display:flex;flex-direction:column;justify-content:center;align-items:center;
-text-align:center;
-background:none; /* ← removed the blurry image */
+height:80vh;
+display:flex;flex-direction:column;justify-content:center;align-items:center;
+text-align:center;padding:0 1rem; /* small side padding */
 position:relative;
 }
 .hero::after{content:"";position:absolute;inset:0;background:rgba(0,0,0,.62)}
 .hero h1{
-z-index:1;font-family:'Bowlby One SC',sans-serif;
+position:relative;z-index:1;
+font-family:'Bowlby One SC',sans-serif;
 font-size:clamp(2.8rem,6vw,4.5rem);
 text-shadow:0 0 14px rgba(0,0,0,.6);
+display:inline-block;max-width:100%;word-break:break-word;
 }
 .hero h1 .white{color:var(--white)}
 .hero h1 .red{color:var(--red);text-shadow:0 0 18px var(--red)}
-.hero p{z-index:1;max-width:800px;font-size:1.05rem;margin-top:1.2rem}
-
-/* ------------ NAV ------------ */
-nav{
-position:sticky;top:0;z-index:999;
-background:rgba(11,14,19,.92);backdrop-filter:blur(6px);
-border-bottom:2px solid var(--gold);
-display:flex;gap:2rem;justify-content:center;flex-wrap:wrap;padding:.9rem;
+.hero p{
+position:relative;z-index:1;
+max-width:800px;font-size:1.05rem;margin-top:1.2rem;
+text-align:center;padding:0 1rem;
 }
+
+/* ---------- NAV ---------- */
+nav{position:sticky;top:0;z-index:999;background:rgba(11,14,19,.92);backdrop-filter:blur(6px);border-bottom:2px solid var(--gold);display:flex;gap:2rem;justify-content:center;flex-wrap:wrap;padding:.9rem}
 nav a{color:var(--white);text-decoration:none;font-weight:500;font-size:.95rem;transition:.3s var(--ease)}
 nav a:hover{color:var(--gold)}
 
-/* ------------ SECTIONS ------------ */
+/* ---------- SECTIONS ---------- */
 section{padding:4.5rem 1rem 4rem;max-width:1040px;margin:auto}
 .alt{background:var(--panel)}
 h2{font-family:'Bowlby One SC',sans-serif;font-size:clamp(1.9rem,4.5vw,2.6rem);color:var(--gold);text-align:center;margin-bottom:2.2rem}
 
-/* ------------ ACCORDION ------------ */
-.accordion details{
-background:var(--card);border-radius:var(--radius);margin:1.4rem 0;overflow:hidden;
-box-shadow:0 8px 22px rgba(0,0,0,.5);position:relative;
-}
-.accordion details::before{
-content:"";position:absolute;left:0;top:0;width:6px;height:100%;background:var(--gold);opacity:.5;transition:opacity .3s;
-}
+/* ---------- ACCORDION ---------- */
+.accordion details{background:var(--card);border-radius:var(--radius);margin:1.4rem 0;overflow:hidden;box-shadow:0 8px 22px rgba(0,0,0,.5);position:relative}
+.accordion details::before{content:"";position:absolute;left:0;top:0;width:6px;height:100%;background:var(--gold);opacity:.5;transition:opacity .3s}
 .accordion details[open]::before{opacity:1}
-.accordion summary{
-cursor:pointer;list-style:none;padding:1.4rem 1.9rem 1.4rem 2.4rem;
-display:flex;justify-content:space-between;align-items:center;font-weight:500;
-}
+.accordion summary{cursor:pointer;list-style:none;padding:1.4rem 1.9rem 1.4rem 2.4rem;display:flex;justify-content:space-between;align-items:center;font-weight:500}
 .accordion summary:hover{background:rgba(255,255,255,.03)}
-.arrow{
-width:12px;height:12px;border-right:2px solid var(--gold);border-bottom:2px solid var(--gold);
-transform:rotate(45deg);transition:transform .35s var(--ease);margin-left:1rem;
-}
+.arrow{width:12px;height:12px;border-right:2px solid var(--gold);border-bottom:2px solid var(--gold);transform:rotate(45deg);transition:transform .35s var(--ease);margin-left:1rem}
 .accordion details[open] .arrow{transform:rotate(-135deg)}
-.content{
-overflow:hidden;max-height:0;opacity:0;padding:0 2.4rem;transform:translateY(-8px);
-transition:max-height var(--duration) var(--ease),opacity var(--duration) var(--ease),transform var(--duration) var(--ease);
-}
-.accordion details[open] .content{
-opacity:1;transform:translateY(0);max-height:1200px;padding:1rem 2.4rem 1.6rem;
-}
+.content{overflow:hidden;max-height:0;opacity:0;padding:0 2.4rem;transform:translateY(-8px);transition:max-height var(--duration) var(--ease),opacity var(--duration) var(--ease),transform var(--duration) var(--ease)}
+.accordion details[open] .content{opacity:1;transform:translateY(0);max-height:1200px;padding:1rem 2.4rem 1.6rem}
 .accordion p{margin:.55rem 0;font-size:1rem}
 
-/* ------------ OPPOSING CARD ------------ */
-.opposing{
-margin:2.8rem auto 0;padding:2.2rem 2.1rem 3.5rem;max-width:900px;
-background:linear-gradient(135deg,#581017,#2d0a0d);
-border:3px solid var(--red);border-radius:var(--radius);box-shadow:0 0 34px rgba(226,29,45,.7);
-position:relative;color:#ffb3b8;font-weight:500;
-}
-.opposing::before{
-content:"🗡️";font-size:3rem;position:absolute;bottom:-30px;left:50%;
-transform:translateX(-50%) rotate(-15deg);color:var(--red);text-shadow:0 0 20px var(--red);
-}
+/* ---------- OPPOSING CLAN CARD ---------- */
+.opposing{margin:2.8rem auto 0;padding:2.2rem 2.1rem 3.5rem;max-width:900px;background:linear-gradient(135deg,#581017,#2d0a0d);border:3px solid var(--red);border-radius:var(--radius);box-shadow:0 0 34px rgba(226,29,45,.7);position:relative;color:#ffb3b8;font-weight:500}
+.opposing::before{content:"🗡️";font-size:3rem;position:absolute;bottom:-30px;left:50%;transform:translateX(-50%) rotate(-15deg);color:var(--red);text-shadow:0 0 20px var(--red)}
 
-/* ------------ CTA ------------ */
-#join-btn{
-position:fixed;bottom:26px;right:26px;z-index:1001;
-background:var(--gold);color:#000;font-weight:700;font-size:1rem;border:none;border-radius:50px;
-padding:1rem 2.2rem;cursor:pointer;box-shadow:0 0 26px var(--gold);transition:.35s var(--ease);
-}
+/* ---------- CTA ---------- */
+#join-btn{position:fixed;bottom:26px;right:26px;z-index:1001;background:var(--gold);color:#000;font-weight:700;font-size:1rem;border:none;border-radius:50px;padding:1rem 2.2rem;cursor:pointer;box-shadow:0 0 26px var(--gold);transition:.35s var(--ease)}
 #join-btn:hover{background:var(--red);color:#fff;box-shadow:0 0 30px var(--red);transform:scale(1.08)}
 
-/* ------------ MODAL ------------ */
+/* ---------- MODAL ---------- */
 #modal{position:fixed;inset:0;display:flex;justify-content:center;align-items:center;background:rgba(0,0,0,.85);backdrop-filter:blur(4px);opacity:0;visibility:hidden;transition:.3s var(--ease);z-index:1000}
 #modal.show{opacity:1;visibility:visible}
-.modal-box{
-background:var(--card);padding:2.6rem 2.9rem;border-radius:var(--radius);
-border:3px solid var(--gold);text-align:center;max-width:440px;color:var(--white);
-animation:pop .45s var(--ease) forwards;position:relative;
-}
+.modal-box{background:var(--card);padding:2.6rem 2.9rem;border-radius:var(--radius);border:3px solid var(--gold);text-align:center;max-width:440px;color:var(--white);animation:pop .45s var(--ease) forwards;position:relative}
 @keyframes pop{from{transform:scale(.8)}to{transform:scale(1)}}
 .modal-box h3{color:var(--gold);font-size:1.35rem;margin-bottom:1.1rem}
-.modal-box button{
-background:var(--red);color:#fff;border:none;padding:.8rem 1.8rem;border-radius:var(--radius);
-font-size:1rem;font-weight:500;cursor:pointer;margin-top:1.4rem;transition:.3s var(--ease);
-}
+.modal-box button{background:var(--red);color:#fff;border:none;padding:.8rem 1.8rem;border-radius:var(--radius);font-size:1rem;font-weight:500;cursor:pointer;margin-top:1.4rem;transition:.3s var(--ease)}
 .modal-box button:hover{background:#ff4d4d;transform:translateY(-2px)}
 .modal-close{position:absolute;top:10px;right:16px;font-size:1.6rem;color:var(--gold);cursor:pointer;transition:.3s}
 .modal-close:hover{color:#fff;transform:rotate(90deg)}
 
-/* ------------ FOOTER ------------ */
+/* ---------- FOOTER ---------- */
 footer{text-align:center;padding:2.5rem 1rem;margin-top:4rem;border-top:2px solid var(--gold);font-size:.9rem}
 footer a{color:var(--gold);text-decoration:none}
 
@@ -180,11 +142,11 @@ footer a{color:var(--gold);text-decoration:none}
 <details>
 <summary>Be 100% War Ready <span class="arrow"></span></summary>
 <div class="content">
-<p>We expect each war participant to be at 100% when the war starts. If you have something upgrading ...</p>
+<p>We expect each war participant to be at 100% when the war starts. If you have something upgrading (spell factory, both dark barracks, barb king, archer queen, etc…) or a real life event which would prevent you from being at 100%, we require you to opt out of war until you are back to 100%. You may not opt out of war until you’ve spent at least 3 wars with us and if you have/will be opted out for more than 7 days speak to an elder or co.</p>
 </div>
 </details>
 
-<!-- (repeat other details blocks exactly as before) -->
+<!-- (Repeat other details blocks exactly as before, text unchanged) -->
 </div>
 </section>
 
@@ -195,14 +157,14 @@ footer a{color:var(--gold);text-decoration:none}
 <details>
 <summary>Donations <span class="arrow"></span></summary>
 <div class="content">
-<p>Donate only what is requested ...</p>
+<p>Donate only what is requested (no exceptions without requesting player approval). You must be an active player in donating, requesting and chat. Limit your non-war troop requests to those you can make. If a higher level guy is on, they will likely give you something higher; our high level guys are very generous so be appreciative. Do NOT call out any specific member to ask for a specific troop; put your request out there and be patient.</p>
 </div>
 </details>
 
 <details>
 <summary>Don't be annoying <span class="arrow"></span></summary>
 <div class="content">
-<p>Quite self explanatory ...</p>
+<p>Quite self explanatory, if you need to ask questions about this one your time with us will be brief. Don't be that guy that impatiently asks for troops they can't make just for farming. We like each other as a clan and we have a ton of fun and rag on each other heavily.</p>
 </div>
 </details>
 </div>
@@ -211,11 +173,11 @@ footer a{color:var(--gold);text-decoration:none}
 <!-- PROMOTIONS -->
 <section id="promotions">
 <h2>Promotions & Joining</h2>
-<p style="text-align:center;max-width:780px;margin:0 auto 2rem">Don't ask for elder or Co-leader! ...</p>
-<p style="text-align:center;max-width:780px;margin:0 auto">If you want to join us ...</p>
+<p style="text-align:center;max-width:780px;margin:0 auto 2rem">Don't ask for elder or Co-leader! Elders are all highly respected folks and it will take a while to earn it. Co-leaders are intentionally selected based on skill level, loyalty, war performance, donations and activity. We keep the volume of co-leaders down intentionally to keep leadership efficient. We have high expectations of our elders and co-leaders.</p>
+<p style="text-align:center;max-width:780px;margin:0 auto">If you want to join us and stay long term, show us you have read and understood these rules by typing the confirmation phrase <strong>‘cwl rules are my rules’</strong> into your request or chat. Your war performance and overall conduct will be reviewed by co-leaders after a few wars. Show us what you’ve got!</p>
 
 <div class="opposing">
-Opposing clan this message is for you. Our goal is to destroy you. It’s nothing personal of course ...
+Opposing clan this message is for you. Our goal is to destroy you. It’s nothing personal of course. If you win, congratulations, you are damn good! Whether we beat you or not we always welcome the top players from the opposing clan to join us as we have a good group who win often. Let’s have fun.
 </div>
 </section>
 
@@ -246,29 +208,26 @@ function closeModal(){modal.classList.remove('show')}
 modal.addEventListener('click',e=>{if(e.target===modal)closeModal()});
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal()});
 
-/* accordion */
+/* accordion keep auto-height */
 document.querySelectorAll('.accordion details').forEach(det=>{
 const box=det.querySelector('.content');
 det.addEventListener('toggle',()=>{
 const speed=parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--duration'))*1000;
 if(det.open){
-box.style.maxHeight=box.scrollHeight+'px';
-box.style.opacity='1';
+box.style.maxHeight=box.scrollHeight+'px';box.style.opacity='1';
 setTimeout(()=>box.style.maxHeight='none',speed);
 }else{
-if(getComputedStyle(box).maxHeight==='none'){
-box.style.maxHeight=box.scrollHeight+'px';box.offsetHeight;
-}
+if(getComputedStyle(box).maxHeight==='none'){box.style.maxHeight=box.scrollHeight+'px';box.offsetHeight;}
 box.style.maxHeight='0';box.style.opacity='0';
 }
 });
 });
 
 /* progress bar */
-const prog=document.getElementById('progress');
+const progress=document.getElementById('progress');
 window.addEventListener('scroll',()=>{
 const h=document.documentElement;
-prog.style.width=(h.scrollTop)/(h.scrollHeight-h.clientHeight)*100+'%';
+progress.style.width=(h.scrollTop)/(h.scrollHeight-h.clientHeight)*100+'%';
 });
 </script>
 
