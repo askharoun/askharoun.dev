@@ -1,0 +1,2773 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>To-Do List - Academic Planner</title>
+  <link rel="icon" href="https://askharoun.dev/favicon.ico" type="image/x-icon">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <style>
+    /* ========================================
+       GLOBAL STYLES & VARIABLES
+       ======================================== */
+    :root {
+      /* Light Mode */
+      --primary-light: #1a4ba6; /* darken for better contrast */
+      --primary-dark-light: #1a4ba6;
+      --secondary-light: #007ea7; /* darken for better contrast */
+      --background-light: #f8f9fc;
+      --surface-light: #ffffff;
+      --text-primary-light: #1a1c25;
+      --text-secondary-light: #2d2d2d; /* darken for better contrast */
+      --border-light: #b0b3c0; /* darken for better contrast */
+      --shadow-light: rgba(0, 24, 69, 0.08);
+      --success-light: #00c853;
+      --error-light: #ff3d71;
+      --warning-light: #ff9800;
+
+      /* Dark Mode */
+      --primary-dark: #4d8df6;
+      --primary-dark-dark: #2c5bb8;
+      --secondary-dark: #00e5ff;
+      --background-dark: #12151d;
+      --surface-dark: #1a1f2c;
+      --text-primary-dark: #ffffff;
+      --text-secondary-dark: #a0a3b8;
+      --border-dark: #2a3042;
+      --shadow-dark: rgba(0, 0, 0, 0.2);
+      --success-dark: #00e676;
+      --error-dark: #ff5c8d;
+      --warning-dark: #ffb74d;
+
+      /* Active Vars */
+      --primary: var(--primary-light);
+      --primary-dark-color: var(--primary-dark-light);
+      --secondary: var(--secondary-light);
+      --background: var(--background-light);
+      --surface: var(--surface-light);
+      --text-primary: var(--text-primary-light);
+      --text-secondary: var(--text-secondary-light);
+      --border: var(--border-light);
+      --shadow: var(--shadow-light);
+      --success: var(--success-light);
+      --error: var(--error-light);
+      --warning: var(--warning-light);
+
+      /* Sizing & Fonts */
+      --space-xs: 0.25rem;
+      --space-sm: 0.5rem;
+      --space-md: 1rem;
+      --space-lg: 1.5rem;
+      --space-xl: 2rem;
+      --space-xxl: 4rem;
+      --font-heading: "Orbitron", sans-serif;
+      --font-body: "Roboto", sans-serif;
+      --transition-normal: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      --transition-fast: 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+      --transition-bounce: 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    }
+
+    .dark-mode {
+      --primary: var(--primary-dark);
+      --primary-dark-color: var(--primary-dark-dark);
+      --secondary: var(--secondary-dark);
+      --background: var(--background-dark);
+      --surface: var(--surface-dark);
+      --text-primary: var(--text-primary-dark);
+      --text-secondary: var(--text-secondary-dark);
+      --border: var(--border-dark);
+      --shadow: var(--shadow-dark);
+      --success: var(--success-dark);
+      --error: var(--error-dark);
+      --warning: var(--warning-dark);
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      font-size: 16px;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: var(--font-body);
+      background-color: var(--background);
+      color: var(--text-primary);
+      line-height: 1.6;
+      transition: background-color var(--transition-normal), color var(--transition-normal);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ========================================
+       HEADER STYLES (SIMPLE LOGO + THEME)
+       ======================================== */
+    .app-header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: var(--space-md) var(--space-xl);
+      background-color: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      z-index: 1000;
+      border-bottom: 1px solid var(--border);
+      transition: all var(--transition-normal);
+    }
+
+    .dark-mode .app-header {
+      background-color: rgba(26, 31, 44, 0.8);
+    }
+
+    .app-logo {
+      font-family: var(--font-heading);
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--primary);
+      text-decoration: none;
+      position: relative;
+      display: inline-block;
+    }
+
+    /* Subtle Glitch effect for app title */
+    .app-title {
+      font-family: var(--font-heading);
+      font-size: 2.5rem;
+      color: var(--primary);
+      margin: 0;
+      position: relative;
+      display: inline-block;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .app-title::before,
+    .app-title::after {
+      content: "Academic Planner";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .app-title::before {
+      color: rgba(255, 0, 128, 0.7);
+      transform: translate(-1px, 0);
+      clip-path: polygon(0 0, 100% 0, 100% 45%, 0 45%);
+    }
+
+    .app-title::after {
+      color: rgba(0, 255, 128, 0.7);
+      transform: translate(1px, 0);
+      clip-path: polygon(0 55%, 100% 55%, 100% 100%, 0 100%);
+    }
+
+    .app-title:hover::before,
+    .app-title:hover::after {
+      opacity: 1;
+      animation: subtleGlitch 0.3s ease-in-out;
+    }
+
+    @keyframes subtleGlitch {
+      0%, 100% {
+        transform: translate(0, 0);
+      }
+      25% {
+        transform: translate(-1px, 0);
+      }
+      75% {
+        transform: translate(1px, 0);
+      }
+    }
+
+    .login-title {
+      font-family: var(--font-heading);
+      font-size: 4rem;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: var(--space-lg);
+      text-shadow: 0 0 30px rgba(45, 108, 223, 0.3);
+      position: relative;
+      display: inline-block;
+    }
+
+    .login-title::before,
+    .login-title::after {
+      content: "Academic Planner";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+    }
+
+    .login-title::before {
+      color: rgba(255, 0, 128, 0.7);
+      transform: translate(-1px, 0);
+      clip-path: polygon(0 0, 100% 0, 100% 45%, 0 45%);
+    }
+
+    .login-title::after {
+      color: rgba(0, 255, 128, 0.7);
+      transform: translate(1px, 0);
+      clip-path: polygon(0 55%, 100% 55%, 100% 100%, 0 100%);
+    }
+
+    .login-title:hover::before,
+    .login-title:hover::after {
+      opacity: 1;
+      animation: subtleGlitch 0.3s ease-in-out;
+    }
+
+    .theme-toggle {
+      position: relative;
+      width: 60px;
+      height: 32px;
+      background: var(--border);
+      border-radius: 20px;
+      border: none;
+      cursor: pointer;
+      transition: all var(--transition-normal);
+      overflow: hidden;
+    }
+
+    .theme-toggle::before {
+      content: "";
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      width: 28px;
+      height: 28px;
+      background: var(--surface);
+      border-radius: 50%;
+      transition: all var(--transition-bounce);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    }
+
+    .dark-mode .theme-toggle {
+      background: var(--primary);
+    }
+
+    .dark-mode .theme-toggle::before {
+      transform: translateX(28px);
+    }
+
+    .theme-toggle:hover {
+      transform: scale(1.05);
+    }
+
+    /* ========================================
+       MAIN CONTENT
+       ======================================== */
+    .main-content {
+      flex: 1;
+      padding: 100px var(--space-xl) var(--space-xl);
+      max-width: 1400px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .login-screen {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 60vh;
+      text-align: center;
+      animation: fadeInScale 0.6s ease-out;
+    }
+
+    @keyframes fadeInScale {
+      0% { opacity: 0; transform: scale(0.9); }
+      100% { opacity: 1; transform: scale(1); }
+    }
+
+    .login-subtitle {
+      font-size: 1.2rem;
+      color: var(--text-secondary);
+      margin-bottom: var(--space-xl);
+      max-width: 600px;
+    }
+
+    .auth-tabs {
+      display: flex;
+      gap: var(--space-md);
+      margin-bottom: var(--space-xl);
+    }
+
+    .auth-tab {
+      background: none;
+      border: none;
+      padding: var(--space-md) var(--space-xl);
+      border-radius: 8px;
+      font-family: var(--font-heading);
+      font-weight: 600;
+      cursor: pointer;
+      transition: all var(--transition-normal);
+      color: var(--text-secondary);
+    }
+
+    .auth-tab.active {
+      background: var(--primary);
+      color: white;
+      box-shadow: 0 4px 15px rgba(45, 108, 223, 0.3);
+    }
+
+    .auth-form {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-lg);
+      width: 100%;
+      max-width: 400px;
+    }
+
+    .auth-form.hidden {
+      display: none;
+    }
+
+    .input-group {
+      position: relative;
+    }
+
+    .form-input, .priority-select, .form-select, textarea {
+      min-height: 44px;
+      font-size: 1.08rem;
+      border-radius: 10px;
+      border: 1.5px solid var(--border);
+      padding: 0.7em 1.1em;
+      margin: 0;
+      box-shadow: 0 1px 6px rgba(45, 108, 223, 0.04);
+      transition: border 0.2s, box-shadow 0.2s;
+    }
+    .form-input:focus, .priority-select:focus, .form-select:focus, textarea:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(45, 108, 223, 0.13);
+      outline: none;
+    }
+    .auth-form, .control-form, .task-input-form {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5em;
+      background: var(--surface);
+      border-radius: 16px;
+      box-shadow: 0 2px 16px rgba(45, 108, 223, 0.07);
+      padding: 2em 2.5em;
+      margin-bottom: 2em;
+    }
+    @media (max-width: 600px) {
+      .auth-form, .control-form, .task-input-form {
+        padding: 1.2em 0.5em;
+        gap: 1.2em;
+      }
+      .btn-primary, .btn-secondary {
+        padding: 0.7em 1.2em;
+        font-size: 1.05rem;
+      }
+    }
+    input[type="file"] {
+      font-size: 1.05rem;
+      margin: 0;
+    }
+    .notification {
+      border-radius: 12px !important;
+      box-shadow: 0 4px 18px rgba(45, 108, 223, 0.13) !important;
+      font-size: 1.05rem !important;
+      padding: 18px 22px !important;
+      margin-bottom: 1.2em !important;
+      background: linear-gradient(120deg, #fff, #f8f9fc 80%);
+      color: var(--text-primary);
+      border-left: 5px solid var(--primary);
+    }
+    .notification.success { border-left-color: var(--success); }
+    .notification.error { border-left-color: var(--error); }
+    .notification.warning { border-left-color: var(--warning); }
+    #customModalBox {
+      border-radius: 18px !important;
+      box-shadow: 0 8px 40px rgba(45, 108, 223, 0.13) !important;
+      padding: 2.5em 3em !important;
+      background: linear-gradient(120deg, #fff, #f8f9fc 80%);
+    }
+    input:focus, select:focus, textarea:focus, button:focus {
+      outline: 2px solid var(--primary);
+      outline-offset: 2px;
+    }
+
+    .btn-primary, .btn-secondary {
+      min-width: 140px;
+      min-height: 44px;
+      padding: 0.9em 2.2em;
+      font-size: 1.15rem;
+      font-weight: 600;
+      border-radius: 12px;
+      box-shadow: 0 2px 12px rgba(45, 108, 223, 0.10);
+      transition: background 0.2s, color 0.2s, box-shadow 0.2s, transform 0.1s;
+      border: none;
+      outline: none;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: #fff;
+      letter-spacing: 0.02em;
+      display: inline-block;
+      margin: 0;
+    }
+
+    .btn-primary:hover, .btn-secondary:hover {
+      box-shadow: 0 6px 24px rgba(45, 108, 223, 0.18);
+      transform: translateY(-2px) scale(1.03);
+      filter: brightness(1.08);
+    }
+
+    .btn-primary:active, .btn-secondary:active {
+      box-shadow: 0 2px 8px rgba(45, 108, 223, 0.10);
+      transform: scale(0.98);
+    }
+
+    .btn-primary:focus, .btn-secondary:focus {
+      outline: 2px solid var(--primary);
+      outline-offset: 2px;
+    }
+
+    .btn-primary::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      transition: left 0.5s;
+    }
+
+    .btn-primary:hover::before {
+      left: 100%;
+    }
+
+    /* ========================================
+       MAIN APP INTERFACE
+       ======================================== */
+    .app-interface {
+      display: none;
+      animation: slideInFromBottom 0.6s ease-out;
+    }
+
+    @keyframes slideInFromBottom {
+      0% { opacity: 0; transform: translateY(30px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+
+    .app-header-section {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: var(--space-xl);
+      padding-bottom: var(--space-lg);
+      border-bottom: 2px solid var(--border);
+    }
+
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: var(--space-lg);
+    }
+
+    .username-display {
+      font-family: var(--font-heading);
+      color: var(--text-secondary);
+      font-size: 1rem;
+    }
+
+    .logout-btn {
+      background: var(--error);
+      color: white;
+      border: none;
+      padding: 0.4em 1em;
+      border-radius: 6px;
+      font-family: var(--font-heading);
+      font-weight: 500;
+      font-size: 0.97rem;
+      cursor: pointer;
+      transition: all var(--transition-normal);
+      display: flex;
+      align-items: center;
+      gap: var(--space-xs);
+      min-height: 32px;
+      min-width: 80px;
+      box-shadow: none;
+    }
+
+    .logout-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(255, 61, 113, 0.4);
+    }
+
+    /* ========================================
+       ENHANCED DROPDOWN STYLING
+       ======================================== */
+    .form-select {
+      flex: 1;
+      padding: 0.3em 0.8em;
+      border: 1.5px solid var(--border);
+      border-radius: 6px;
+      background: var(--surface);
+      color: var(--text-primary);
+      font-family: var(--font-body);
+      transition: all var(--transition-normal);
+      cursor: pointer;
+      position: relative;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+      background-position: right 0.75rem center;
+      background-repeat: no-repeat;
+      background-size: 1.5em 1.5em;
+      padding-right: 2.5rem;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+
+    .form-select:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 4px rgba(45, 108, 223, 0.1), 0 4px 16px rgba(0, 0, 0, 0.1);
+      transform: translateY(-2px);
+    }
+
+    .form-select:hover {
+      border-color: var(--secondary);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    /* ========================================
+       SEMESTER & FOLDER MANAGEMENT
+       ======================================== */
+    .controls-section {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1em;
+      margin-bottom: var(--space-xxl);
+    }
+
+    .control-panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: var(--space-xl);
+      box-shadow: 0 4px 20px var(--shadow);
+      transition: all var(--transition-normal);
+    }
+
+    .control-panel:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 30px var(--shadow);
+    }
+
+    .control-title {
+      font-family: var(--font-heading);
+      font-size: 1.3rem;
+      color: var(--primary);
+      margin-bottom: var(--space-lg);
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+    }
+
+    .control-form {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-md);
+    }
+
+    .form-row {
+      display: flex;
+      gap: var(--space-md);
+    }
+
+    .btn-secondary {
+      background: var(--secondary);
+      color: white;
+      border: none;
+      padding: 0.4em 1em;
+      border-radius: 6px;
+      font-family: var(--font-heading);
+      font-weight: 500;
+      font-size: 0.97rem;
+      cursor: pointer;
+      transition: all var(--transition-normal);
+      display: flex;
+      align-items: center;
+      gap: var(--space-xs);
+      min-height: 32px;
+      min-width: 80px;
+      box-shadow: none;
+    }
+
+    .btn-secondary:hover {
+      background: var(--primary);
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0, 194, 255, 0.4);
+    }
+
+    /* ========================================
+       WORKSPACE LAYOUT
+       ======================================== */
+    .workspace {
+      display: grid;
+      grid-template-columns: 300px 1fr;
+      gap: 1em;
+      min-height: 60vh;
+    }
+
+    .sidebar {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 0.7em;
+      height: fit-content;
+      box-shadow: 0 4px 20px var(--shadow);
+    }
+
+    .sidebar-title {
+      font-family: var(--font-heading);
+      font-size: 1.2rem;
+      color: var(--primary);
+      margin-bottom: var(--space-lg);
+      padding-bottom: var(--space-sm);
+      border-bottom: 2px solid var(--border);
+    }
+
+    .folder-list {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-sm);
+    }
+
+    .folder-item {
+      padding: 0.6em 0.5em;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all var(--transition-normal);
+      position: relative;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .folder-item:hover {
+      background: rgba(45, 108, 223, 0.1);
+      transform: translateX(5px);
+    }
+
+    .folder-item.active {
+      background: var(--primary);
+      color: white;
+      transform: translateX(10px);
+      box-shadow: 0 4px 15px rgba(45, 108, 223, 0.3);
+    }
+
+    .folder-info {
+      flex: 1;
+    }
+
+    .folder-name {
+      font-weight: 600;
+      margin-bottom: var(--space-xs);
+    }
+
+    .folder-meta {
+      font-size: 0.85rem;
+      opacity: 0.8;
+    }
+
+    .folder-actions {
+      display: flex;
+      gap: var(--space-xs);
+      opacity: 0;
+      transition: opacity var(--transition-normal);
+    }
+
+    .folder-item:hover .folder-actions {
+      opacity: 1;
+    }
+
+    .action-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: var(--space-xs);
+      border-radius: 4px;
+      transition: all var(--transition-fast);
+    }
+
+    .action-btn:hover {
+      background: rgba(255, 255, 255, 0.2);
+      transform: scale(1.1);
+    }
+
+    /* ========================================
+       CONTENT AREA
+       ======================================== */
+    .content-area {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 0.7em;
+      box-shadow: 0 4px 20px var(--shadow);
+    }
+
+    .content-header {
+      margin-bottom: var(--space-xl);
+      padding-bottom: var(--space-lg);
+      border-bottom: 2px solid var(--border);
+    }
+
+    .content-title {
+      font-family: var(--font-heading);
+      font-size: 1.8rem;
+      color: var(--primary);
+      margin-bottom: var(--space-md);
+    }
+
+    .folder-stats {
+      display: flex;
+      gap: var(--space-lg);
+      flex-wrap: wrap;
+    }
+
+    /* ========================================
+       TASK INPUT & MANAGEMENT
+       ======================================== */
+    .task-input-section {
+      margin-bottom: var(--space-xl);
+      padding: var(--space-lg);
+      background: rgba(45, 108, 223, 0.05);
+      border-radius: 12px;
+      border: 1px solid rgba(45, 108, 223, 0.1);
+    }
+
+    .task-input-title {
+      font-family: var(--font-heading);
+      color: var(--primary);
+      margin-bottom: var(--space-lg);
+    }
+
+    .task-input-form {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-md);
+    }
+
+    .task-input {
+      width: 100%;
+      padding: 0.5em 0.9em;
+      border: 1.5px solid var(--border);
+      border-radius: 7px;
+      background: var(--surface);
+      color: var(--text-primary);
+      font-family: var(--font-body);
+      font-size: 0.98rem;
+      transition: all var(--transition-normal);
+      min-height: 36px;
+    }
+
+    .task-input:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 4px rgba(45, 108, 223, 0.1);
+    }
+
+    .task-options {
+      display: flex;
+      gap: var(--space-md);
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .priority-select {
+      padding: 0.3em 0.8em;
+      border: 1.5px solid var(--border);
+      border-radius: 6px;
+      background: var(--surface);
+      color: var(--text-primary);
+      font-family: var(--font-body);
+      cursor: pointer;
+      font-size: 0.97rem;
+      min-height: 32px;
+    }
+
+    .file-input-wrapper {
+      position: relative;
+    }
+
+    .file-input {
+      display: none;
+    }
+
+    .file-input-label {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-sm);
+      padding: var(--space-sm) var(--space-md);
+      background: var(--secondary);
+      color: white;
+      border-radius: 8px;
+      cursor: pointer;
+      font-family: var(--font-heading);
+      font-weight: 500;
+      transition: all var(--transition-normal);
+    }
+
+    .file-input-label:hover {
+      background: var(--primary);
+      transform: translateY(-2px);
+    }
+
+    /* ========================================
+       TASK LIST
+       ======================================== */
+    .task-list {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-md);
+    }
+
+    .task-item {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 0.7em;
+      transition: all var(--transition-normal);
+      animation: slideInFromLeft 0.3s ease-out;
+    }
+
+    @keyframes slideInFromLeft {
+      0% { opacity: 0; transform: translateX(-20px); }
+      100% { opacity: 1; transform: translateX(0); }
+    }
+
+    .task-item:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px var(--shadow);
+    }
+
+    .task-item.completed {
+      opacity: 0.7;
+      background: rgba(0, 200, 83, 0.1);
+    }
+
+    .task-header {
+      display: flex;
+      align-items: flex-start;
+      gap: var(--space-md);
+    }
+
+    .task-checkbox {
+      width: 24px;
+      height: 24px;
+      border: 2px solid var(--border);
+      border-radius: 6px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all var(--transition-normal);
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .task-checkbox:hover {
+      border-color: var(--primary);
+      transform: scale(1.1);
+    }
+
+    .task-checkbox.checked {
+      background: var(--success);
+      border-color: var(--success);
+      color: white;
+    }
+
+    .task-checkbox.checked::after {
+      content: "✓";
+      font-weight: bold;
+    }
+
+    .task-content {
+      flex: 1;
+    }
+
+    .task-text {
+      font-size: 1.1rem;
+      line-height: 1.5;
+      margin-bottom: var(--space-sm);
+    }
+
+    .task-meta {
+      display: flex;
+      gap: var(--space-md);
+      align-items: center;
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      margin-bottom: var(--space-sm);
+    }
+
+    .priority-badge {
+      padding: var(--space-xs) var(--space-sm);
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+    }
+
+    .priority-low {
+      background: rgba(0, 200, 83, 0.2);
+      color: var(--success);
+    }
+
+    .priority-medium {
+      background: rgba(255, 152, 0, 0.2);
+      color: var(--warning);
+    }
+
+    .priority-high {
+      background: rgba(255, 61, 113, 0.2);
+      color: var(--error);
+    }
+
+    .task-attachments {
+      display: flex;
+      gap: var(--space-sm);
+      flex-wrap: wrap;
+      margin-top: var(--space-sm);
+    }
+
+    .task-image {
+      width: 80px;
+      height: 80px;
+      object-fit: cover;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all var(--transition-normal);
+    }
+
+    .task-image:hover {
+      transform: scale(1.05);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .task-video {
+      width: 200px;
+      height: 120px;
+      border-radius: 8px;
+    }
+
+    .attachment-item {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-xs);
+      padding: var(--space-xs) var(--space-sm);
+      background: rgba(45, 108, 223, 0.1);
+      color: var(--primary);
+      text-decoration: none;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      transition: all var(--transition-normal);
+      cursor: pointer;
+    }
+
+    .attachment-item:hover {
+      background: rgba(45, 108, 223, 0.2);
+      transform: translateY(-1px);
+    }
+
+    .pdf-attachment {
+      background: rgba(220, 53, 69, 0.1);
+      color: #dc3545;
+    }
+
+    .attachment-size {
+      opacity: 0.7;
+      font-size: 0.75rem;
+    }
+
+    .task-actions {
+      display: flex;
+      gap: var(--space-xs);
+      opacity: 0;
+      transition: opacity var(--transition-normal);
+    }
+
+    .task-item:hover .task-actions {
+      opacity: 1;
+    }
+
+     /* ========================================
+        CLEAN NOTIFICATIONS SYSTEM
+        ======================================== */
+     #notificationContainer {
+       position: fixed;
+       bottom: 30px;
+       right: 30px;
+       z-index: 10000;
+       display: flex;
+       flex-direction: column;
+       gap: 8px;
+       max-width: 340px;
+       align-items: flex-end;
+       pointer-events: none;
+     }
+
+     .notification {
+       background: rgba(255, 255, 255, 0.95);
+       border: 1px solid rgba(0, 0, 0, 0.1);
+       border-radius: 8px;
+       padding: 12px 16px;
+       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+       backdrop-filter: blur(10px);
+       font-size: 0.9rem;
+       color: var(--text-primary);
+       transform: translateX(100%);
+       opacity: 0;
+       transition: opacity 0.3s, transform 0.3s;
+       max-width: 100%;
+       word-wrap: break-word;
+       position: relative;
+       margin-bottom: 4px;
+       pointer-events: auto;
+     }
+
+     .dark-mode .notification {
+       background: rgba(26, 31, 44, 0.95);
+       border-color: rgba(255, 255, 255, 0.1);
+     }
+
+     .notification.show {
+       transform: translateX(0);
+       opacity: 1;
+     }
+
+     .notification.success {
+       border-left: 3px solid var(--success);
+     }
+
+     .notification.error {
+       border-left: 3px solid var(--error);
+     }
+
+     .notification.warning {
+       border-left: 3px solid var(--warning);
+     }
+
+     .notification-content {
+       display: flex;
+       align-items: center;
+       gap: 8px;
+       justify-content: space-between;
+     }
+
+     .notification-text {
+       flex: 1;
+       font-weight: 400;
+       line-height: 1.4;
+     }
+
+     /* ========================================
+        FILE UPLOAD PROGRESS BAR
+        ======================================== */
+     .upload-progress {
+       position: fixed;
+       top: 70px;
+       right: 20px;
+       width: 300px;
+       background: rgba(255, 255, 255, 0.95);
+       border: 1px solid rgba(0, 0, 0, 0.1);
+       border-radius: 8px;
+       padding: 16px;
+       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+       backdrop-filter: blur(10px);
+       z-index: 10001;
+       transform: translateX(400px);
+       opacity: 0;
+       transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+     }
+
+     .dark-mode .upload-progress {
+       background: rgba(26, 31, 44, 0.95);
+       border-color: rgba(255, 255, 255, 0.1);
+     }
+
+     .upload-progress.show {
+       transform: translateX(0);
+       opacity: 1;
+     }
+
+     .upload-progress-header {
+       display: flex;
+       align-items: center;
+       gap: 8px;
+       margin-bottom: 12px;
+       font-size: 0.9rem;
+       font-weight: 500;
+       color: var(--text-primary);
+     }
+
+     .upload-progress-bar {
+       width: 100%;
+       height: 6px;
+       background: var(--border);
+       border-radius: 3px;
+       overflow: hidden;
+       margin-bottom: 8px;
+     }
+
+     .upload-progress-fill {
+       height: 100%;
+       background: linear-gradient(90deg, var(--primary), var(--secondary));
+       border-radius: 3px;
+       transition: width 0.3s ease;
+       position: relative;
+     }
+
+     .upload-progress-fill::after {
+       content: '';
+       position: absolute;
+       top: 0;
+       left: 0;
+       height: 100%;
+       width: 100%;
+       background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+       animation: shimmer 1.5s infinite;
+     }
+
+     @keyframes shimmer {
+       0% { transform: translateX(-100%); }
+       100% { transform: translateX(100%); }
+     }
+
+     .upload-progress-text {
+       font-size: 0.8rem;
+       color: var(--text-secondary);
+       text-align: center;
+     }
+
+    /* ========================================
+       FOOTER
+       ======================================== */
+    .app-footer {
+      margin-top: auto;
+      padding: var(--space-xl);
+      text-align: center;
+      border-top: 1px solid var(--border);
+      background: var(--surface);
+    }
+
+    .footer-text {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+    }
+
+    .footer-link {
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 600;
+      transition: all var(--transition-normal);
+    }
+
+    .footer-link:hover {
+      color: var(--secondary);
+      text-shadow: 0 0 10px rgba(45, 108, 223, 0.5);
+    }
+
+    /* ========================================
+       RESPONSIVE DESIGN
+       ======================================== */
+    @media (max-width: 1024px) {
+      .controls-section {
+        grid-template-columns: 1fr;
+      }
+      
+      .workspace {
+        grid-template-columns: 1fr;
+      }
+      
+      .sidebar {
+        order: 2;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .main-content {
+        padding: 80px var(--space-md) var(--space-md);
+      }
+
+      .app-header {
+        padding: var(--space-sm) var(--space-md);
+      }
+
+      .app-logo {
+        font-size: 1.2rem;
+      }
+
+      .login-title {
+        font-size: 2.5rem;
+      }
+
+      .form-row {
+        flex-direction: column;
+      }
+
+      .task-options {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      #notificationContainer {
+        right: var(--space-md);
+        left: var(--space-md);
+        max-width: none;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .login-title {
+        font-size: 2rem;
+      }
+
+      .control-panel {
+        padding: var(--space-lg);
+      }
+
+      .content-area {
+        padding: var(--space-lg);
+      }
+    }
+
+    /* ========================================
+       ANIMATIONS & EFFECTS
+       ======================================== */
+    @keyframes slideInRight {
+      0% { transform: translateX(100%); opacity: 0; }
+      100% { transform: translateX(0); opacity: 1; }
+    }
+
+    @keyframes bounceIn {
+      0% { transform: scale(0.3); opacity: 0; }
+      50% { transform: scale(1.05); }
+      70% { transform: scale(0.9); }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+      20%, 40%, 60%, 80% { transform: translateX(5px); }
+    }
+
+    .shake {
+      animation: shake 0.5s ease-in-out;
+    }
+
+    /* ========================================
+       ACCESSIBILITY
+       ======================================== */
+    @media (prefers-reduced-motion: reduce) {
+      * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+
+    @media (prefers-contrast: high) {
+      :root {
+        --border-light: #000000;
+        --text-secondary-light: #000000;
+      }
+      
+      .dark-mode {
+        --border-dark: #ffffff;
+        --text-secondary-dark: #ffffff;
+      }
+    }
+
+    /* MOBILE-FIRST LAYOUT */
+    @media (max-width: 600px) {
+      .main-content {
+        padding: 60px 0.5em 1.5em;
+        max-width: 100vw;
+      }
+      .app-header {
+        padding: 0.5em 0.7em;
+        font-size: 1em;
+      }
+      .app-title, .login-title {
+        font-size: 1.3em !important;
+      }
+      .controls-section {
+        grid-template-columns: 1fr;
+        gap: 1em;
+      }
+      .workspace {
+        grid-template-columns: 1fr;
+        gap: 1em;
+      }
+      .sidebar {
+        padding: 0.7em;
+        border-radius: 10px;
+        font-size: 0.98em;
+      }
+      .content-area {
+        padding: 0.7em;
+        border-radius: 10px;
+      }
+      .task-input-form {
+        padding: 0.7em !important;
+        border-radius: 10px !important;
+      }
+      .btn-primary, .btn-secondary {
+        min-width: 140px !important;
+        min-height: 44px !important;
+        margin-bottom: 1.5em;
+        padding: 0.9em 2.2em !important;
+        font-size: 1.15rem !important;
+        font-weight: 600 !important;
+        border-radius: 12px !important;
+        box-shadow: 0 2px 12px rgba(45, 108, 223, 0.10);
+        transition: background 0.2s, color 0.2s, box-shadow 0.2s, transform 0.1s;
+        margin-right: 1em;
+      }
+      .btn-primary:hover, .btn-secondary:hover {
+        box-shadow: 0 6px 24px rgba(45, 108, 223, 0.18);
+        transform: translateY(-2px) scale(1.03);
+      }
+      .btn-primary:active, .btn-secondary:active {
+        box-shadow: 0 2px 8px rgba(45, 108, 223, 0.10);
+        transform: scale(0.98);
+      }
+      .form-input, .priority-select {
+        min-height: 30px;
+        font-size: 0.95em;
+        padding: 0.4em 0.7em;
+      }
+      .folder-item {
+        font-size: 0.98em;
+        padding: 0.6em 0.5em;
+      }
+      .sidebar-title {
+        font-size: 1.05em;
+      }
+      .task-item {
+        padding: 0.7em;
+        border-radius: 10px;
+      }
+      .task-text {
+        font-size: 1em;
+      }
+      .app-footer {
+        padding: 0.7em;
+        font-size: 0.95em;
+      }
+      #customModalBox {
+        min-width: 90vw !important;
+        padding: 1.2em 0.5em !important;
+      }
+    }
+  </style>
+  <!-- Add Firebase scripts and config at the top of the <head> or <script> section -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <script>
+  // TODO: Replace with your Firebase project config
+  const firebaseConfig = {
+    apiKey: "YOUR_API_KEY",
+    authDomain: "YOUR_AUTH_DOMAIN",
+    projectId: "YOUR_PROJECT_ID",
+    storageBucket: "YOUR_STORAGE_BUCKET",
+    messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+    appId: "YOUR_APP_ID"
+  };
+  firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth();
+  const db = firebase.firestore();
+  // ...
+  // Replace all localStorage logic with Firebase Auth and Firestore CRUD
+  // ... existing code ...
+  </script>
+</head>
+<body>
+  <!-- Simple Header -->
+  <header class="app-header">
+    <h1 class="app-logo">To-Do List</h1>
+    <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode"></button>
+  </header>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <!-- Login Screen -->
+    <div id="loginScreen" class="login-screen">
+      <h1 class="login-title">Academic Planner</h1>
+      <p class="login-subtitle">
+        Organize your studies with a Notion-style to-do list. Create custom semesters, manage folders, and add rich content to your tasks.
+      </p>
+      
+      <!-- Auth Tabs -->
+      <div class="auth-tabs">
+        <button id="loginTab" class="auth-tab active" onclick="switchAuthTab('login')">Login</button>
+        <button id="registerTab" class="auth-tab" onclick="switchAuthTab('register')">Register</button>
+      </div>
+
+      <!-- Login Form -->
+      <form id="loginForm" class="auth-form" autocomplete="off">
+        <div class="input-group">
+          <input type="text" id="loginUsername" class="form-input" placeholder="Enter your username" required autocomplete="off">
+        </div>
+        <div class="input-group">
+          <input type="password" id="loginPassword" class="form-input" placeholder="Enter your password" required autocomplete="off">
+        </div>
+        <button type="submit" class="btn-primary">
+          🔓 Login
+        </button>
+      </form>
+
+      <!-- Register Form -->
+      <form id="registerForm" class="auth-form hidden" autocomplete="off">
+        <div class="input-group">
+          <input type="text" id="regUsername" class="form-input" placeholder="Choose a username (min 3 chars)" required autocomplete="off">
+        </div>
+        <div class="input-group">
+          <input type="password" id="regPassword" class="form-input" placeholder="Create a strong password (min 8 chars)" required autocomplete="off">
+        </div>
+        <button type="submit" class="btn-primary">
+          🔐 Create Secure Account
+        </button>
+      </form>
+    </div>
+
+    <!-- Main App Interface -->
+    <div id="appInterface" class="app-interface">
+      <!-- App Header -->
+      <div class="app-header-section">
+        <h1 class="app-title">Academic Planner</h1>
+        <div class="user-info">
+          <span class="username-display">Welcome, <span id="currentUsername"></span></span>
+          <button id="logoutBtn" class="logout-btn">Logout</button>
+        </div>
+      </div>
+
+      <!-- Controls Section -->
+      <div class="controls-section">
+        <!-- Semester Management -->
+        <div class="control-panel">
+          <h2 class="control-title">
+            📅 Semester Management
+          </h2>
+          <form id="semesterForm" class="control-form">
+            <div class="form-row">
+              <input type="text" id="semesterInput" class="form-input" placeholder="e.g., Fall 2024, Spring 2025">
+              <button type="submit" class="btn-secondary">
+                ➕ Add Semester
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Folder Management -->
+        <div class="control-panel">
+          <h2 class="control-title">
+            📁 Folder Management
+          </h2>
+          <form id="folderForm" class="control-form">
+            <div class="form-row">
+              <select id="semesterSelect" class="form-select">
+                <option value="">Select Semester</option>
+              </select>
+              <input type="text" id="folderInput" class="form-input" placeholder="e.g., Math 101, Chemistry Lab">
+            </div>
+            <button type="submit" class="btn-secondary">
+              📂 Create Folder
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Main Workspace -->
+      <div class="workspace">
+        <!-- Sidebar -->
+        <div class="sidebar">
+          <h3 class="sidebar-title">📚 My Folders</h3>
+          <div id="folderList" class="folder-list">
+            <!-- Folders will be populated here -->
+          </div>
+          <div style="margin-top:2rem;">
+            <button id="archivedDropdownBtn" class="btn-secondary" style="width:100%;justify-content:left;gap:0.5em;">
+              🗄️ Archived Folders <span id="archivedDropdownIcon" style="margin-left:auto;">▼</span>
+            </button>
+            <div id="archiveList" class="folder-list" style="display:none;">
+              <!-- Archived folders will be populated here -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Content Area -->
+        <div class="content-area">
+          <div class="content-header">
+            <h2 id="contentTitle" class="content-title">Select a folder to get started</h2>
+            <div id="folderStats" class="folder-stats"></div>
+          </div>
+
+          <!-- Task Input Section -->
+          <div id="taskInputSection" class="task-input-section" style="display: none;">
+            <h3 class="task-input-title">✨ Add New Task</h3>
+            <form id="taskForm" class="task-input-form" style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:var(--space-xl);box-shadow:0 2px 10px var(--shadow);display:flex;flex-direction:column;gap:var(--space-lg);" autocomplete="off">
+              <div style="margin-bottom:0.5em;">
+                <h4 style="font-family:var(--font-heading);font-size:1.2rem;color:var(--primary);margin-bottom:0.5em;">Create New Task</h4>
+                <textarea id="taskInput" class="form-input" placeholder="Task description (required)" rows="3" style="margin-bottom:0.5em;"></textarea>
+              </div>
+              <div style="display:flex;gap:var(--space-lg);flex-wrap:wrap;align-items:flex-end;">
+                <div style="flex:1;min-width:180px;">
+                  <label for="prioritySelect" style="font-weight:500;color:var(--text-secondary);margin-bottom:0.25em;display:block;">Priority</label>
+                  <select id="prioritySelect" class="priority-select" style="width:100%;">
+                    <option value="low">🟢 Low Priority</option>
+                    <option value="medium">🟡 Medium Priority</option>
+                    <option value="high">🔴 High Priority</option>
+                  </select>
+                </div>
+                <div style="flex:2;min-width:220px;">
+                  <label style="font-weight:500;color:var(--text-secondary);margin-bottom:0.25em;display:block;">Attachments</label>
+                  <div class="file-input-wrapper" style="display:flex;align-items:center;gap:0.5em;">
+                    <input type="file" id="fileInput" class="file-input" accept="image/*,.pdf,.doc,.docx,.txt,video/*" multiple>
+                    <label for="fileInput" class="file-input-label" style="margin-bottom:0;">
+                      📎 Attach Files
+                    </label>
+                    <div id="fileUploadStatus" style="display:flex;align-items:center;gap:0.5em;"></div>
+                  </div>
+                </div>
+              </div>
+              <div style="display:flex;gap:var(--space-lg);flex-wrap:wrap;align-items:flex-end;">
+                <div style="flex:1;min-width:180px;">
+                  <label for="taskLink" style="font-weight:500;color:var(--text-secondary);margin-bottom:0.25em;display:block;">Link</label>
+                  <input type="url" id="taskLink" class="form-input" placeholder="Add a link (optional)" autocomplete="off">
+                </div>
+                <div style="flex:1;min-width:180px;">
+                  <label for="taskNote" style="font-weight:500;color:var(--text-secondary);margin-bottom:0.25em;display:block;">Note</label>
+                  <input type="text" id="taskNote" class="form-input" placeholder="Add a note (optional)" autocomplete="off">
+                </div>
+              </div>
+              <div style="margin-top:0.5em;">
+                <label style="font-weight:500;color:var(--text-secondary);margin-bottom:0.25em;display:block;">Custom Fields</label>
+                <button type="button" class="btn-secondary" id="addCustomFieldBtn" style="max-width:200px;margin-bottom:0.5em;">➕ Custom Field</button>
+                <div id="customFieldsContainer" style="width:100%;margin-top:0.5em;"></div>
+              </div>
+              <div style="display:flex;justify-content:flex-end;">
+                <button type="submit" class="btn-primary" style="font-size:1.1rem;padding:0.75em 2em;">
+                  ➕ Add Task
+                </button>
+              </div>
+              <div id="filePreviewList" style="margin-top: 0.5rem;"></div>
+            </form>
+          </div>
+
+          <!-- Task List -->
+          <div id="taskList" class="task-list">
+            <!-- Tasks will be populated here -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="app-footer">
+    <p class="footer-text">
+      Made with ❤️ by <a href="https://askharoun.dev" class="footer-link" target="_blank">Tom</a>
+    </p>
+  </footer>
+
+  <!-- Notification Container -->
+  <div id="notificationContainer"></div>
+
+  <!-- Custom Modal Popup -->
+  <div id="customModal" style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.25);z-index:20000;align-items:center;justify-content:center;">
+    <div id="customModalBox" style="background:white;padding:2em 2.5em;border-radius:16px;box-shadow:0 8px 40px rgba(0,0,0,0.18);min-width:320px;max-width:90vw;display:flex;flex-direction:column;align-items:center;">
+      <div id="customModalMessage" style="font-size:1.1em;color:var(--text-primary);margin-bottom:1.5em;text-align:center;"></div>
+      <div style="display:flex;gap:1.5em;">
+        <button id="customModalCancel" class="btn-secondary" style="min-width:90px;">Cancel</button>
+        <button id="customModalConfirm" class="btn-primary" style="min-width:90px;">Delete</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ========================================
+    // GLOBAL STATE & CONFIGURATION
+    // ========================================
+    let currentUser = null;
+    let currentFolder = null;
+    let appData = {
+      users: {},
+      semesters: [],
+      folders: [],
+      tasks: []
+    };
+
+    // Load data from localStorage
+    function loadData() {
+      const savedData = localStorage.getItem('academicPlannerData');
+      if (savedData) {
+        try {
+          appData = JSON.parse(savedData);
+        } catch (e) {
+          appData = { users: {}, semesters: [], folders: [], tasks: [] };
+          showNotification('Data corrupted. Resetting to default.', 'error');
+          saveData();
+        }
+      }
+    }
+
+    // Save data to localStorage
+    function saveData() {
+      localStorage.setItem('academicPlannerData', JSON.stringify(appData));
+    }
+
+    // ========================================
+    // THEME MANAGEMENT
+    // ========================================
+    const themeToggle = document.getElementById('themeToggle');
+    const body = document.body;
+
+    function initTheme() {
+      const savedTheme = localStorage.getItem('theme');
+      if (savedTheme === 'dark') {
+        body.classList.add('dark-mode');
+      } else if (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        body.classList.add('dark-mode');
+        localStorage.setItem('theme', 'dark');
+      }
+    }
+
+    themeToggle.addEventListener('click', () => {
+      body.classList.toggle('dark-mode');
+      const isDark = body.classList.contains('dark-mode');
+      localStorage.setItem('theme', isDark ? 'dark' : 'light');
+    });
+
+    // ========================================
+    // CLEAN NOTIFICATION SYSTEM
+    // ========================================
+    // Smart notification system
+    let notificationHistory = [];
+    function showNotification(message, type = 'success') {
+      const container = document.getElementById('notificationContainer') || createNotificationContainer();
+      // Prevent duplicate notifications (same message and type within 2s)
+      const now = Date.now();
+      notificationHistory = notificationHistory.filter(n => now - n.time < 2000);
+      if (notificationHistory.some(n => n.message === message && n.type === type)) return;
+      notificationHistory.push({ message, type, time: now });
+
+      // Group similar notifications (show count if same message appears quickly)
+      let existing = Array.from(container.children).find(n => n.dataset.message === message && n.dataset.type === type);
+      if (existing) {
+        let count = parseInt(existing.dataset.count || '1', 10) + 1;
+        existing.dataset.count = count;
+        existing.querySelector('.notification-text').textContent = `${message} (${count}x)`;
+        existing.classList.add('show');
+        setTimeout(() => hideNotification(existing), 3000);
+        return;
+      }
+
+      const notification = document.createElement('div');
+      notification.className = `notification ${type}`;
+      notification.dataset.message = message;
+      notification.dataset.type = type;
+      notification.dataset.count = 1;
+      notification.innerHTML = `
+        <div class="notification-content">
+          <span class="notification-text">${message}</span>
+          <button class="action-btn" style="font-size:1.2em;background:none;border:none;cursor:pointer;" title="Dismiss">✕</button>
+        </div>
+      `;
+      notification.querySelector('button').onclick = () => hideNotification(notification);
+      container.appendChild(notification);
+      setTimeout(() => {
+        notification.classList.add('show');
+      }, 50);
+      setTimeout(() => {
+        hideNotification(notification);
+      }, 3000);
+
+      // Limit to 3 visible notifications at once
+      const notifs = Array.from(container.children);
+      if (notifs.length > 3) {
+        for (let i = 0; i < notifs.length - 3; i++) {
+          hideNotification(notifs[i]);
+        }
+      }
+    }
+
+    function hideNotification(notification) {
+      notification.classList.remove('show');
+      setTimeout(() => {
+        if (notification.parentNode) {
+          notification.parentNode.removeChild(notification);
+        }
+      }, 300);
+    }
+
+    function createNotificationContainer() {
+      const container = document.createElement('div');
+      container.id = 'notificationContainer';
+      document.body.appendChild(container);
+      return container;
+    }
+
+    // ========================================
+    // UPLOAD PROGRESS SYSTEM
+    // ========================================
+    let uploadProgressElement = null;
+
+    function showUploadProgress(fileCount) {
+      if (uploadProgressElement) return;
+      
+      uploadProgressElement = document.createElement('div');
+      uploadProgressElement.className = 'upload-progress';
+      uploadProgressElement.innerHTML = `
+        <div class="upload-progress-header">
+          <span>📁</span>
+          <span>Uploading ${fileCount} file${fileCount > 1 ? 's' : ''}...</span>
+        </div>
+        <div class="upload-progress-bar">
+          <div class="upload-progress-fill" style="width: 0%"></div>
+        </div>
+        <div class="upload-progress-text">0%</div>
+      `;
+      
+      document.body.appendChild(uploadProgressElement);
+      
+      setTimeout(() => {
+        uploadProgressElement.classList.add('show');
+      }, 50);
+    }
+
+    function updateUploadProgress(percentage) {
+      if (!uploadProgressElement) return;
+      
+      const fill = uploadProgressElement.querySelector('.upload-progress-fill');
+      const text = uploadProgressElement.querySelector('.upload-progress-text');
+      
+      fill.style.width = `${percentage}%`;
+      text.textContent = `${Math.round(percentage)}%`;
+    }
+
+    function hideUploadProgress() {
+      if (!uploadProgressElement) return;
+      
+      updateUploadProgress(100);
+      
+      setTimeout(() => {
+        uploadProgressElement.classList.remove('show');
+        setTimeout(() => {
+          if (uploadProgressElement && uploadProgressElement.parentNode) {
+            uploadProgressElement.parentNode.removeChild(uploadProgressElement);
+            uploadProgressElement = null;
+          }
+        }, 300);
+      }, 500);
+    }
+
+    // ========================================
+    // ENHANCED AUTHENTICATION
+    // ========================================
+    function switchAuthTab(tab) {
+      const loginTab = document.getElementById('loginTab');
+      const registerTab = document.getElementById('registerTab');
+      const loginForm = document.getElementById('loginForm');
+      const registerForm = document.getElementById('registerForm');
+
+      if (tab === 'login') {
+        loginTab.classList.add('active');
+        registerTab.classList.remove('active');
+        loginForm.classList.remove('hidden');
+        registerForm.classList.add('hidden');
+      } else {
+        registerTab.classList.add('active');
+        loginTab.classList.remove('active');
+        registerForm.classList.remove('hidden');
+        loginForm.classList.add('hidden');
+      }
+    }
+
+    function login() {
+      const username = document.getElementById('loginUsername').value.trim();
+      const password = document.getElementById('loginPassword').value.trim();
+      
+      if (!username || !password) {
+        showNotification('Please fill in all fields!', 'error');
+        return;
+      }
+      
+      const user = appData.users[username];
+      if (!user) {
+        showNotification('Invalid username or password!', 'error');
+        return;
+      }
+      
+      // Check hashed password
+      const hashedPassword = btoa(password + 'salt' + username);
+      if (user.password !== hashedPassword) {
+        showNotification('Invalid username or password!', 'error');
+        return;
+      }
+      
+      // Update last login
+      user.lastLogin = new Date().toISOString();
+      saveData();
+      
+      currentUser = username;
+      showApp();
+      showNotification('Welcome!');
+    }
+
+    function register() {
+      const username = document.getElementById('regUsername').value.trim();
+      const password = document.getElementById('regPassword').value.trim();
+      
+      if (!username || !password) {
+        showNotification('Please fill in all fields!', 'error');
+        return;
+      }
+      
+      // Enhanced security checks
+      if (username.length < 3) {
+        showNotification('Username must be at least 3 characters!', 'error');
+        return;
+      }
+      
+      if (password.length < 8) {
+        showNotification('Password must be at least 8 characters!', 'error');
+        return;
+      }
+      
+      // Check for password complexity
+      const hasUpperCase = /[A-Z]/.test(password);
+      const hasLowerCase = /[a-z]/.test(password);
+      const hasNumbers = /\d/.test(password);
+      const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+      
+      if (!hasUpperCase || !hasLowerCase || !hasNumbers || !hasSpecialChar) {
+        showNotification('Password must contain uppercase, lowercase, numbers, and special characters!', 'error');
+        return;
+      }
+      
+      // Check for common weak passwords
+      const weakPasswords = ['password', '12345678', 'qwerty123', 'Password1', 'admin123'];
+      if (weakPasswords.some(weak => password.toLowerCase().includes(weak.toLowerCase()))) {
+        showNotification('Please choose a stronger password!', 'error');
+        return;
+      }
+      
+      if (appData.users[username]) {
+        showNotification('Username already exists!', 'error');
+        return;
+      }
+      
+      // Simple password hashing (in real app, use proper hashing)
+      const hashedPassword = btoa(password + 'salt' + username);
+      
+      // Create new user
+      appData.users[username] = {
+        password: hashedPassword,
+        created: new Date().toISOString(),
+        lastLogin: new Date().toISOString()
+      };
+      
+      saveData();
+      showNotification('Secure account created. Welcome!', 'success');
+      
+      // Auto login
+      currentUser = username;
+      showApp();
+    }
+
+    function showApp() {
+      document.getElementById('currentUsername').textContent = currentUser;
+      document.getElementById('loginScreen').style.display = 'none';
+      document.getElementById('appInterface').style.display = 'block';
+      loadUserData();
+    }
+
+    function logout() {
+      currentUser = null;
+      currentFolder = null;
+      document.getElementById('loginScreen').style.display = 'flex';
+      document.getElementById('appInterface').style.display = 'none';
+      showNotification('Logged out! 👋');
+    }
+
+    document.getElementById('logoutBtn').addEventListener('click', logout);
+
+    // ========================================
+    // SEMESTER MANAGEMENT
+    // ========================================
+    const semesterForm = document.getElementById('semesterForm');
+    const semesterInput = document.getElementById('semesterInput');
+    const semesterSelect = document.getElementById('semesterSelect');
+
+    // Inline error for blank semester
+    let semesterError = document.createElement('div');
+    semesterError.style.color = 'var(--error)';
+    semesterError.style.fontSize = '0.95em';
+    semesterError.style.marginTop = '0.25em';
+    semesterInput.parentNode.appendChild(semesterError);
+    semesterForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      semesterError.textContent = '';
+      const semesterName = semesterInput.value.trim();
+      if (!semesterName) {
+        semesterError.textContent = 'Semester name cannot be blank.';
+        semesterInput.classList.add('shake');
+        setTimeout(() => semesterInput.classList.remove('shake'), 500);
+        return;
+      }
+      if (!appData.semesters.includes(semesterName)) {
+        appData.semesters.push(semesterName);
+        updateSemesterSelect();
+        semesterInput.value = '';
+        showNotification(`Semester "${semesterName}" created! 📅`);
+        saveData();
+      } else {
+        showNotification('Semester already exists!', 'warning');
+        semesterInput.classList.add('shake');
+        setTimeout(() => semesterInput.classList.remove('shake'), 500);
+      }
+    });
+
+    function updateSemesterSelect() {
+      semesterSelect.innerHTML = '<option value="">Select Semester</option>';
+      appData.semesters.forEach(semester => {
+        const option = document.createElement('option');
+        option.value = semester;
+        option.textContent = semester;
+        semesterSelect.appendChild(option);
+      });
+    }
+
+    // ========================================
+    // FOLDER MANAGEMENT
+    // ========================================
+    const folderForm = document.getElementById('folderForm');
+    const folderInput = document.getElementById('folderInput');
+    const folderList = document.getElementById('folderList');
+
+    folderForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const folderName = folderInput.value.trim();
+      const selectedSemester = semesterSelect.value;
+      
+      if (folderName && selectedSemester) {
+        const folder = {
+          id: Date.now().toString(),
+          name: folderName,
+          semester: selectedSemester,
+          owner: currentUser,
+          created: new Date().toISOString()
+        };
+        
+        appData.folders.push(folder);
+        folderInput.value = '';
+        semesterSelect.value = '';
+        updateFolderList();
+        showNotification(`Folder "${folderName}" created! 📂`);
+        saveData();
+      } else {
+        showNotification('Please select a semester and enter a folder name!', 'warning');
+        if (!selectedSemester) {
+          semesterSelect.classList.add('shake');
+          setTimeout(() => semesterSelect.classList.remove('shake'), 500);
+        }
+        if (!folderName) {
+          folderInput.classList.add('shake');
+          setTimeout(() => folderInput.classList.remove('shake'), 500);
+        }
+      }
+    });
+
+    function updateFolderList() {
+      const userFolders = appData.folders.filter(folder => folder.owner === currentUser && !folder.archived);
+      folderList.innerHTML = '';
+      if (userFolders.length === 0) {
+        folderList.innerHTML = '<p style="color: var(--text-secondary); text-align: center; padding: var(--space-lg);">No folders yet. Create your first folder above! 📁</p>';
+      } else {
+        userFolders.forEach(folder => {
+          const taskCount = appData.tasks.filter(task => task.folderId === folder.id).length;
+          const completedCount = appData.tasks.filter(task => task.folderId === folder.id && task.completed).length;
+          const folderElement = document.createElement('div');
+          folderElement.className = 'folder-item';
+          folderElement.innerHTML = `
+            <div class="folder-info">
+              <div class="folder-name">📁 ${folder.name}</div>
+              <div class="folder-meta">${folder.semester} • ${taskCount} tasks • ${completedCount} completed</div>
+            </div>
+            <div class="folder-actions">
+              <button class="action-btn" onclick="editFolder('${folder.id}')" title="Edit">✏️</button>
+              <button class="action-btn" onclick="archiveFolder('${folder.id}')" title="Archive">🗄️</button>
+              <button class="action-btn" onclick="deleteFolder('${folder.id}')" title="Delete">🗑️</button>
+            </div>
+          `;
+          folderElement.addEventListener('click', (e) => {
+            if (!e.target.closest('.folder-actions')) {
+              selectFolder(folder);
+            }
+          });
+          folderList.appendChild(folderElement);
+        });
+      }
+      updateArchiveList();
+    }
+
+    function updateArchiveList() {
+      const archiveList = document.getElementById('archiveList');
+      const archivedFolders = appData.folders.filter(folder => folder.owner === currentUser && folder.archived);
+      archiveList.innerHTML = '';
+      if (archivedFolders.length === 0) {
+        archiveList.innerHTML = '<p style="color: var(--text-secondary); text-align: center; padding: var(--space-lg);">No archived folders.</p>';
+        return;
+      }
+      archivedFolders.forEach(folder => {
+        const taskCount = appData.tasks.filter(task => task.folderId === folder.id).length;
+        const completedCount = appData.tasks.filter(task => task.folderId === folder.id && task.completed).length;
+        const folderElement = document.createElement('div');
+        folderElement.className = 'folder-item';
+        folderElement.innerHTML = `
+          <div class="folder-info">
+            <div class="folder-name">📁 ${folder.name}</div>
+            <div class="folder-meta">${folder.semester} • ${taskCount} tasks • ${completedCount} completed</div>
+          </div>
+          <div class="folder-actions">
+            <button class="action-btn" onclick="unarchiveFolder('${folder.id}')" title="Unarchive">↩️</button>
+            <button class="action-btn" onclick="deleteFolder('${folder.id}')" title="Delete">🗑️</button>
+          </div>
+        `;
+        folderElement.addEventListener('click', (e) => {
+          if (!e.target.closest('.folder-actions')) {
+            selectFolder(folder);
+          }
+        });
+        archiveList.appendChild(folderElement);
+      });
+    }
+
+    function selectFolder(folder) {
+      currentFolder = folder;
+      // Update active state
+      document.querySelectorAll('.folder-item').forEach(item => {
+        item.classList.remove('active');
+        const label = item.querySelector('.selected-class-label');
+        if (label) label.remove();
+      });
+      // Find the sidebar element for this folder and add a subtle label
+      const sidebarItems = Array.from(document.querySelectorAll('.folder-item'));
+      const idx = sidebarItems.findIndex(item => item.textContent.includes(folder.name));
+      if (idx !== -1) {
+        sidebarItems[idx].classList.add('active');
+        // Add a subtle label to the right
+        const label = document.createElement('span');
+        label.textContent = 'Selected';
+        label.className = 'selected-class-label';
+        label.style.cssText = 'margin-left:auto;color:var(--primary);font-size:0.95em;font-weight:600;background:rgba(45,108,223,0.08);padding:2px 10px;border-radius:8px;';
+        sidebarItems[idx].appendChild(label);
+      }
+      // Update content area
+      updateContentArea();
+      loadTasks();
+    }
+
+    function editFolder(folderId) {
+      const folder = appData.folders.find(f => f.id === folderId);
+      if (folder) {
+        const newName = prompt('Enter new folder name:', folder.name);
+        if (newName && newName.trim()) {
+          folder.name = newName.trim();
+          updateFolderList();
+          if (currentFolder && currentFolder.id === folderId) {
+            updateContentArea();
+          }
+          showNotification('Folder renamed! ✏️');
+          saveData();
+        }
+      }
+    }
+
+    function deleteFolder(folderId) {
+      const folder = appData.folders.find(f => f.id === folderId);
+      if (folder) {
+        showCustomModal(`Are you sure you want to delete "${folder.name}" and all its tasks?`, () => {
+          // Remove folder
+          appData.folders = appData.folders.filter(f => f.id !== folderId);
+          // Remove all tasks in this folder
+          appData.tasks = appData.tasks.filter(t => t.folderId !== folderId);
+          if (currentFolder && currentFolder.id === folderId) {
+            currentFolder = null;
+            clearContent();
+          }
+          updateFolderList();
+          showNotification('Folder deleted successfully.');
+          saveData();
+        });
+      }
+    }
+
+    function showCustomModal(message, onConfirm) {
+      const modal = document.getElementById('customModal');
+      document.getElementById('customModalMessage').textContent = message;
+      modal.style.display = 'flex';
+      function cleanup() {
+        modal.style.display = 'none';
+        document.getElementById('customModalCancel').onclick = null;
+        document.getElementById('customModalConfirm').onclick = null;
+      }
+      document.getElementById('customModalCancel').onclick = () => {
+        cleanup();
+      };
+      document.getElementById('customModalConfirm').onclick = () => {
+        cleanup();
+        if (onConfirm) onConfirm();
+      };
+    }
+
+    function archiveFolder(folderId) {
+      const folder = appData.folders.find(f => f.id === folderId);
+      if (folder) {
+        showCustomModal(`Archive folder "${folder.name}"? You can restore it anytime from the archive.`, () => {
+          folder.archived = true;
+          if (currentFolder && currentFolder.id === folderId) {
+            currentFolder = null;
+            clearContent();
+          }
+          updateFolderList();
+          showNotification('Folder archived.');
+          saveData();
+        });
+      }
+    }
+
+    function unarchiveFolder(folderId) {
+      const folder = appData.folders.find(f => f.id === folderId);
+      if (folder) {
+        showCustomModal(`Restore folder "${folder.name}" from archive?`, () => {
+          folder.archived = false;
+          updateFolderList();
+          showNotification('Folder restored.');
+          saveData();
+        });
+      }
+    }
+
+    // ========================================
+    // ENHANCED TASK MANAGEMENT
+    // ========================================
+    const taskForm = document.getElementById('taskForm');
+    const taskInput = document.getElementById('taskInput');
+    const prioritySelect = document.getElementById('prioritySelect');
+    const fileInput = document.getElementById('fileInput');
+    const taskList = document.getElementById('taskList');
+    const taskInputSection = document.getElementById('taskInputSection');
+
+    // Helper: get file icon by type
+    function getFileIcon(type, name) {
+      if (type.startsWith('image/')) return '🖼️';
+      if (type.startsWith('video/')) return '🎥';
+      if (type === 'application/pdf') return '📄';
+      if (type.includes('word')) return '📃';
+      if (type.includes('excel')) return '📊';
+      if (type.includes('text')) return '📑';
+      if (type.includes('zip') || name.endsWith('.zip')) return '🗜️';
+      if (type.includes('audio')) return '🎵';
+      return '📎';
+    }
+
+    taskForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      if (!currentFolder) {
+        showNotification('Please select a folder first!', 'warning');
+        return;
+      }
+      const taskText = taskInput.value.trim();
+      if (!taskText) {
+        showNotification('Task cannot be empty!', 'warning');
+        return;
+      }
+      const taskLink = document.getElementById('taskLink').value.trim();
+      const taskNote = document.getElementById('taskNote').value.trim();
+      // Gather custom fields
+      const customFields = {};
+      Array.from(customFieldsContainer.children).forEach(div => {
+        const [keyInput, valueInput] = div.querySelectorAll('input');
+        if (keyInput && valueInput && keyInput.value.trim()) {
+          customFields[keyInput.value.trim()] = valueInput.value.trim();
+        }
+      });
+      const files = Array.from(fileInput.files);
+      const baseTask = {
+        id: Date.now().toString(),
+        text: sanitizeInput(taskText),
+        priority: prioritySelect.value,
+        completed: false,
+        folderId: currentFolder.id,
+        owner: currentUser,
+        created: new Date().toISOString(),
+        attachments: [],
+        link: taskLink ? sanitizeInput(taskLink) : undefined,
+        note: taskNote ? sanitizeInput(taskNote) : undefined,
+        custom: Object.keys(customFields).length ? customFields : undefined
+      };
+      // Only use localStorage for now
+      appData.tasks.push(baseTask);
+      saveData();
+      taskInput.value = '';
+      fileInput.value = '';
+      filePreviewList.innerHTML = '';
+      pendingFiles = [];
+      prioritySelect.value = 'low';
+      document.getElementById('taskLink').value = '';
+      document.getElementById('taskNote').value = '';
+      customFieldsContainer.innerHTML = '';
+      showNotification('Task added.');
+      loadTasks();
+    });
+
+    function loadTasks() {
+      if (!currentFolder) {
+        taskList.innerHTML = '';
+        return;
+      }
+      // Newest first, completed always at the bottom
+      let folderTasks = appData.tasks.filter(task => task.folderId === currentFolder.id);
+      const incomplete = folderTasks.filter(t => !t.completed).sort((a, b) => b.created.localeCompare(a.created));
+      const complete = folderTasks.filter(t => t.completed).sort((a, b) => b.created.localeCompare(a.created));
+      folderTasks = [...incomplete, ...complete];
+      taskList.innerHTML = '';
+      if (folderTasks.length === 0) {
+        taskList.innerHTML = '<p style="color: var(--text-secondary); text-align: center; padding: var(--space-xl);">No tasks yet. Add your first task above! ✨</p>';
+        return;
+      }
+      folderTasks.forEach(task => {
+        const taskElement = createTaskElement(task);
+        taskList.appendChild(taskElement);
+      });
+    }
+
+    function createTaskElement(task) {
+      const taskElement = document.createElement('div');
+      taskElement.className = `task-item ${task.completed ? 'completed' : ''}`;
+      const attachmentsHtml = (task.attachments || []).map(attachment => {
+        if (attachment.type.startsWith('image/')) {
+          return `<img src="${attachment.data}" alt="${attachment.name}" class="task-image" onclick="openAttachmentInNewTab('${attachment.data}', '${attachment.name}', '${attachment.type}')" title="Click to open in new tab">`;
+        } else if (attachment.type.startsWith('video/')) {
+          return `<div class="attachment-item video-attachment" onclick="openAttachmentInNewTab('${attachment.data}', '${attachment.name}', '${attachment.type}')">🎥 ${attachment.name} <span class="attachment-size">(${formatFileSize(attachment.size)})</span></div>`;
+        } else if (attachment.type === 'application/pdf') {
+          return `<div class="attachment-item pdf-attachment" onclick="openAttachmentInNewTab('${attachment.data}', '${attachment.name}', '${attachment.type}')">📄 ${attachment.name} <span class="attachment-size">(${formatFileSize(attachment.size)})</span></div>`;
+        } else {
+          return `<div class="attachment-item" onclick="openAttachmentInNewTab('${attachment.data}', '${attachment.name}', '${attachment.type}')">${getFileIcon(attachment.type, attachment.name)} ${attachment.name} <span class="attachment-size">(${formatFileSize(attachment.size)})</span></div>`;
+        }
+      }).join('');
+      // Links, notes, custom fields
+      let extraHtml = '';
+      if (task.link) {
+        extraHtml += `<div style='margin-top:0.5em;'><a href='${task.link}' target='_blank' style='color:var(--primary);text-decoration:underline;word-break:break-all;'>🔗 ${task.link}</a></div>`;
+      }
+      if (task.note) {
+        extraHtml += `<div style='margin-top:0.5em;color:var(--text-secondary);font-style:italic;'>📝 ${task.note}</div>`;
+      }
+      if (task.custom) {
+        extraHtml += `<div style='margin-top:0.5em;'><b>Custom:</b> ` + Object.entries(task.custom).map(([k,v]) => `<span style='background:rgba(45,108,223,0.08);padding:2px 6px;border-radius:6px;margin-right:4px;'>${k}: ${v}</span>`).join('') + `</div>`;
+      }
+      taskElement.innerHTML = `
+        <div class="task-header">
+          <div style="display: flex; align-items: flex-start; gap: var(--space-md); flex: 1;">
+            <div class="task-checkbox ${task.completed ? 'checked' : ''}" onclick="toggleTask('${task.id}')"></div>
+            <div class="task-content">
+              <div class="task-text">${formatTaskText(task.text)}</div>
+              <div class="task-meta">
+                <span class="priority-badge priority-${task.priority}">${task.priority}</span>
+                <span>Created: ${new Date(task.created).toLocaleDateString()}</span>
+              </div>
+              <div class="task-attachments">${attachmentsHtml}</div>
+              ${extraHtml}
+            </div>
+          </div>
+          <div class="task-actions">
+            <button class="action-btn" onclick="editTask('${task.id}')" title="Edit">✏️</button>
+            <button class="action-btn" onclick="deleteTask('${task.id}')" title="Delete">🗑️</button>
+          </div>
+        </div>
+      `;
+      return taskElement;
+    }
+
+    function formatTaskText(text) {
+      // Convert URLs to clickable links
+      const urlRegex = /(https?:\/\/[^\s]+)/g;
+      return text.replace(urlRegex, '<a href="$1" target="_blank" style="color: var(--primary);">$1</a>');
+    }
+
+    function toggleTask(taskId) {
+      const task = appData.tasks.find(t => t.id === taskId);
+      if (task) {
+        task.completed = !task.completed;
+        if (task.completed) {
+          task.completedAt = new Date().toISOString();
+          confettiEffect();
+        } else {
+          delete task.completedAt;
+        }
+        loadTasks();
+        updateFolderList();
+        updateStats();
+        showNotification(task.completed ? 'Task completed.' : 'Task reopened.');
+        saveData();
+      }
+    }
+
+    function editTask(taskId) {
+      const task = appData.tasks.find(t => t.id === taskId);
+      if (task) {
+        const newText = prompt('Edit task:', task.text);
+        if (newText && newText.trim()) {
+          task.text = newText.trim();
+          task.lastModified = new Date().toISOString();
+          loadTasks();
+          updateStats();
+          showNotification('Task updated.');
+          saveData();
+        }
+      }
+    }
+
+    function deleteTask(taskId) {
+      const task = appData.tasks.find(t => t.id === taskId);
+      if (task) {
+        showCustomModal('Are you sure you want to delete this task?', () => {
+          appData.tasks = appData.tasks.filter(t => t.id !== taskId);
+          loadTasks();
+          updateFolderList();
+          updateStats();
+          showNotification('Task deleted.');
+          saveData();
+        });
+      }
+    }
+
+    // Enhanced file handling
+    function openAttachmentInNewTab(data, name, type) {
+      // For images, open in new tab directly
+      if (type.startsWith('image/')) {
+        const win = window.open();
+        win.document.write(`<title>${name}</title><img src='${data}' alt='${name}' style='max-width:100vw;max-height:100vh;display:block;margin:auto;'/>`);
+        return;
+      }
+      // For PDFs, open in new tab
+      if (type === 'application/pdf') {
+        const win = window.open();
+        win.document.write(`<title>${name}</title><iframe src='${data}' style='width:100vw;height:100vh;border:none;'></iframe>`);
+        return;
+      }
+      // For videos
+      if (type.startsWith('video/')) {
+        const win = window.open();
+        win.document.write(`<title>${name}</title><video src='${data}' controls style='max-width:100vw;max-height:100vh;display:block;margin:auto;'></video>`);
+        return;
+      }
+      // For other files, trigger download or open
+      const a = document.createElement('a');
+      a.href = data;
+      a.download = name;
+      a.target = '_blank';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    }
+
+    // File preview before upload
+    const filePreviewList = document.getElementById('filePreviewList');
+    // Professional file attachment UI
+    let pendingFiles = [];
+    fileInput.addEventListener('change', function() {
+      const files = Array.from(fileInput.files);
+      if (files.length === 0) return;
+      // Add new files to pendingFiles (avoid duplicates by name/size)
+      files.forEach(file => {
+        if (!pendingFiles.some(f => f.name === file.name && f.size === file.size)) {
+          pendingFiles.push({ file, progress: 0, uploaded: false, data: null });
+        }
+      });
+      updateFileUploadStatus();
+      // Start reading files (simulate upload)
+      pendingFiles.forEach((pf, idx) => {
+        if (!pf.uploaded && !pf.reading) {
+          pf.reading = true;
+          const reader = new FileReader();
+          reader.onprogress = (e) => {
+            if (e.lengthComputable) {
+              pf.progress = Math.round((e.loaded / e.total) * 100);
+              updateFileUploadStatus();
+            }
+          };
+          reader.onload = (e) => {
+            pf.data = e.target.result;
+            pf.progress = 100;
+            pf.uploaded = true;
+            updateFileUploadStatus();
+          };
+          reader.readAsDataURL(pf.file);
+        }
+      });
+    });
+
+    // Attachment confirmation block UI
+    function updateFileUploadStatus() {
+      const statusDiv = document.getElementById('fileUploadStatus');
+      statusDiv.innerHTML = '';
+      if (pendingFiles.length === 0) return;
+      // Confirmation block for each fully uploaded file
+      pendingFiles.forEach((pf, idx) => {
+        if (pf.progress === 100) {
+          const confirmBlock = document.createElement('div');
+          confirmBlock.style.display = 'inline-flex';
+          confirmBlock.style.alignItems = 'center';
+          confirmBlock.style.gap = '0.5em';
+          confirmBlock.style.background = 'rgba(0,200,83,0.08)';
+          confirmBlock.style.border = '1px solid var(--success)';
+          confirmBlock.style.borderRadius = '6px';
+          confirmBlock.style.padding = '4px 10px';
+          confirmBlock.style.marginRight = '0.5em';
+          confirmBlock.style.fontWeight = '500';
+          confirmBlock.innerHTML = `
+            <span style='color:var(--success);font-size:1.2em;'>✔️</span>
+            <span style='color:var(--success);'>${pf.file.name} attached</span>
+            <button type='button' class='action-btn' title='Remove' style='font-size:1.1em;color:var(--error);background:none;border:none;'>🗑️</button>
+          `;
+          confirmBlock.querySelector('button').onclick = () => {
+            pendingFiles.splice(idx, 1);
+            updateFileUploadStatus();
+          };
+          statusDiv.appendChild(confirmBlock);
+        } else {
+          // Show progress bar for files still uploading
+          const progressBlock = document.createElement('div');
+          progressBlock.style.display = 'inline-flex';
+          progressBlock.style.alignItems = 'center';
+          progressBlock.style.gap = '0.5em';
+          progressBlock.style.background = 'rgba(45,108,223,0.06)';
+          progressBlock.style.borderRadius = '6px';
+          progressBlock.style.padding = '2px 10px';
+          progressBlock.style.marginRight = '0.5em';
+          progressBlock.innerHTML = `
+            <span>${getFileIcon(pf.file.type, pf.file.name)}</span>
+            <span style='font-size:0.95em;'>${pf.file.name}</span>
+            <span style='width:60px;display:inline-block;'>
+              <div style='background:var(--border);height:6px;width:100%;border-radius:3px;overflow:hidden;position:relative;'>
+                <div style='height:100%;background:linear-gradient(90deg,var(--primary),var(--secondary));width:${pf.progress}%;border-radius:3px;transition:width 0.3s;'></div>
+              </div>
+            </span>
+          `;
+          statusDiv.appendChild(progressBlock);
+        }
+      });
+    }
+
+    // ========================================
+    // UI HELPERS WITH REAL-TIME STATS
+    // ========================================
+    function updateContentArea() {
+      const contentTitle = document.getElementById('contentTitle');
+      
+      if (currentFolder) {
+        contentTitle.textContent = `📁 ${currentFolder.name}`;
+        updateStats();
+        taskInputSection.style.display = 'block';
+      } else {
+        contentTitle.textContent = 'Select a folder to get started';
+        document.getElementById('folderStats').innerHTML = '';
+        taskInputSection.style.display = 'none';
+      }
+    }
+
+    function updateStats() {
+      const folderStats = document.getElementById('folderStats');
+      if (!currentFolder) return;
+      
+      const taskCount = appData.tasks.filter(task => task.folderId === currentFolder.id).length;
+      const completedCount = appData.tasks.filter(task => task.folderId === currentFolder.id && task.completed).length;
+      const pendingCount = taskCount - completedCount;
+      const completionRate = taskCount > 0 ? Math.round((completedCount / taskCount) * 100) : 0;
+      
+      folderStats.innerHTML = `
+        <div style="display: flex; gap: var(--space-lg); align-items: center; animation: statsUpdate 0.5s ease-out;">
+          <span style="color: var(--success); display: flex; align-items: center; gap: var(--space-xs);">
+            ✅ <span style="font-weight: 600;">${completedCount}</span> completed
+          </span>
+          <span style="color: var(--warning); display: flex; align-items: center; gap: var(--space-xs);">
+            ⏳ <span style="font-weight: 600;">${pendingCount}</span> pending
+          </span>
+          <span style="color: var(--text-secondary); display: flex; align-items: center; gap: var(--space-xs);">
+            📊 <span style="font-weight: 600;">${taskCount}</span> total
+          </span>
+          <div style="background: linear-gradient(90deg, var(--success) ${completionRate}%, var(--border) ${completionRate}%); height: 8px; width: 100px; border-radius: 4px; margin-left: auto;"></div>
+          <span style="color: var(--primary); font-weight: 700; font-family: var(--font-heading);">${completionRate}%</span>
+        </div>
+      `;
+      
+      // Add animation styles if not already added
+      if (!document.getElementById('statsAnimation')) {
+        const style = document.createElement('style');
+        style.id = 'statsAnimation';
+        style.textContent = `
+          @keyframes statsUpdate {
+            0% { transform: scale(0.95); opacity: 0.7; }
+            100% { transform: scale(1); opacity: 1; }
+          }
+        `;
+        document.head.appendChild(style);
+      }
+    }
+
+    function confettiEffect() {
+      // Create confetti animation
+      for (let i = 0; i < 50; i++) {
+        const confetti = document.createElement('div');
+        confetti.style.cssText = `
+          position: fixed;
+          width: 10px;
+          height: 10px;
+          background: ${['var(--primary)', 'var(--secondary)', 'var(--success)', 'var(--warning)'][Math.floor(Math.random() * 4)]};
+          left: ${Math.random() * 100}vw;
+          top: -10px;
+          z-index: 9999;
+          animation: confettiFall ${2 + Math.random() * 3}s linear forwards;
+          border-radius: ${Math.random() > 0.5 ? '50%' : '0'};
+          transform: rotate(${Math.random() * 360}deg);
+        `;
+        
+        document.body.appendChild(confetti);
+        
+        setTimeout(() => {
+          if (document.body.contains(confetti)) {
+            document.body.removeChild(confetti);
+          }
+        }, 5000);
+      }
+      
+      // Add confetti animation styles if not already added
+      if (!document.getElementById('confettiAnimation')) {
+        const style = document.createElement('style');
+        style.id = 'confettiAnimation';
+        style.textContent = `
+          @keyframes confettiFall {
+            0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+          }
+        `;
+        document.head.appendChild(style);
+      }
+    }
+
+    function clearContent() {
+      document.getElementById('contentTitle').textContent = 'Select a folder to get started';
+      document.getElementById('folderStats').innerHTML = '';
+      taskInputSection.style.display = 'none';
+      taskList.innerHTML = '';
+    }
+
+    function loadUserData() {
+      updateSemesterSelect();
+      updateFolderList();
+      clearContent();
+    }
+
+    // ========================================
+    // INITIALIZATION
+    // ========================================
+    document.addEventListener('DOMContentLoaded', () => {
+      initTheme();
+      loadData();
+      
+      // Show welcome message
+      setTimeout(() => {
+        showNotification('Welcome!');
+      }, 1000);
+      
+      // Add pulse effect to login buttons
+      setTimeout(() => {
+        document.querySelectorAll('.btn-primary').forEach(btn => {
+          btn.style.animation = 'buttonPulse 2s ease-in-out infinite';
+        });
+      }, 2000);
+      
+      // Add button pulse animation
+      const style = document.createElement('style');
+      style.textContent = `
+        @keyframes buttonPulse {
+          0%, 100% { box-shadow: 0 4px 15px rgba(45, 108, 223, 0.3); }
+          50% { box-shadow: 0 6px 25px rgba(45, 108, 223, 0.5); }
+        }
+        @keyframes fadeOut {
+          0% { opacity: 1; }
+          100% { opacity: 0; }
+        }
+      `;
+      document.head.appendChild(style);
+    });
+
+    // Save data before page unload
+    window.addEventListener('beforeunload', saveData);
+    
+    // Add error handling for all forms
+    function addErrorHandling() {
+      // Handle login form errors
+      document.getElementById('loginUsername').addEventListener('blur', function() {
+        if (this.value.trim().length < 3) {
+          this.style.borderColor = 'var(--error)';
+          showNotification('Username must be at least 3 characters', 'error');
+        } else {
+          this.style.borderColor = 'var(--border)';
+        }
+      });
+      
+      document.getElementById('loginPassword').addEventListener('blur', function() {
+        if (this.value.length < 8) {
+          this.style.borderColor = 'var(--error)';
+          showNotification('Password must be at least 8 characters', 'error');
+        } else {
+          this.style.borderColor = 'var(--border)';
+        }
+      });
+      
+      // Handle register form errors
+      document.getElementById('regUsername').addEventListener('blur', function() {
+        if (this.value.trim().length < 3) {
+          this.style.borderColor = 'var(--error)';
+          showNotification('Username must be at least 3 characters', 'error');
+        } else if (appData.users[this.value.trim()]) {
+          this.style.borderColor = 'var(--error)';
+          showNotification('Username already exists!', 'error');
+        } else {
+          this.style.borderColor = 'var(--success)';
+          showNotification('Username available!', 'success');
+        }
+      });
+      
+      document.getElementById('regPassword').addEventListener('input', function() {
+        const password = this.value;
+        if (password.length < 8) {
+          this.style.borderColor = 'var(--error)';
+          return;
+        }
+        
+        const hasUpperCase = /[A-Z]/.test(password);
+        const hasLowerCase = /[a-z]/.test(password);
+        const hasNumbers = /\d/.test(password);
+        const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+        
+        if (!hasUpperCase || !hasLowerCase || !hasNumbers || !hasSpecialChar) {
+          this.style.borderColor = 'var(--warning)';
+        } else {
+          this.style.borderColor = 'var(--success)';
+        }
+      });
+      
+      // Handle folder/semester form errors
+      document.getElementById('semesterInput').addEventListener('blur', function() {
+        if (this.value.trim().length < 1) {
+          this.style.borderColor = 'var(--error)';
+          showNotification('Semester name cannot be empty', 'error');
+        } else if (appData.semesters.includes(this.value.trim())) {
+          this.style.borderColor = 'var(--warning)';
+          showNotification('Semester already exists', 'warning');
+        } else {
+          this.style.borderColor = 'var(--success)';
+        }
+      });
+      
+      document.getElementById('folderInput').addEventListener('blur', function() {
+        if (this.value.trim().length < 1) {
+          this.style.borderColor = 'var(--error)';
+          showNotification('Folder name cannot be empty', 'error');
+        } else {
+          this.style.borderColor = 'var(--success)';
+        }
+      });
+      
+      document.getElementById('taskInput').addEventListener('blur', function() {
+        if (this.value.trim().length < 1) {
+          this.style.borderColor = 'var(--error)';
+          showNotification('Task cannot be empty', 'error');
+        } else {
+          this.style.borderColor = 'var(--success)';
+        }
+      });
+    }
+    
+    // Initialize error handling after DOM is loaded
+    document.addEventListener('DOMContentLoaded', addErrorHandling);
+
+    // Enable Enter key for login/register
+    document.getElementById('loginForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      login();
+    });
+    document.getElementById('registerForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      register();
+    });
+
+    // Custom fields logic
+    const customFieldsContainer = document.getElementById('customFieldsContainer');
+    document.getElementById('addCustomFieldBtn').addEventListener('click', function() {
+      const div = document.createElement('div');
+      div.style.display = 'flex';
+      div.style.gap = '0.5em';
+      div.style.marginBottom = '0.25em';
+      div.innerHTML = `<input type='text' class='form-input' placeholder='Field name' style='max-width:120px;'> <input type='text' class='form-input' placeholder='Value' style='max-width:120px;'><button type='button' class='action-btn' title='Remove' style='font-size:1.2em;'>✕</button>`;
+      div.querySelector('button').onclick = () => div.remove();
+      customFieldsContainer.appendChild(div);
+    });
+
+    // Archived dropdown logic
+    const archivedDropdownBtn = document.getElementById('archivedDropdownBtn');
+    const archiveList = document.getElementById('archiveList');
+    const archivedDropdownIcon = document.getElementById('archivedDropdownIcon');
+    archivedDropdownBtn.addEventListener('click', function() {
+      if (archiveList.style.display === 'none') {
+        archiveList.style.display = 'block';
+        archivedDropdownIcon.textContent = '▲';
+      } else {
+        archiveList.style.display = 'none';
+        archivedDropdownIcon.textContent = '▼';
+      }
+    });
+
+    // ... existing code ...
+    function sanitizeInput(str) {
+      return String(str).replace(/[&<>"]/g, function(c) {
+        return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];
+      });
+    }
+    // Use sanitizeInput() on all user-provided text before saving or displaying.
+    // ... existing code ...
+  </script>
+</body>
+</html>
