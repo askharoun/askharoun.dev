@@ -1,18 +1,19 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <!-- Basic -->
+  
+  <script type="text/javascript">
+        (function(c,l,a,r,i,t,y){
+            c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+            t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+            y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+        })(window, document, "clarity", "script", "rmcsekaion");
+  </script>
+
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>You’ve Been Invited 💍</title>
+  <title>Tap Me</title>
   <meta name="theme-color" content="#000000" />
-
-  <!-- Link Preview bait (edit as you like) -->
-  <meta property="og:title" content="Your Access Link: The Ring" />
-  <meta property="og:description" content="Tap to view. Mobile-optimized." />
-  <meta property="og:image" content="poster.jpg" />
-  <meta property="og:type" content="website" />
-
   <style>
     :root { --accent:#ffbd59; }
     * { box-sizing: border-box; }
@@ -20,147 +21,132 @@
     body {
       margin: 0; background: #000; color:#fff;
       font-family: system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial, sans-serif;
-      -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility;
     }
 
-    /* Full-bleed video */
+    /* Full-bleed video (initially hidden behind overlay) */
     .wrap { position: fixed; inset: 0; }
     video {
       width: 100%; height: 100%;
       object-fit: cover; display: block; background:#000;
     }
 
-    /* Overlay for “tap for sound” */
-    .overlay {
+    /* Centered “Tap me” screen */
+    .gate {
       position: fixed; inset: 0;
-      display: grid; place-items: end center;
-      padding: max(16px, env(safe-area-inset-bottom));
-      background: linear-gradient(to top, rgba(0,0,0,0.55), transparent 40%);
-      transition: opacity .25s ease;
+      display: grid; place-items: center;
+      background:
+        radial-gradient(1200px 1200px at 50% 110%, rgba(255,255,255,0.05), transparent 60%),
+        #000;
+      padding: 24px;
     }
-    .overlay.hidden { opacity: 0; pointer-events: none; }
-
-    .cta {
-      pointer-events: auto;
-      display: inline-flex; align-items: center; gap: 8px;
+    .card {
+      text-align: center;
+      padding: 28px 24px;
       background: rgba(0,0,0,0.6);
-      border: 1px solid rgba(255,255,255,0.25);
-      padding: 12px 16px; border-radius: 999px;
-      font-weight: 700; letter-spacing: .2px;
-      box-shadow: 0 6px 24px rgba(0,0,0,0.35);
-      backdrop-filter: blur(6px);
-      user-select: none;
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 20px;
+      backdrop-filter: blur(8px);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+      max-width: 480px;
+      width: 100%;
     }
-    .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); }
+    h1 {
+      margin: 0 0 12px; font-size: 22px; font-weight: 800; letter-spacing:.2px;
+    }
+    p {
+      margin: 0 0 20px; color: #bbb; font-size: 14px;
+    }
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+      width: 100%;
+      border: 1px solid rgba(255,255,255,0.25);
+      background: linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.02));
+      border-radius: 999px;
+      padding: 14px 18px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: .6px;
+      color: #fff;
+      cursor: pointer;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.45);
+      transition: transform .05s ease, border-color .2s ease;
+    }
+    .btn:active { transform: translateY(1px) scale(.995); }
+    .ping {
+      width: 10px; height: 10px; border-radius: 50%; background: var(--accent);
+      box-shadow: 0 0 0 6px rgba(255,189,89,0.15), 0 0 24px rgba(255,189,89,0.5);
+    }
 
     /* Tiny status pill */
     .badge {
       position: fixed;
       top: calc(env(safe-area-inset-top) + 12px);
       right: 12px;
-      font-size: 12px; opacity:.85;
+      font-size: 12px; opacity:.9;
       background: rgba(0,0,0,0.55);
       border: 1px solid rgba(255,255,255,0.2);
       border-radius: 999px; padding: 6px 10px;
     }
 
-    /* Optional subtle loader text for the first second */
-    .intro {
-      position: fixed; inset: 0; display:grid; place-items:center;
-      color:#ddd; font-weight:600; letter-spacing:.3px;
-      opacity: 0; animation: pop .6s .2s both;
-      text-shadow: 0 2px 20px rgba(0,0,0,.5);
+    @media (min-width: 768px) {
+      h1 { font-size: 26px; }
+      p { font-size: 15px; }
     }
-    @keyframes pop { from { opacity:0 } to { opacity:1 } }
   </style>
 </head>
 <body>
   <div class="wrap">
-    <!-- Keep playsinline to avoid forced fullscreen on iOS. Start muted for mobile policy. -->
-    <video id="vid" playsinline autoplay muted loop preload="auto" poster="poster.jpg">
+    <!-- No autoplay. We’ll start on button click with sound. -->
+    <video id="vid" playsinline preload="auto" poster="poster.jpg" loop>
       <source src="videoplayback.mp4" type="video/mp4" />
       Your browser doesn’t support MP4 playback.
     </video>
   </div>
 
-  <div id="badge" class="badge">Autoplay · Muted</div>
+  <div id="badge" class="badge">Idle · Sound off</div>
 
-  <div class="intro" id="intro">Loading…</div>
-
-  <div class="overlay" id="overlay">
-    <button class="cta" id="cta">
-      <span class="dot" aria-hidden="true"></span> 🔊 Tap for sound
-    </button>
+  <!-- Gated start screen -->
+  <div class="gate" id="gate">
+    <div class="card">
+      <h1>Tap me</h1>
+      <button id="startBtn" class="btn" aria-label="Tap to start with sound">
+        <span class="ping" aria-hidden="true"></span> Tap to Start
+      </button>
+    </div>
   </div>
 
   <script>
     (function () {
       const v = document.getElementById('vid');
-      const overlay = document.getElementById('overlay');
-      const cta = document.getElementById('cta');
+      const gate = document.getElementById('gate');
+      const btn = document.getElementById('startBtn');
       const badge = document.getElementById('badge');
-      const intro = document.getElementById('intro');
 
-      // Try to play immediately (desktop may allow sound right away)
-      const attemptPlayWithSound = async () => {
+      // Start playback WITH sound when the user taps the button
+      const startWithSound = async () => {
         try {
-          v.muted = false;
-          await v.play();
-          // If it worked, hide overlay
-          overlay.classList.add('hidden');
+          v.muted = false;      // ensure audio on
+          v.volume = 1.0;       // max volume
+          await v.play();       // user gesture makes this legal on mobile
+          gate.style.opacity = '0';
+          gate.style.pointerEvents = 'none';
+          setTimeout(() => gate.remove(), 300);
           badge.textContent = 'Playing · Sound on';
-        } catch {
-          // If blocked, go muted and keep rolling
-          v.muted = true;
-          try { await v.play(); } catch {}
-          overlay.classList.remove('hidden');
-          badge.textContent = 'Autoplay · Muted';
+        } catch (e) {
+          // If anything blocks it (rare), hint the user to tap again
+          badge.textContent = 'Tap again to enable sound';
         }
       };
 
-      const firstTry = () => {
-        if (v.readyState >= 2) attemptPlayWithSound();
-        else v.addEventListener('loadeddata', attemptPlayWithSound, { once: true });
-      };
-
-      // Desktop can sometimes autoplay w/ sound; mobile won’t. Try anyway.
-      firstTry();
-
-      // On ANY user interaction, immediately unmute + play.
-      let armed = true;
-      const armDisarm = async () => {
-        if (!armed) return;
-        armed = false;
-        try {
-          v.muted = false;
-          // Some phones need a tiny volume nudge to “count” as change.
-          v.volume = 1.0;
-          await v.play();
-          overlay.classList.add('hidden');
-          badge.textContent = 'Playing · Sound on';
-        } catch {
-          // If it still fails (rare), re-arm and keep overlay visible
-          armed = true;
+      // Optional: allow hitting Enter/Space to start on desktop
+      gate.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          startWithSound();
         }
-      };
-
-      // Consider everything an interaction:
-      ['pointerdown','click','touchstart','keydown','scroll'].forEach(evt => {
-        window.addEventListener(evt, armDisarm, { passive: true });
       });
 
-      // Button explicitly does the same
-      cta.addEventListener('click', armDisarm);
-
-      // Reflect mute changes if the user toggles via native controls (if you add them)
-      v.addEventListener('volumechange', () => {
-        const on = !v.muted && v.volume > 0;
-        badge.textContent = on ? 'Playing · Sound on' : 'Autoplay · Muted';
-        overlay.classList.toggle('hidden', on);
-      });
-
-      // Clean up the intro label after a moment
-      setTimeout(() => intro.style.display = 'none', 1200);
+      btn.addEventListener('click', startWithSound);
     })();
   </script>
 </body>
