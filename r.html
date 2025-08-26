@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Tap Me</title>
+  <meta name="theme-color" content="#000000" />
+  <style>
+    :root { --accent:#ffbd59; }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body { margin: 0; background: #000; color:#fff; font-family: system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial, sans-serif; }
+    .wrap { position: fixed; inset: 0; }
+    video { width: 100%; height: 100%; object-fit: cover; display: block; background:#000; }
+    .gate { position: fixed; inset: 0; display: grid; place-items: center; background:#000; padding: 24px; }
+    .card { text-align: center; padding: 28px 24px; background: rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.15); border-radius: 20px; backdrop-filter: blur(8px); box-shadow: 0 20px 60px rgba(0,0,0,0.4); max-width: 480px; width: 100%; }
+    h1 { margin: 0 0 12px; font-size: 22px; font-weight: 800; letter-spacing:.2px; }
+    p { margin: 0 0 20px; color: #bbb; font-size: 14px; }
+    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 10px; width: 100%; border: 1px solid rgba(255,255,255,0.25); background: linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.02)); border-radius: 999px; padding: 14px 18px; font-weight: 800; text-transform: uppercase; letter-spacing: .6px; color: #fff; cursor: pointer; box-shadow: 0 10px 30px rgba(0,0,0,0.45); transition: transform .05s ease, border-color .2s ease; }
+    .btn:active { transform: translateY(1px) scale(.995); }
+    .ping { width: 10px; height: 10px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 6px rgba(255,189,89,0.15), 0 0 24px rgba(255,189,89,0.5); }
+    .badge { position: fixed; top: calc(env(safe-area-inset-top) + 12px); right: 12px; font-size: 12px; opacity:.9; background: rgba(0,0,0,0.55); border: 1px solid rgba(255,255,255,0.2); border-radius: 999px; padding: 6px 10px; }
+    @media (min-width: 768px) { h1 { font-size: 26px; } p { font-size: 15px; } }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <!-- No autoplay. We'll start with sound on button tap. -->
+    <video id="vid" playsinline preload="auto" poster="poster.jpg" loop>
+      <source src="videoplayback.mp4" type="video/mp4" />
+      Your browser doesn’t support MP4 playback.
+    </video>
+  </div>
+
+  <div id="badge" class="badge">Idle · Sound off</div>
+
+  <div class="gate" id="gate">
+    <div class="card" tabindex="0">
+      <h1>Tap me</h1>
+      <p>Heads up: audio will be loud.</p>
+      <button id="startBtn" class="btn" aria-label="Tap to start with sound">
+        <span class="ping" aria-hidden="true"></span> Tap to Start
+      </button>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      const v = document.getElementById('vid');
+      const gate = document.getElementById('gate');
+      const btn = document.getElementById('startBtn');
+      const badge = document.getElementById('badge');
+      let ctx, src, gain, wired = false;
+
+      async function wireAudioGraph() {
+        if (wired) return;
+        // Create/resume AudioContext AFTER user gesture
+        ctx = new (window.AudioContext || window.webkitAudioContext)();
+        if (ctx.state === 'suspended') { try { await ctx.resume(); } catch(e){} }
+        src = ctx.createMediaElementSource(v);
+        gain = ctx.createGain();
+
+        // Set gain above 1.0 to boost loudness; 1.5–2.0 is spicy.
+        // Warning: can clip if the file is already mastered hot.
+        gain.gain.value = 1.8;
+
+        src.connect(gain);
+        gain.connect(ctx.destination);
+        wired = true;
+      }
+
+      const startWithMaxLoud = async () => {
+        try {
+          await wireAudioGraph();
+          v.muted = false;     // ensure not muted
+          v.volume = 1.0;      // element volume max (0..1)
+          // Optional: restart from beginning if you want the drop instantly
+          // v.currentTime = 0;
+          await v.play();      // allowed because user tapped
+          gate.style.opacity = '0';
+          gate.style.pointerEvents = 'none';
+          setTimeout(() => gate.remove(), 300);
+          badge.textContent = 'Playing · Sound boosted';
+        } catch (e) {
+          badge.textContent = 'Tap again (audio blocked)';
+        }
+      };
+
+      // Button click starts playback w/ boost
+      btn.addEventListener('click', startWithMaxLoud);
+
+      // Keyboard start for desktop
+      gate.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          startWithMaxLoud();
+        }
+      });
+
+      // Reflect mute changes
+      v.addEventListener('volumechange', () => {
+        const on = !v.muted && v.volume > 0;
+        badge.textContent = on ? 'Playing · Sound boosted' : 'Paused/Muted';
+      });
+    })();
+  </script>
+</body>
+</html>
