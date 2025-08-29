@@ -1,152 +1,244 @@
 <!doctype html>
 <html lang="en">
 <head>
-  
   <script type="text/javascript">
         (function(c,l,a,r,i,t,y){
             c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
             t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
             y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
         })(window, document, "clarity", "script", "rmcsekaion");
-  </script>
-
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>Tap Me</title>
-  <meta name="theme-color" content="#000000" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Unstoppable Brain Fart</title>
   <style>
     :root { --accent:#ffbd59; }
     * { box-sizing: border-box; }
-    html, body { height: 100%; }
-    body {
-      margin: 0; background: #000; color:#fff;
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial, sans-serif;
+    html, body { height: 100%; margin: 0; background: #000; color: #fff; font-family: system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial, sans-serif; }
+    body { display: grid; place-items: center; overflow: hidden; }
+
+    /* Circular button */
+    #startBtn {
+      width: 140px; height: 140px; border-radius: 50%;
+      border: 4px solid var(--accent);
+      background: radial-gradient(circle at 30% 30%, var(--accent), #ff9900);
+      color:#000; font-weight: 900; font-size: 16px; text-transform: uppercase;
+      cursor: pointer; box-shadow: 0 0 24px rgba(255,189,89,0.8), inset 0 0 30px rgba(0,0,0,0.25);
+      transition: transform 0.1s ease, box-shadow .2s ease;
+    }
+    #startBtn:active { transform: scale(0.96); }
+    #hud {
+      position: fixed; top: 12px; right: 12px; z-index: 5;
+      background: rgba(0,0,0,0.55); border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 999px; padding: 6px 12px; font-size: 12px; opacity: .9;
     }
 
-    /* Full-bleed video (initially hidden behind overlay) */
-    .wrap { position: fixed; inset: 0; }
-    video {
-      width: 100%; height: 100%;
-      object-fit: cover; display: block; background:#000;
-    }
+    /* Visuals container hidden until start */
+    #stage { position: fixed; inset: 0; display: none; }
+    #canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
 
-    /* Centered “Tap me” screen */
-    .gate {
-      position: fixed; inset: 0;
-      display: grid; place-items: center;
-      background:
-        radial-gradient(1200px 1200px at 50% 110%, rgba(255,255,255,0.05), transparent 60%),
-        #000;
-      padding: 24px;
+    /* Soft animated gradient under the canvas */
+    #bg {
+      position: absolute; inset: -20%;
+      background: conic-gradient(from 0deg, #000 0%, #111 20%, #141414 40%, #1a1a1a 60%, #111 80%, #000 100%);
+      filter: blur(60px) saturate(120%);
+      animation: swirl 14s linear infinite;
+      opacity: 0.7;
     }
-    .card {
-      text-align: center;
-      padding: 28px 24px;
-      background: rgba(0,0,0,0.6);
-      border: 1px solid rgba(255,255,255,0.15);
-      border-radius: 20px;
-      backdrop-filter: blur(8px);
-      box-shadow: 0 20px 60px rgba(0,0,0,0.4);
-      max-width: 480px;
-      width: 100%;
-    }
-    h1 {
-      margin: 0 0 12px; font-size: 22px; font-weight: 800; letter-spacing:.2px;
-    }
-    p {
-      margin: 0 0 20px; color: #bbb; font-size: 14px;
-    }
-    .btn {
-      display: inline-flex; align-items: center; justify-content: center; gap: 10px;
-      width: 100%;
-      border: 1px solid rgba(255,255,255,0.25);
-      background: linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.02));
-      border-radius: 999px;
-      padding: 14px 18px;
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: .6px;
-      color: #fff;
-      cursor: pointer;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.45);
-      transition: transform .05s ease, border-color .2s ease;
-    }
-    .btn:active { transform: translateY(1px) scale(.995); }
-    .ping {
-      width: 10px; height: 10px; border-radius: 50%; background: var(--accent);
-      box-shadow: 0 0 0 6px rgba(255,189,89,0.15), 0 0 24px rgba(255,189,89,0.5);
-    }
+    @keyframes swirl { to { transform: rotate(360deg); } }
 
-    /* Tiny status pill */
-    .badge {
-      position: fixed;
-      top: calc(env(safe-area-inset-top) + 12px);
-      right: 12px;
-      font-size: 12px; opacity:.9;
-      background: rgba(0,0,0,0.55);
-      border: 1px solid rgba(255,255,255,0.2);
-      border-radius: 999px; padding: 6px 10px;
-    }
+    /* Floating particles on top */
+    .p { position: absolute; width: 6px; height: 6px; border-radius: 50%; pointer-events: none; background: var(--accent); box-shadow: 0 0 16px rgba(255,189,89,0.75); }
 
-    @media (min-width: 768px) {
-      h1 { font-size: 26px; }
-      p { font-size: 15px; }
-    }
+    /* Hide everything clickable post-start */
+    .locked { pointer-events: none !important; user-select: none !important; }
   </style>
 </head>
 <body>
-  <div class="wrap">
-    <!-- No autoplay. We’ll start on button click with sound. -->
-    <video id="vid" playsinline preload="auto" poster="poster.jpg" loop>
-      <source src="videoplayback.mp4" type="video/mp4" />
-      Your browser doesn’t support MP4 playback.
-    </video>
-  </div>
+  <button id="startBtn" aria-label="Tap to unleash">Tap</button>
+  <div id="hud">Idle · Sound off</div>
 
-  <div id="badge" class="badge">Idle · Sound off</div>
-
-  <!-- Gated start screen -->
-  <div class="gate" id="gate">
-    <div class="card">
-      <h1>Tap me for the Surprise</h1>
-      <button id="startBtn" class="btn" aria-label="Tap to start with sound">
-        <span class="ping" aria-hidden="true"></span> Tap to Start
-      </button>
-    </div>
+  <!-- Visuals (hidden until tap) -->
+  <div id="stage" aria-hidden="true">
+    <div id="bg"></div>
+    <canvas id="canvas"></canvas>
   </div>
 
   <script>
     (function () {
-      const v = document.getElementById('vid');
-      const gate = document.getElementById('gate');
       const btn = document.getElementById('startBtn');
-      const badge = document.getElementById('badge');
+      const hud = document.getElementById('hud');
+      const stage = document.getElementById('stage');
+      const canvas = document.getElementById('canvas');
+      const ctx2d = canvas.getContext('2d', { alpha: true });
 
-      // Start playback WITH sound when the user taps the button
-      const startWithSound = async () => {
+      let actx, src, gain, analyser, audio;
+      let started = false;
+      let particles = [];
+      let rafId;
+
+      // Resize canvas to pixel-perfect size
+      function fit() {
+        const dpr = Math.min(window.devicePixelRatio || 1, 2);
+        canvas.width = Math.floor(canvas.clientWidth * dpr);
+        canvas.height = Math.floor(canvas.clientHeight * dpr);
+      }
+      const clamp = (n, a, b) => Math.max(a, Math.min(b, n));
+
+      function spawnParticles(count) {
+        const w = canvas.width, h = canvas.height;
+        for (let i = 0; i < count; i++) {
+          particles.push({
+            x: Math.random() * w,
+            y: h + Math.random() * 40,
+            vx: (Math.random() - 0.5) * 0.6,
+            vy: - (1 + Math.random() * 2.5),
+            life: 60 + Math.random() * 100,
+            r: 2 + Math.random() * 4
+          });
+        }
+      }
+
+      function draw() {
+        const w = canvas.width, h = canvas.height;
+        ctx2d.clearRect(0, 0, w, h);
+
+        // Reactive bars (frequency domain)
+        if (analyser) {
+          const bins = 96;
+          const data = new Uint8Array(analyser.frequencyBinCount);
+          analyser.getByteFrequencyData(data);
+
+          const step = Math.floor(data.length / bins);
+          const barW = (w / bins) * 0.9;
+          for (let i = 0; i < bins; i++) {
+            const v = data[i * step] / 255;           // 0..1
+            const barH = Math.pow(v, 1.3) * (h * 0.5);
+            const x = i * (w / bins) + (w / bins - barW) / 2;
+            const y = h - barH - 10;
+            // gradient per bar
+            const g = ctx2d.createLinearGradient(0, y, 0, y + barH);
+            g.addColorStop(0, 'rgba(255,189,89,0.95)');
+            g.addColorStop(1, 'rgba(255,189,89,0.15)');
+            ctx2d.fillStyle = g;
+            ctx2d.fillRect(x, y, barW, barH);
+            // top glow
+            ctx2d.fillStyle = 'rgba(255,255,255,0.25)';
+            ctx2d.fillRect(x, y - 2, barW, 2);
+          }
+        }
+
+        // Particles
+        for (let i = particles.length - 1; i >= 0; i--) {
+          const p = particles[i];
+          p.x += p.vx; p.y += p.vy; p.life--;
+          ctx2d.beginPath();
+          ctx2d.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+          ctx2d.fillStyle = 'rgba(255,189,89,0.9)';
+          ctx2d.fill();
+          if (p.life <= 0 || p.y < -20) particles.splice(i, 1);
+        }
+
+        rafId = requestAnimationFrame(draw);
+      }
+
+      async function wireGraph() {
+        if (actx) return;
+        actx = new (window.AudioContext || window.webkitAudioContext)();
+        if (actx.state === 'suspended') { try { await actx.resume(); } catch(e){} }
+
+        audio = new Audio('long-brain-fart.mp3');
+        audio.preload = 'auto';
+        audio.loop = false;        // one glorious blast
+        audio.crossOrigin = 'anonymous'; // in case
+
+        src = actx.createMediaElementSource(audio);
+        gain = actx.createGain();
+        analyser = actx.createAnalyser();
+        analyser.fftSize = 2048;
+        analyser.smoothingTimeConstant = 0.85;
+
+        // Boost volume (careful: can clip if file is hot)
+        gain.gain.value = 1.9;
+
+        src.connect(gain);
+        gain.connect(analyser);
+        analyser.connect(actx.destination);
+      }
+
+      function makeUnstoppable() {
+        // Keep volume/max & unmuted
+        const lockVolume = () => { if (audio) { audio.muted = false; audio.volume = 1.0; } };
+        audio.addEventListener('volumechange', lockVolume);
+        lockVolume();
+
+        // If something pauses it (programmatically or by accident), resume immediately
+        audio.addEventListener('pause', () => {
+          // Allow pause only if it's naturally ended; if not ended, force play
+          if (!audio.ended) { audio.play().catch(()=>{}); }
+        });
+
+        // Resist visibility changes (some browsers suspend audio—most won’t with MediaElement)
+        document.addEventListener('visibilitychange', () => {
+          if (document.visibilityState !== 'visible') { /* no-op; can't force keep-alive on all UAs */ }
+          else if (!audio.paused) { audio.play().catch(()=>{}); }
+        });
+
+        // Nerf common keys from doing anything dumb on the page
+        window.addEventListener('keydown', (e) => {
+          const kill = [' ', 'MediaPlayPause', 'MediaStop', 'MediaTrackNext', 'MediaTrackPrevious'];
+          if (kill.includes(e.key)) e.preventDefault();
+        }, { capture: true });
+
+        // Kill context menu to reduce “inspect and mute” antics
+        window.addEventListener('contextmenu', (e) => e.preventDefault());
+      }
+
+      async function start() {
+        if (started) return;
+        started = true;
+
+        btn.classList.add('locked');
+        btn.setAttribute('disabled', 'true');
+
+        await wireGraph();
+
+        // Show visuals
+        stage.style.display = 'block';
+        fit();
+        spawnParticles(200);
+        draw();
+
+        // Play absolute max (in-page)
+        audio.currentTime = 0;
+        audio.muted = false;
+        audio.volume = 1.0;
+
+        makeUnstoppable();
+
         try {
-          v.muted = false;      // ensure audio on
-          v.volume = 1.0;       // max volume
-          await v.play();       // user gesture makes this legal on mobile
-          gate.style.opacity = '0';
-          gate.style.pointerEvents = 'none';
-          setTimeout(() => gate.remove(), 300);
-          badge.textContent = 'Playing · Sound on';
+          await audio.play();
+          hud.textContent = 'Playing · Unstoppable · Sound boosted';
         } catch (e) {
-          // If anything blocks it (rare), hint the user to tap again
-          badge.textContent = 'Tap again to enable sound';
+          hud.textContent = 'Tap again (blocked by browser)';
+          started = false;
+          return;
         }
-      };
 
-      // Optional: allow hitting Enter/Space to start on desktop
-      gate.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault();
-          startWithSound();
-        }
-      });
+        // Remove the button visually after a tiny delay (so the click ripple feels responsive)
+        setTimeout(() => {
+          btn.remove();
+          document.body.classList.add('locked'); // nuke pointer events on body
+        }, 150);
+      }
 
-      btn.addEventListener('click', startWithSound);
+      // Handle resizes
+      window.addEventListener('resize', fit);
+
+      // Button
+      btn.addEventListener('click', start);
+
+      // Bonus: click anywhere on stage spawns more particles
+      stage.addEventListener('click', () => spawnParticles(80));
     })();
   </script>
 </body>
