@@ -2,14 +2,17 @@
 <html lang="en">
 <head>
   <script type="text/javascript">
-        (function(c,l,a,r,i,t,y){
-            c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
-            t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
-            y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
-        })(window, document, "clarity", "script", "rmcsekaion");
+    (function(c,l,a,r,i,t,y){
+        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+    })(window, document, "clarity", "script", "rmcsekaion");
+  </script>
+
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Unstoppable Brain Fart</title>
+
   <style>
     :root { --accent:#ffbd59; }
     * { box-sizing: border-box; }
@@ -26,6 +29,7 @@
       transition: transform 0.1s ease, box-shadow .2s ease;
     }
     #startBtn:active { transform: scale(0.96); }
+
     #hud {
       position: fixed; top: 12px; right: 12px; z-index: 5;
       background: rgba(0,0,0,0.55); border: 1px solid rgba(255,255,255,0.2);
@@ -173,23 +177,22 @@
 
         // If something pauses it (programmatically or by accident), resume immediately
         audio.addEventListener('pause', () => {
-          // Allow pause only if it's naturally ended; if not ended, force play
           if (!audio.ended) { audio.play().catch(()=>{}); }
         });
 
-        // Resist visibility changes (some browsers suspend audio—most won’t with MediaElement)
         document.addEventListener('visibilitychange', () => {
-          if (document.visibilityState !== 'visible') { /* no-op; can't force keep-alive on all UAs */ }
-          else if (!audio.paused) { audio.play().catch(()=>{}); }
+          if (document.visibilityState === 'visible' && !audio.paused) {
+            audio.play().catch(()=>{});
+          }
         });
 
-        // Nerf common keys from doing anything dumb on the page
+        // Nerf common keys
         window.addEventListener('keydown', (e) => {
           const kill = [' ', 'MediaPlayPause', 'MediaStop', 'MediaTrackNext', 'MediaTrackPrevious'];
           if (kill.includes(e.key)) e.preventDefault();
         }, { capture: true });
 
-        // Kill context menu to reduce “inspect and mute” antics
+        // Disable right-click
         window.addEventListener('contextmenu', (e) => e.preventDefault());
       }
 
@@ -208,7 +211,7 @@
         spawnParticles(200);
         draw();
 
-        // Play absolute max (in-page)
+        // Play at max
         audio.currentTime = 0;
         audio.muted = false;
         audio.volume = 1.0;
@@ -224,10 +227,10 @@
           return;
         }
 
-        // Remove the button visually after a tiny delay (so the click ripple feels responsive)
+        // Remove the button visually
         setTimeout(() => {
           btn.remove();
-          document.body.classList.add('locked'); // nuke pointer events on body
+          document.body.classList.add('locked');
         }, 150);
       }
 
