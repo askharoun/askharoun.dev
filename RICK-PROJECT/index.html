@@ -8,241 +8,491 @@
         y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
     })(window, document, "clarity", "script", "rmcsekaion");
   </script>
-
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Unstoppable Brain Fart</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title> </title>
+<style>
+  :root{
+    --bg1:#0b0f1a;
+    --bg2:#121a2c;
+    --glow:#7df9ff;
+    --peach:#ffbd59;
+    --ink:#0c1220;
+    --glass:rgba(255,255,255,.08);
+    --card:rgba(255,255,255,.12);
+    --white:#eef3ff;
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent}
+  html,body{height:100%}
+  body{
+    margin:0;
+    font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial, sans-serif;
+    color:var(--white);
+    background: radial-gradient(1200px 800px at 20% 10%, #152040 0%, transparent 60%),
+                radial-gradient(1000px 700px at 80% 90%, #1a2448 0%, transparent 60%),
+                linear-gradient(135deg,var(--bg1),var(--bg2));
+    overflow:hidden;
+  }
 
-  <style>
-    :root { --accent:#ffbd59; }
-    * { box-sizing: border-box; }
-    html, body { height: 100%; margin: 0; background: #000; color: #fff; font-family: system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial, sans-serif; }
-    body { display: grid; place-items: center; overflow: hidden; }
+  /* floating orbs */
+  .orb{
+    position:fixed; inset:auto;
+    border-radius:999px; filter:blur(40px); opacity:.55;
+    pointer-events:none; mix-blend-mode:screen;
+    animation: float 14s ease-in-out infinite;
+  }
+  .o1{width:220px;height:220px; left:12%; top:8%; background:#5be7ff;}
+  .o2{width:280px;height:280px; right:10%; bottom:12%; background:#7a5bff; animation-duration:18s;}
+  .o3{width:180px;height:180px; left:50%; bottom:20%; background:#ffbd59; animation-duration:16s;}
+  @keyframes float{ 0%,100%{transform:translateY(0)} 50%{transform:translateY(-18px)} }
 
-    /* Circular button */
-    #startBtn {
-      width: 140px; height: 140px; border-radius: 50%;
-      border: 4px solid var(--accent);
-      background: radial-gradient(circle at 30% 30%, var(--accent), #ff9900);
-      color:#000; font-weight: 900; font-size: 16px; text-transform: uppercase;
-      cursor: pointer; box-shadow: 0 0 24px rgba(255,189,89,0.8), inset 0 0 30px rgba(0,0,0,0.25);
-      transition: transform 0.1s ease, box-shadow .2s ease;
-    }
-    #startBtn:active { transform: scale(0.96); }
+  /* animated gradient grid */
+  .grid{
+    position:fixed; inset:0; pointer-events:none; opacity:.18;
+    background:
+      radial-gradient(circle at 50% 50%, rgba(255,255,255,.12), transparent 55%) 0 0/240px 240px,
+      linear-gradient( to bottom, rgba(255,255,255,.12), transparent 30% );
+    mask-image: radial-gradient(80% 80% at 50% 50%, #000 60%, transparent 100%);
+    animation: shimmer 12s linear infinite;
+  }
+  @keyframes shimmer{ from{background-position:0 0, 0 0} to{background-position:240px 240px, 0 0} }
 
-    #hud {
-      position: fixed; top: 12px; right: 12px; z-index: 5;
-      background: rgba(0,0,0,0.55); border: 1px solid rgba(255,255,255,0.2);
-      border-radius: 999px; padding: 6px 12px; font-size: 12px; opacity: .9;
-    }
+  /* container */
+  .wrap{
+    position:relative;
+    height:100%;
+    display:flex; align-items:center; justify-content:center;
+    padding:20px;
+  }
 
-    /* Visuals container hidden until start */
-    #stage { position: fixed; inset: 0; display: none; }
-    #canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+  /* glass card */
+  .card{
+    width:min(92vw, 620px);
+    min-height: 44vh;
+    background: linear-gradient(180deg, rgba(255,255,255,.18), rgba(255,255,255,.08));
+    border:1px solid rgba(255,255,255,.16);
+    border-radius:28px;
+    backdrop-filter: blur(14px) saturate(140%);
+    box-shadow:
+      0 10px 30px rgba(0,0,0,.35),
+      0 0 0 1px rgba(125,249,255,.10) inset,
+      0 0 40px rgba(125,249,255,.15);
+    position:relative;
+    overflow:hidden;
+    padding:22px 18px 18px;
+  }
 
-    /* Soft animated gradient under the canvas */
-    #bg {
-      position: absolute; inset: -20%;
-      background: conic-gradient(from 0deg, #000 0%, #111 20%, #141414 40%, #1a1a1a 60%, #111 80%, #000 100%);
-      filter: blur(60px) saturate(120%);
-      animation: swirl 14s linear infinite;
-      opacity: 0.7;
-    }
-    @keyframes swirl { to { transform: rotate(360deg); } }
+  /* top icons */
+  .topbar{
+    display:flex; align-items:center; justify-content:space-between;
+    gap:10px; margin-bottom:8px; user-select:none;
+  }
+  .icon{
+    width:42px;height:42px;border-radius:14px;
+    display:grid;place-items:center;
+    background:var(--glass);
+    border:1px solid rgba(255,255,255,.14);
+    box-shadow:0 4px 18px rgba(0,0,0,.25);
+    cursor:pointer;
+    transition:transform .08s ease, opacity .2s ease, box-shadow .2s ease;
+  }
+  .icon:active{ transform:scale(.96) }
+  .icon svg{ width:22px;height:22px; fill: none; stroke:#cfe8ff; stroke-width:2; }
 
-    /* Floating particles on top */
-    .p { position: absolute; width: 6px; height: 6px; border-radius: 50%; pointer-events: none; background: var(--accent); box-shadow: 0 0 16px rgba(255,189,89,0.75); }
+  /* joke */
+  .joke{
+    font-size: clamp(20px, 4.8vw, 28px);
+    line-height:1.35;
+    letter-spacing:.2px;
+    padding: 18px 8px 12px;
+    text-align:center;
+    user-select:text;
+    -webkit-user-select:text;
+  }
 
-    /* Hide everything clickable post-start */
-    .locked { pointer-events: none !important; user-select: none !important; }
-  </style>
+  /* hint pulse (no text) */
+  .pulse{
+    position:absolute; left:50%; bottom:22px; transform:translateX(-50%);
+    width:64px;height:64px;border-radius:50%;
+    background: radial-gradient(circle at 50% 50%, rgba(255,255,255,.22), rgba(255,255,255,0));
+    animation: pulse 2.2s ease-in-out infinite;
+    pointer-events:none; opacity:.55;
+  }
+  @keyframes pulse{
+    0%{ transform:translateX(-50%) scale(1); opacity:.55 }
+    50%{ transform:translateX(-50%) scale(1.06); opacity:.25 }
+    100%{ transform:translateX(-50%) scale(1); opacity:.55 }
+  }
+
+  /* toast (no label, just a check) */
+  .toast{
+    position:fixed; left:50%; bottom:18px; transform:translateX(-50%) translateY(20px);
+    background:rgba(0,0,0,.5);
+    border:1px solid rgba(255,255,255,.18);
+    border-radius:999px; padding:10px 12px;
+    display:flex; align-items:center; gap:8px; opacity:0; pointer-events:none;
+    transition:opacity .22s ease, transform .22s ease;
+    backdrop-filter: blur(8px) saturate(140%);
+    box-shadow:0 8px 18px rgba(0,0,0,.3);
+  }
+  .toast.show{ opacity:1; transform:translateX(-50%) translateY(0) }
+  .toast svg{ width:18px; height:18px; stroke:#9ff7c8; }
+
+  /* tiny badges (no text) */
+  .badge{
+    position:absolute; right:16px; top:64px;
+    width:10px; height:10px; border-radius:50%;
+    background: radial-gradient(circle at 30% 30%, #fff, #7df9ff 40%, transparent 70%);
+    opacity:.0; transition:opacity .25s ease;
+  }
+  .badge.on{ opacity:.9 }
+
+  /* subtle arrows for swipe (no labels) */
+  .ghost{
+    position:absolute; top:50%; transform:translateY(-50%);
+    width:44px;height:44px; border-radius:50%;
+    display:grid; place-items:center;
+    background:rgba(255,255,255,.05);
+    border:1px solid rgba(255,255,255,.12);
+    opacity:.0; transition:opacity .25s ease;
+    pointer-events:none;
+  }
+  .ghost svg{ width:20px;height:20px; stroke:#cfe8ff }
+  .ghost.left{ left:10px }
+  .ghost.right{ right:10px }
+  .card:active .ghost{ opacity:.35 }
+
+  /* accessibility focus ring (invisible by default) */
+  .icon:focus-visible{ outline:2px solid var(--glow); outline-offset:2px }
+
+  /* reduce motion */
+  @media (prefers-reduced-motion: reduce){
+    .orb,.grid,.pulse{ animation:none }
+  }
+</style>
 </head>
 <body>
-  <button id="startBtn" aria-label="Tap to unleash">Tap</button>
-  <div id="hud">Idle · Sound off</div>
 
-  <!-- Visuals (hidden until tap) -->
-  <div id="stage" aria-hidden="true">
-    <div id="bg"></div>
-    <canvas id="canvas"></canvas>
-  </div>
+<div class="orb o1"></div>
+<div class="orb o2"></div>
+<div class="orb o3"></div>
+<div class="grid"></div>
 
-  <script>
-    (function () {
-      const btn = document.getElementById('startBtn');
-      const hud = document.getElementById('hud');
-      const stage = document.getElementById('stage');
-      const canvas = document.getElementById('canvas');
-      const ctx2d = canvas.getContext('2d', { alpha: true });
+<div class="wrap">
+  <section class="card" id="card" aria-live="polite">
+    <div class="topbar">
+      <!-- left: previous -->
+      <button class="icon" id="prev" aria-label="">
+        <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+      </button>
 
-      let actx, src, gain, analyser, audio;
-      let started = false;
-      let particles = [];
-      let rafId;
+      <!-- center: dice / random -->
+      <button class="icon" id="random" aria-label="">
+        <svg viewBox="0 0 24 24">
+          <rect x="3" y="3" width="18" height="18" rx="4" stroke-linecap="round" />
+          <circle cx="8.5" cy="8.5" r="1.2" />
+          <circle cx="15.5" cy="15.5" r="1.2" />
+          <circle cx="15.5" cy="8.5" r="1.2" />
+          <circle cx="8.5" cy="15.5" r="1.2" />
+        </svg>
+      </button>
 
-      // Resize canvas to pixel-perfect size
-      function fit() {
-        const dpr = Math.min(window.devicePixelRatio || 1, 2);
-        canvas.width = Math.floor(canvas.clientWidth * dpr);
-        canvas.height = Math.floor(canvas.clientHeight * dpr);
+      <!-- right: favorite -->
+      <button class="icon" id="fav" aria-label="">
+        <svg id="star" viewBox="0 0 24 24">
+          <path d="M12 3l2.9 5.9 6.5.9-4.7 4.6 1.1 6.5L12 17.8 6.2 21l1.1-6.5L2.6 9.8l6.5-.9L12 3z" stroke-linejoin="round"/>
+        </svg>
+      </button>
+    </div>
+
+    <div class="joke" id="joke"></div>
+
+    <div class="pulse"></div>
+    <span class="badge" id="badge"></span>
+
+    <div class="ghost left">
+      <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6" fill="none" stroke-width="2"/></svg>
+    </div>
+    <div class="ghost right">
+      <svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6" fill="none" stroke-width="2"/></svg>
+    </div>
+  </section>
+</div>
+
+<div class="toast" id="toast">
+  <svg viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+</div>
+
+<script>
+  // haptics utility
+  const buzz = ms => 'vibrate' in navigator ? navigator.vibrate(ms) : null;
+
+  // jokes (100)
+  const jokes = [
+    "I told my suitcase we’re not going on vacation this year. Now I’m dealing with emotional baggage.",
+    "Why don’t eggs tell jokes? They’d crack each other up.",
+    "I used to be addicted to the hokey pokey… but I turned myself around.",
+    "I’m reading a book about anti-gravity. It’s impossible to put down.",
+    "Why did the scarecrow get promoted? He was outstanding in his field.",
+    "I ordered a chicken and an egg from Amazon. I’ll let you know which comes first.",
+    "Want to hear a construction joke? Sorry, I’m still working on it.",
+    "Why did the math book look sad? Too many problems.",
+    "I don’t trust stairs. They’re always up to something.",
+    "I used to hate facial hair… but then it grew on me.",
+    "I’m on a seafood diet. I see food and I eat it.",
+    "Why did the coffee file a police report? It got mugged.",
+    "Did you hear about the restaurant on the moon? Great food, no atmosphere.",
+    "What do you call fake spaghetti? An impasta.",
+    "How does a penguin build its house? Igloos it together.",
+    "What do you call cheese that isn’t yours? Nacho cheese.",
+    "I’m so good at sleeping I can do it with my eyes closed.",
+    "Why couldn’t the bicycle stand up by itself? It was two-tired.",
+    "I don’t play soccer because I enjoy the sport. I’m just doing it for kicks.",
+    "What do you call a factory that makes okay products? A satisfactory.",
+    "Want to hear a joke about paper? Never mind, it’s tearable.",
+    "Why did the golfer bring two pairs of pants? In case he got a hole in one.",
+    "I used to be a baker, but I couldn’t make enough dough.",
+    "Why did the photo go to jail? It was framed.",
+    "I only know 25 letters of the alphabet. I don’t know y.",
+    "What do you call a fish wearing a bowtie? Sofishticated.",
+    "How do you organize a space party? You planet.",
+    "What do you call a belt made of watches? A waist of time.",
+    "Why are elevator jokes so classic? They work on many levels.",
+    "I got hit in the head with a can of soda. Luckily, it was a soft drink.",
+    "I’d tell you a joke about chemistry, but I know I wouldn’t get a reaction.",
+    "Why did the computer go to the doctor? It had a virus.",
+    "I told my friend she drew her eyebrows too high. She looked surprised.",
+    "I stayed up all night wondering where the sun went… then it dawned on me.",
+    "You know what they say about cliff jokes… they’re edgy.",
+    "What do you call a cold dog? A chili dog.",
+    "Why don’t skeletons fight each other? They don’t have the guts.",
+    "I gave all my dead batteries away… free of charge.",
+    "What do you call a line of men waiting for haircuts? A barberqueue.",
+    "What did the janitor say when he jumped out of the closet? Supplies!",
+    "I used to be a banker, but I lost interest.",
+    "The graveyard looks overcrowded. People must be dying to get in.",
+    "Why did the tomato blush? It saw the salad dressing.",
+    "Why can’t you trust atoms? They make up everything.",
+    "What do you call an alligator in a vest? An investigator.",
+    "I wrote a song about a tortilla. Actually, it’s more of a wrap.",
+    "How do you make a tissue dance? Put a little boogie in it.",
+    "I don’t trust those trees. They seem kind of shady.",
+    "What did the ocean say to the beach? Nothing, it just waved.",
+    "Why was the stadium so cool? It was full of fans.",
+    "I’d tell you a roof joke, but it’s over your head.",
+    "I got a job at a bakery because I kneaded dough.",
+    "What do you call a bear with no teeth? A gummy bear.",
+    "I used to be a train driver, but I got sidetracked.",
+    "How do you find Will Smith in the snow? You look for fresh prints.",
+    "What do you call a sleeping bull? A bulldozer.",
+    "Why don’t oysters donate to charity? Because they’re shellfish.",
+    "I don’t trust calendars. Their days are numbered.",
+    "Want to hear a vegetable joke? I’ll lettuce know.",
+    "I tried to catch fog yesterday. Mist.",
+    "What do you call a pile of cats? A meowtain.",
+    "Why did the cookie go to the hospital? He felt crummy.",
+    "Why can’t a nose be 12 inches long? Then it’d be a foot.",
+    "I used to be a shoe salesman till I got the boot.",
+    "Why did the man fall down the well? He couldn’t see that well.",
+    "I’m reading a book about glue. I just can’t put it down.",
+    "What do you call a cow with no legs? Ground beef.",
+    "Why did the bike fall over? It was two-tired… again.",
+    "What do you call a bee that can’t make up its mind? A may-bee.",
+    "The furniture store keeps calling me. All I wanted was a one nightstand.",
+    "Why did the music teacher go to jail? She got caught with too many notes.",
+    "How do you fix a cracked pumpkin? With a pumpkin patch.",
+    "Why did the computer show up at work late? It had a hard drive.",
+    "I told a joke about a roof once… it went over everyone’s head.",
+    "Why was the computer cold? It left its Windows open.",
+    "I cut my finger chopping cheese. I think that I may have grater problems.",
+    "Singing in the shower is fun… until you get soap in your mouth. Then it’s a soap opera.",
+    "Why did the orange stop? It ran out of juice.",
+    "I used to be a gardener, but my celery wasn’t high enough.",
+    "Why don’t crabs give to charity? They’re shellfish.",
+    "How do you make holy water? You boil the hell out of it.",
+    "I told my dog to stop chasing people on bikes. He said he just couldn’t handle the wheels.",
+    "Why did the golfer wear two pairs of socks? In case he got a hole in one.",
+    "What do you call a knight who is afraid to fight? Sir Render.",
+    "Why did the keyboard break up with the computer? It wasn’t their type.",
+    "I asked the librarian if the library had books on paranoia. She whispered, “They’re right behind you.”",
+    "What’s orange and sounds like a parrot? A carrot.",
+    "I used to date a baker. She was a real sweetie pie.",
+    "What do clouds wear? Thunderwear.",
+    "Why did the picture go to jail? It was framed. Classic.",
+    "I gave up my seat to a blind person on the bus. That’s how I lost my job as a bus driver.",
+    "Why did the kid bring a ladder to school? He wanted to go to high school.",
+    "I asked my dog what’s two minus two. He said nothing.",
+    "What did one wall say to the other? I’ll meet you at the corner.",
+    "I would avoid the sushi if I were you. It’s a little fishy.",
+    "What do you call a dinosaur with an extensive vocabulary? A thesaurus.",
+    "How does the moon cut his hair? Eclipse it.",
+    "Why don’t seagulls fly over the bay? Because then they’d be bagels.",
+    "Did you hear about the claustrophobic astronaut? He just needed a little space.",
+    "I used to be a tennis player, but I kept raising a racquet.",
+    "What do you call a can opener that doesn’t work? A can’t opener.",
+    "I bought shoes from a drug dealer. I don’t know what he laced them with, but I’ve been tripping all day.",
+    "Why are peppers good at archery? Because they habanero.",
+    "My friend says, “What rhymes with orange?” I said, “No it doesn’t.”",
+    "I told my plants jokes. They’re still not rooting for me.",
+    "Why did the smartphone need glasses? It lost all its contacts.",
+    "I ate a clock yesterday. It was very time-consuming."
+  ];
+
+  // elements
+  const elJoke = document.getElementById('joke');
+  const elRandom = document.getElementById('random');
+  const elPrev = document.getElementById('prev');
+  const elFav = document.getElementById('fav');
+  const elStar = document.getElementById('star');
+  const elBadge = document.getElementById('badge');
+  const elToast = document.getElementById('toast');
+  const card = document.getElementById('card');
+
+  // state
+  const store = {
+    keyFav: 'dorm_faves_v1',
+    keyIdx: 'dorm_last_idx',
+    history: [],
+    ptr: -1,
+    favorites: new Set(JSON.parse(localStorage.getItem('dorm_faves_v1')||'[]')),
+  };
+
+  const setToast = (ok=true)=>{
+    elToast.classList.add('show');
+    setTimeout(()=>elToast.classList.remove('show'), 900);
+  };
+
+  const starOn = (on)=> {
+    elStar.style.fill = on ? '#ffd86b' : 'none';
+    elStar.style.stroke = on ? '#ffd86b' : '#cfe8ff';
+    elBadge.classList.toggle('on', on);
+  };
+
+  const inBounds = i => i>=0 && i<jokes.length;
+
+  const pickRandom = (excludeIdx) => {
+    if (jokes.length <= 1) return 0;
+    let idx;
+    do { idx = Math.floor(Math.random()*jokes.length); }
+    while (idx === excludeIdx);
+    return idx;
+  };
+
+  const showIndex = (idx, pushHist=true)=>{
+    if (!inBounds(idx)) return;
+    elJoke.textContent = jokes[idx];
+    localStorage.setItem(store.keyIdx, String(idx));
+    // star state
+    starOn(store.favorites.has(idx));
+    // history
+    if (pushHist){
+      if (store.ptr < store.history.length - 1) {
+        store.history = store.history.slice(0, store.ptr+1);
       }
-      const clamp = (n, a, b) => Math.max(a, Math.min(b, n));
+      store.history.push(idx);
+      store.ptr = store.history.length - 1;
+    }
+  };
 
-      function spawnParticles(count) {
-        const w = canvas.width, h = canvas.height;
-        for (let i = 0; i < count; i++) {
-          particles.push({
-            x: Math.random() * w,
-            y: h + Math.random() * 40,
-            vx: (Math.random() - 0.5) * 0.6,
-            vy: - (1 + Math.random() * 2.5),
-            life: 60 + Math.random() * 100,
-            r: 2 + Math.random() * 4
-          });
-        }
-      }
+  // interactions
+  const nextRandom = ()=>{
+    buzz(10);
+    const current = store.ptr>=0 ? store.history[store.ptr] : -1;
+    const idx = pickRandom(current);
+    showIndex(idx, true);
+  };
 
-      function draw() {
-        const w = canvas.width, h = canvas.height;
-        ctx2d.clearRect(0, 0, w, h);
+  const prev = ()=>{
+    if (store.ptr>0){ store.ptr--; showIndex(store.history[store.ptr], false); buzz(8); }
+  };
 
-        // Reactive bars (frequency domain)
-        if (analyser) {
-          const bins = 96;
-          const data = new Uint8Array(analyser.frequencyBinCount);
-          analyser.getByteFrequencyData(data);
+  const favToggle = ()=>{
+    const idx = store.ptr>=0 ? store.history[store.ptr] : -1;
+    if (!inBounds(idx)) return;
+    if (store.favorites.has(idx)) store.favorites.delete(idx);
+    else store.favorites.add(idx);
+    localStorage.setItem(store.keyFav, JSON.stringify([...store.favorites]));
+    starOn(store.favorites.has(idx));
+    buzz(12);
+  };
 
-          const step = Math.floor(data.length / bins);
-          const barW = (w / bins) * 0.9;
-          for (let i = 0; i < bins; i++) {
-            const v = data[i * step] / 255;           // 0..1
-            const barH = Math.pow(v, 1.3) * (h * 0.5);
-            const x = i * (w / bins) + (w / bins - barW) / 2;
-            const y = h - barH - 10;
-            // gradient per bar
-            const g = ctx2d.createLinearGradient(0, y, 0, y + barH);
-            g.addColorStop(0, 'rgba(255,189,89,0.95)');
-            g.addColorStop(1, 'rgba(255,189,89,0.15)');
-            ctx2d.fillStyle = g;
-            ctx2d.fillRect(x, y, barW, barH);
-            // top glow
-            ctx2d.fillStyle = 'rgba(255,255,255,0.25)';
-            ctx2d.fillRect(x, y - 2, barW, 2);
-          }
-        }
+  // copy on long-press
+  let pressTimer=null;
+  const startPress = ()=>{
+    clearTimeout(pressTimer);
+    pressTimer = setTimeout(async ()=>{
+      try{
+        await navigator.clipboard.writeText(elJoke.textContent||'');
+        setToast(true); buzz(18);
+      }catch(e){ /* ignore */ }
+    }, 450);
+  };
+  const endPress = ()=> clearTimeout(pressTimer);
 
-        // Particles
-        for (let i = particles.length - 1; i >= 0; i--) {
-          const p = particles[i];
-          p.x += p.vx; p.y += p.vy; p.life--;
-          ctx2d.beginPath();
-          ctx2d.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-          ctx2d.fillStyle = 'rgba(255,189,89,0.9)';
-          ctx2d.fill();
-          if (p.life <= 0 || p.y < -20) particles.splice(i, 1);
-        }
+  // gestures
+  let x0=null, y0=null, t0=0;
+  const onTouchStart = (e)=>{
+    const t = e.touches[0];
+    x0 = t.clientX; y0 = t.clientY; t0=Date.now();
+    startPress();
+  };
+  const onTouchMove = (e)=>{ /* cancel long-press if moving a lot */ 
+    if (!x0) return;
+    const t = e.touches[0];
+    if (Math.hypot(t.clientX-x0, t.clientY-y0) > 10) endPress();
+  };
+  const onTouchEnd = (e)=>{
+    endPress();
+    if (x0===null) return;
+    const dx = (e.changedTouches[0].clientX - x0);
+    const dy = (e.changedTouches[0].clientY - y0);
+    const dt = Date.now()-t0;
+    const ax = Math.abs(dx), ay = Math.abs(dy);
+    // quick swipe
+    if (dt<500 && ax>40 && ax>ay){
+      if (dx<0) nextRandom(); else prev();
+    } else if (dt<250 && ax<10 && ay<10){
+      // quick tap = next
+      nextRandom();
+    }
+    x0=y0=null;
+  };
 
-        rafId = requestAnimationFrame(draw);
-      }
+  // double tap favorite
+  let lastTap=0;
+  const onDoubleTap = ()=>{
+    const now = Date.now();
+    if (now - lastTap < 300){ favToggle(); }
+    lastTap = now;
+  };
 
-      async function wireGraph() {
-        if (actx) return;
-        actx = new (window.AudioContext || window.webkitAudioContext)();
-        if (actx.state === 'suspended') { try { await actx.resume(); } catch(e){} }
+  // click handlers (desktop or mobile)
+  elRandom.addEventListener('click', nextRandom);
+  elPrev.addEventListener('click', prev);
+  elFav.addEventListener('click', favToggle);
 
-        audio = new Audio('long-brain-fart.mp3');
-        audio.preload = 'auto';
-        audio.loop = false;        // one glorious blast
-        audio.crossOrigin = 'anonymous'; // in case
+  // card interactions
+  card.addEventListener('touchstart', onTouchStart, {passive:true});
+  card.addEventListener('touchmove', onTouchMove, {passive:true});
+  card.addEventListener('touchend', onTouchEnd, {passive:true});
+  card.addEventListener('click', (e)=>{
+    // avoid triggering when top icons clicked
+    if (e.target.closest('.icon')) return;
+    nextRandom();
+  });
+  card.addEventListener('pointerdown', ()=>startPress());
+  card.addEventListener('pointerup', ()=>endPress());
+  card.addEventListener('pointercancel', ()=>endPress());
+  card.addEventListener('pointerdown', onDoubleTap);
 
-        src = actx.createMediaElementSource(audio);
-        gain = actx.createGain();
-        analyser = actx.createAnalyser();
-        analyser.fftSize = 2048;
-        analyser.smoothingTimeConstant = 0.85;
-
-        // Boost volume (careful: can clip if file is hot)
-        gain.gain.value = 1.9;
-
-        src.connect(gain);
-        gain.connect(analyser);
-        analyser.connect(actx.destination);
-      }
-
-      function makeUnstoppable() {
-        // Keep volume/max & unmuted
-        const lockVolume = () => { if (audio) { audio.muted = false; audio.volume = 1.0; } };
-        audio.addEventListener('volumechange', lockVolume);
-        lockVolume();
-
-        // If something pauses it (programmatically or by accident), resume immediately
-        audio.addEventListener('pause', () => {
-          if (!audio.ended) { audio.play().catch(()=>{}); }
-        });
-
-        document.addEventListener('visibilitychange', () => {
-          if (document.visibilityState === 'visible' && !audio.paused) {
-            audio.play().catch(()=>{});
-          }
-        });
-
-        // Nerf common keys
-        window.addEventListener('keydown', (e) => {
-          const kill = [' ', 'MediaPlayPause', 'MediaStop', 'MediaTrackNext', 'MediaTrackPrevious'];
-          if (kill.includes(e.key)) e.preventDefault();
-        }, { capture: true });
-
-        // Disable right-click
-        window.addEventListener('contextmenu', (e) => e.preventDefault());
-      }
-
-      async function start() {
-        if (started) return;
-        started = true;
-
-        btn.classList.add('locked');
-        btn.setAttribute('disabled', 'true');
-
-        await wireGraph();
-
-        // Show visuals
-        stage.style.display = 'block';
-        fit();
-        spawnParticles(200);
-        draw();
-
-        // Play at max
-        audio.currentTime = 0;
-        audio.muted = false;
-        audio.volume = 1.0;
-
-        makeUnstoppable();
-
-        try {
-          await audio.play();
-          hud.textContent = 'Playing · Unstoppable · Sound boosted';
-        } catch (e) {
-          hud.textContent = 'Tap again (blocked by browser)';
-          started = false;
-          return;
-        }
-
-        // Remove the button visually
-        setTimeout(() => {
-          btn.remove();
-          document.body.classList.add('locked');
-        }, 150);
-      }
-
-      // Handle resizes
-      window.addEventListener('resize', fit);
-
-      // Button
-      btn.addEventListener('click', start);
-
-      // Bonus: click anywhere on stage spawns more particles
-      stage.addEventListener('click', () => spawnParticles(80));
-    })();
-  </script>
+  // init
+  (function init(){
+    const last = Number(localStorage.getItem(store.keyIdx));
+    const startIdx = inBounds(last) ? pickRandom(last) : Math.floor(Math.random()*jokes.length);
+    showIndex(startIdx, true);
+    // subtle first buzz
+    buzz(6);
+  })();
+</script>
 </body>
 </html>
