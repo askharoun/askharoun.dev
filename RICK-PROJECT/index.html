@@ -8,491 +8,368 @@
         y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
     })(window, document, "clarity", "script", "rmcsekaion");
   </script>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title> </title>
+   <!DOCTYPE html>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Room 265 • Joke of the Day</title>
 <style>
   :root{
-    --bg1:#0b0f1a;
-    --bg2:#121a2c;
-    --glow:#7df9ff;
-    --peach:#ffbd59;
-    --ink:#0c1220;
-    --glass:rgba(255,255,255,.08);
-    --card:rgba(255,255,255,.12);
-    --white:#eef3ff;
+    --bg:#f9fafb; --card:#ffffff; --ink:#111827; --muted:#6b7280; --accent:#ffbd59;
   }
   *{box-sizing:border-box; -webkit-tap-highlight-color:transparent}
   html,body{height:100%}
   body{
-    margin:0;
-    font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial, sans-serif;
-    color:var(--white);
-    background: radial-gradient(1200px 800px at 20% 10%, #152040 0%, transparent 60%),
-                radial-gradient(1000px 700px at 80% 90%, #1a2448 0%, transparent 60%),
-                linear-gradient(135deg,var(--bg1),var(--bg2));
-    overflow:hidden;
-  }
-
-  /* floating orbs */
-  .orb{
-    position:fixed; inset:auto;
-    border-radius:999px; filter:blur(40px); opacity:.55;
-    pointer-events:none; mix-blend-mode:screen;
-    animation: float 14s ease-in-out infinite;
-  }
-  .o1{width:220px;height:220px; left:12%; top:8%; background:#5be7ff;}
-  .o2{width:280px;height:280px; right:10%; bottom:12%; background:#7a5bff; animation-duration:18s;}
-  .o3{width:180px;height:180px; left:50%; bottom:20%; background:#ffbd59; animation-duration:16s;}
-  @keyframes float{ 0%,100%{transform:translateY(0)} 50%{transform:translateY(-18px)} }
-
-  /* animated gradient grid */
-  .grid{
-    position:fixed; inset:0; pointer-events:none; opacity:.18;
-    background:
-      radial-gradient(circle at 50% 50%, rgba(255,255,255,.12), transparent 55%) 0 0/240px 240px,
-      linear-gradient( to bottom, rgba(255,255,255,.12), transparent 30% );
-    mask-image: radial-gradient(80% 80% at 50% 50%, #000 60%, transparent 100%);
-    animation: shimmer 12s linear infinite;
-  }
-  @keyframes shimmer{ from{background-position:0 0, 0 0} to{background-position:240px 240px, 0 0} }
-
-  /* container */
-  .wrap{
-    position:relative;
-    height:100%;
+    margin:0; background:var(--bg); color:var(--ink);
+    font-family: system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,sans-serif;
     display:flex; align-items:center; justify-content:center;
+    overflow:hidden; /* no scrolling */
     padding:20px;
   }
-
-  /* glass card */
+  .wrap{width:min(640px,100%); display:flex; flex-direction:column; align-items:center; gap:14px}
+  header{
+    text-transform:uppercase; letter-spacing:.06em; font-weight:800; font-size:1rem; color:var(--muted);
+  }
   .card{
-    width:min(92vw, 620px);
-    min-height: 44vh;
-    background: linear-gradient(180deg, rgba(255,255,255,.18), rgba(255,255,255,.08));
-    border:1px solid rgba(255,255,255,.16);
-    border-radius:28px;
-    backdrop-filter: blur(14px) saturate(140%);
-    box-shadow:
-      0 10px 30px rgba(0,0,0,.35),
-      0 0 0 1px rgba(125,249,255,.10) inset,
-      0 0 40px rgba(125,249,255,.15);
-    position:relative;
-    overflow:hidden;
-    padding:22px 18px 18px;
+    width:100%; background:var(--card); border:1px solid #e5e7eb; border-radius:18px;
+    box-shadow:0 6px 18px rgba(0,0,0,.05); padding:22px;
   }
-
-  /* top icons */
-  .topbar{
-    display:flex; align-items:center; justify-content:space-between;
-    gap:10px; margin-bottom:8px; user-select:none;
+  .row{display:flex; justify-content:space-between; align-items:center; margin-bottom:10px}
+  .label{font-size:.8rem; text-transform:uppercase; letter-spacing:.05em; color:var(--muted)}
+  .pill{
+    font-size:.72rem; padding:6px 10px; border-radius:999px; background:#fff7ea; color:#7a4a00; border:1px solid #ffe0a6;
   }
-  .icon{
-    width:42px;height:42px;border-radius:14px;
-    display:grid;place-items:center;
-    background:var(--glass);
-    border:1px solid rgba(255,255,255,.14);
-    box-shadow:0 4px 18px rgba(0,0,0,.25);
-    cursor:pointer;
-    transition:transform .08s ease, opacity .2s ease, box-shadow .2s ease;
+  .q{font-size:1.25rem; line-height:1.4; margin:8px 0 10px}
+  .tap{font-size:.85rem; color:var(--muted); margin:0 0 6px}
+  .a{
+    display:none; margin-top:8px; padding-top:10px; border-top:1px dashed #e5e7eb;
+    color:#000; font-weight:600;
   }
-  .icon:active{ transform:scale(.96) }
-  .icon svg{ width:22px;height:22px; fill: none; stroke:#cfe8ff; stroke-width:2; }
-
-  /* joke */
-  .joke{
-    font-size: clamp(20px, 4.8vw, 28px);
-    line-height:1.35;
-    letter-spacing:.2px;
-    padding: 18px 8px 12px;
-    text-align:center;
-    user-select:text;
-    -webkit-user-select:text;
+  .hint{
+    text-align:center; font-size:.8rem; color:#9aa0a6; margin-top:10px;
   }
-
-  /* hint pulse (no text) */
-  .pulse{
-    position:absolute; left:50%; bottom:22px; transform:translateX(-50%);
-    width:64px;height:64px;border-radius:50%;
-    background: radial-gradient(circle at 50% 50%, rgba(255,255,255,.22), rgba(255,255,255,0));
-    animation: pulse 2.2s ease-in-out infinite;
-    pointer-events:none; opacity:.55;
-  }
-  @keyframes pulse{
-    0%{ transform:translateX(-50%) scale(1); opacity:.55 }
-    50%{ transform:translateX(-50%) scale(1.06); opacity:.25 }
-    100%{ transform:translateX(-50%) scale(1); opacity:.55 }
-  }
-
-  /* toast (no label, just a check) */
-  .toast{
-    position:fixed; left:50%; bottom:18px; transform:translateX(-50%) translateY(20px);
-    background:rgba(0,0,0,.5);
-    border:1px solid rgba(255,255,255,.18);
-    border-radius:999px; padding:10px 12px;
-    display:flex; align-items:center; gap:8px; opacity:0; pointer-events:none;
-    transition:opacity .22s ease, transform .22s ease;
-    backdrop-filter: blur(8px) saturate(140%);
-    box-shadow:0 8px 18px rgba(0,0,0,.3);
-  }
-  .toast.show{ opacity:1; transform:translateX(-50%) translateY(0) }
-  .toast svg{ width:18px; height:18px; stroke:#9ff7c8; }
-
-  /* tiny badges (no text) */
-  .badge{
-    position:absolute; right:16px; top:64px;
-    width:10px; height:10px; border-radius:50%;
-    background: radial-gradient(circle at 30% 30%, #fff, #7df9ff 40%, transparent 70%);
-    opacity:.0; transition:opacity .25s ease;
-  }
-  .badge.on{ opacity:.9 }
-
-  /* subtle arrows for swipe (no labels) */
-  .ghost{
-    position:absolute; top:50%; transform:translateY(-50%);
-    width:44px;height:44px; border-radius:50%;
-    display:grid; place-items:center;
-    background:rgba(255,255,255,.05);
-    border:1px solid rgba(255,255,255,.12);
-    opacity:.0; transition:opacity .25s ease;
-    pointer-events:none;
-  }
-  .ghost svg{ width:20px;height:20px; stroke:#cfe8ff }
-  .ghost.left{ left:10px }
-  .ghost.right{ right:10px }
-  .card:active .ghost{ opacity:.35 }
-
-  /* accessibility focus ring (invisible by default) */
-  .icon:focus-visible{ outline:2px solid var(--glow); outline-offset:2px }
-
-  /* reduce motion */
-  @media (prefers-reduced-motion: reduce){
-    .orb,.grid,.pulse{ animation:none }
-  }
+  footer{font-size:.85rem; color:var(--muted); text-align:center}
+  footer a{color:var(--ink); text-decoration:none; font-weight:600}
+  .accent{color:#000; background:var(--accent); padding:2px 8px; border-radius:8px; font-weight:700}
+  button{appearance:none; border:none; background:none; padding:0; margin:0}
 </style>
 </head>
 <body>
+  <main class="wrap" aria-live="polite">
+    <header>ROOM #265</header>
 
-<div class="orb o1"></div>
-<div class="orb o2"></div>
-<div class="orb o3"></div>
-<div class="grid"></div>
+    <section class="card" id="card">
+      <div class="row">
+        <div class="label">Joke</div>
+        <span class="pill" id="datePill"></span>
+      </div>
+      <p class="q" id="q"></p>
+      <p class="tap">Tap to reveal answer</p>
+      <p class="a" id="a"></p>
+      <p class="hint">Same joke for everyone today • Come back tomorrow for a new one!</p>
+    </section>
 
-<div class="wrap">
-  <section class="card" id="card" aria-live="polite">
-    <div class="topbar">
-      <!-- left: previous -->
-      <button class="icon" id="prev" aria-label="">
-        <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
-      </button>
-
-      <!-- center: dice / random -->
-      <button class="icon" id="random" aria-label="">
-        <svg viewBox="0 0 24 24">
-          <rect x="3" y="3" width="18" height="18" rx="4" stroke-linecap="round" />
-          <circle cx="8.5" cy="8.5" r="1.2" />
-          <circle cx="15.5" cy="15.5" r="1.2" />
-          <circle cx="15.5" cy="8.5" r="1.2" />
-          <circle cx="8.5" cy="15.5" r="1.2" />
-        </svg>
-      </button>
-
-      <!-- right: favorite -->
-      <button class="icon" id="fav" aria-label="">
-        <svg id="star" viewBox="0 0 24 24">
-          <path d="M12 3l2.9 5.9 6.5.9-4.7 4.6 1.1 6.5L12 17.8 6.2 21l1.1-6.5L2.6 9.8l6.5-.9L12 3z" stroke-linejoin="round"/>
-        </svg>
-      </button>
-    </div>
-
-    <div class="joke" id="joke"></div>
-
-    <div class="pulse"></div>
-    <span class="badge" id="badge"></span>
-
-    <div class="ghost left">
-      <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6" fill="none" stroke-width="2"/></svg>
-    </div>
-    <div class="ghost right">
-      <svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6" fill="none" stroke-width="2"/></svg>
-    </div>
-  </section>
-</div>
-
-<div class="toast" id="toast">
-  <svg viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-</div>
+    <footer>
+      Created by <a href="https://instagram.com/tommy.much" target="_blank">@tommy.much</a>
+      & <a href="https://instagram.com/kerlos.rafayel" target="_blank">@kerlos.rafayel</a>
+      • <span class="accent">Daily</span>
+    </footer>
+  </main>
 
 <script>
-  // haptics utility
-  const buzz = ms => 'vibrate' in navigator ? navigator.vibrate(ms) : null;
+/* ——— Deterministic daily index (UTC) ——— */
+function dayOfYearUTC(d){
+  const start = Date.UTC(d.getUTCFullYear(), 0, 1);
+  const now   = Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate());
+  return Math.floor((now - start)/86400000) + 1; // 1–366
+}
+function dailyIndex(len){
+  const d = new Date();
+  const y = d.getUTCFullYear();
+  const doy = dayOfYearUTC(d);
+  // stable across all devices: year+day hashed into a simple index
+  return ((y * 397) + (doy * 17)) % len;
+}
 
-  // jokes (100)
-  const jokes = [
-    "I told my suitcase we’re not going on vacation this year. Now I’m dealing with emotional baggage.",
-    "Why don’t eggs tell jokes? They’d crack each other up.",
-    "I used to be addicted to the hokey pokey… but I turned myself around.",
-    "I’m reading a book about anti-gravity. It’s impossible to put down.",
-    "Why did the scarecrow get promoted? He was outstanding in his field.",
-    "I ordered a chicken and an egg from Amazon. I’ll let you know which comes first.",
-    "Want to hear a construction joke? Sorry, I’m still working on it.",
-    "Why did the math book look sad? Too many problems.",
-    "I don’t trust stairs. They’re always up to something.",
-    "I used to hate facial hair… but then it grew on me.",
-    "I’m on a seafood diet. I see food and I eat it.",
-    "Why did the coffee file a police report? It got mugged.",
-    "Did you hear about the restaurant on the moon? Great food, no atmosphere.",
-    "What do you call fake spaghetti? An impasta.",
-    "How does a penguin build its house? Igloos it together.",
-    "What do you call cheese that isn’t yours? Nacho cheese.",
-    "I’m so good at sleeping I can do it with my eyes closed.",
-    "Why couldn’t the bicycle stand up by itself? It was two-tired.",
-    "I don’t play soccer because I enjoy the sport. I’m just doing it for kicks.",
-    "What do you call a factory that makes okay products? A satisfactory.",
-    "Want to hear a joke about paper? Never mind, it’s tearable.",
-    "Why did the golfer bring two pairs of pants? In case he got a hole in one.",
-    "I used to be a baker, but I couldn’t make enough dough.",
-    "Why did the photo go to jail? It was framed.",
-    "I only know 25 letters of the alphabet. I don’t know y.",
-    "What do you call a fish wearing a bowtie? Sofishticated.",
-    "How do you organize a space party? You planet.",
-    "What do you call a belt made of watches? A waist of time.",
-    "Why are elevator jokes so classic? They work on many levels.",
-    "I got hit in the head with a can of soda. Luckily, it was a soft drink.",
-    "I’d tell you a joke about chemistry, but I know I wouldn’t get a reaction.",
-    "Why did the computer go to the doctor? It had a virus.",
-    "I told my friend she drew her eyebrows too high. She looked surprised.",
-    "I stayed up all night wondering where the sun went… then it dawned on me.",
-    "You know what they say about cliff jokes… they’re edgy.",
-    "What do you call a cold dog? A chili dog.",
-    "Why don’t skeletons fight each other? They don’t have the guts.",
-    "I gave all my dead batteries away… free of charge.",
-    "What do you call a line of men waiting for haircuts? A barberqueue.",
-    "What did the janitor say when he jumped out of the closet? Supplies!",
-    "I used to be a banker, but I lost interest.",
-    "The graveyard looks overcrowded. People must be dying to get in.",
-    "Why did the tomato blush? It saw the salad dressing.",
-    "Why can’t you trust atoms? They make up everything.",
-    "What do you call an alligator in a vest? An investigator.",
-    "I wrote a song about a tortilla. Actually, it’s more of a wrap.",
-    "How do you make a tissue dance? Put a little boogie in it.",
-    "I don’t trust those trees. They seem kind of shady.",
-    "What did the ocean say to the beach? Nothing, it just waved.",
-    "Why was the stadium so cool? It was full of fans.",
-    "I’d tell you a roof joke, but it’s over your head.",
-    "I got a job at a bakery because I kneaded dough.",
-    "What do you call a bear with no teeth? A gummy bear.",
-    "I used to be a train driver, but I got sidetracked.",
-    "How do you find Will Smith in the snow? You look for fresh prints.",
-    "What do you call a sleeping bull? A bulldozer.",
-    "Why don’t oysters donate to charity? Because they’re shellfish.",
-    "I don’t trust calendars. Their days are numbered.",
-    "Want to hear a vegetable joke? I’ll lettuce know.",
-    "I tried to catch fog yesterday. Mist.",
-    "What do you call a pile of cats? A meowtain.",
-    "Why did the cookie go to the hospital? He felt crummy.",
-    "Why can’t a nose be 12 inches long? Then it’d be a foot.",
-    "I used to be a shoe salesman till I got the boot.",
-    "Why did the man fall down the well? He couldn’t see that well.",
-    "I’m reading a book about glue. I just can’t put it down.",
-    "What do you call a cow with no legs? Ground beef.",
-    "Why did the bike fall over? It was two-tired… again.",
-    "What do you call a bee that can’t make up its mind? A may-bee.",
-    "The furniture store keeps calling me. All I wanted was a one nightstand.",
-    "Why did the music teacher go to jail? She got caught with too many notes.",
-    "How do you fix a cracked pumpkin? With a pumpkin patch.",
-    "Why did the computer show up at work late? It had a hard drive.",
-    "I told a joke about a roof once… it went over everyone’s head.",
-    "Why was the computer cold? It left its Windows open.",
-    "I cut my finger chopping cheese. I think that I may have grater problems.",
-    "Singing in the shower is fun… until you get soap in your mouth. Then it’s a soap opera.",
-    "Why did the orange stop? It ran out of juice.",
-    "I used to be a gardener, but my celery wasn’t high enough.",
-    "Why don’t crabs give to charity? They’re shellfish.",
-    "How do you make holy water? You boil the hell out of it.",
-    "I told my dog to stop chasing people on bikes. He said he just couldn’t handle the wheels.",
-    "Why did the golfer wear two pairs of socks? In case he got a hole in one.",
-    "What do you call a knight who is afraid to fight? Sir Render.",
-    "Why did the keyboard break up with the computer? It wasn’t their type.",
-    "I asked the librarian if the library had books on paranoia. She whispered, “They’re right behind you.”",
-    "What’s orange and sounds like a parrot? A carrot.",
-    "I used to date a baker. She was a real sweetie pie.",
-    "What do clouds wear? Thunderwear.",
-    "Why did the picture go to jail? It was framed. Classic.",
-    "I gave up my seat to a blind person on the bus. That’s how I lost my job as a bus driver.",
-    "Why did the kid bring a ladder to school? He wanted to go to high school.",
-    "I asked my dog what’s two minus two. He said nothing.",
-    "What did one wall say to the other? I’ll meet you at the corner.",
-    "I would avoid the sushi if I were you. It’s a little fishy.",
-    "What do you call a dinosaur with an extensive vocabulary? A thesaurus.",
-    "How does the moon cut his hair? Eclipse it.",
-    "Why don’t seagulls fly over the bay? Because then they’d be bagels.",
-    "Did you hear about the claustrophobic astronaut? He just needed a little space.",
-    "I used to be a tennis player, but I kept raising a racquet.",
-    "What do you call a can opener that doesn’t work? A can’t opener.",
-    "I bought shoes from a drug dealer. I don’t know what he laced them with, but I’ve been tripping all day.",
-    "Why are peppers good at archery? Because they habanero.",
-    "My friend says, “What rhymes with orange?” I said, “No it doesn’t.”",
-    "I told my plants jokes. They’re still not rooting for me.",
-    "Why did the smartphone need glasses? It lost all its contacts.",
-    "I ate a clock yesterday. It was very time-consuming."
-  ];
+/* ——— ~200 jokes (Q|A) ——— */
+const jokes = [
+"Why don’t eggs tell jokes?|They’d crack each other up.",
+"I used to be addicted to the hokey pokey…|But I turned myself around.",
+"I’m reading a book about anti-gravity…|It’s impossible to put down.",
+"Why did the scarecrow get promoted?|He was outstanding in his field.",
+"What do you call fake spaghetti?|An impasta.",
+"How does a penguin build its house?|Igloos it together.",
+"What do you call cheese that isn’t yours?|Nacho cheese.",
+"Why couldn’t the bicycle stand up by itself?|It was two-tired.",
+"What do you call a factory that makes okay products?|A satisfactory.",
+"Why did the golfer bring two pairs of pants?|In case he got a hole in one.",
+"Why did the photo go to jail?|It was framed.",
+"What do you call a fish wearing a bowtie?|Sofishticated.",
+"How do you organize a space party?|You planet.",
+"What do you call a belt made of watches?|A waist of time.",
+"Why are elevator jokes so classic?|They work on many levels.",
+"Why did the computer go to the doctor?|It had a virus.",
+"Why don’t skeletons fight each other?|They don’t have the guts.",
+"What do you call a line of men waiting for haircuts?|A barberqueue.",
+"What did the janitor say when he jumped out of the closet?|Supplies!",
+"Why did the tomato blush?|It saw the salad dressing.",
+"Why can’t you trust atoms?|They make up everything.",
+"What do you call an alligator in a vest?|An investigator.",
+"I wrote a song about a tortilla…|Actually, it’s more of a wrap.",
+"How do you make a tissue dance?|Put a little boogie in it.",
+"I don’t trust those trees…|They seem kinda shady.",
+"What did the ocean say to the beach?|Nothing, it just waved.",
+"Why was the stadium so cool?|It was full of fans.",
+"I’d tell you a roof joke…|But it’s over your head.",
+"I got a job at a bakery…|Because I kneaded dough.",
+"What do you call a bear with no teeth?|A gummy bear.",
+"I used to be a train driver…|But I got sidetracked.",
+"How do you find Will Smith in the snow?|You look for fresh prints.",
+"What do you call a sleeping bull?|A bulldozer.",
+"Why don’t oysters donate to charity?|Because they’re shellfish.",
+"I don’t trust calendars…|Their days are numbered.",
+"Want to hear a vegetable joke?|I’ll lettuce know.",
+"I tried to catch fog yesterday…|Mist.",
+"What do you call a pile of cats?|A meowtain.",
+"Why did the cookie go to the hospital?|He felt crummy.",
+"Why can’t a nose be 12 inches long?|Then it would be a foot.",
+"I used to be a shoe salesman…|Till I got the boot.",
+"Why did the man fall down the well?|He couldn’t see that well.",
+"I’m reading a book about glue…|I just can’t put it down.",
+"What do you call a cow with no legs?|Ground beef.",
+"Why did the bike fall over (again)?|It was two-tired.",
+"What do you call a bee that can’t make up its mind?|A may-bee.",
+"The furniture store keeps calling me…|All I wanted was a one-nightstand.",
+"Why did the music teacher go to jail?|Too many notes.",
+"How do you fix a cracked pumpkin?|With a pumpkin patch.",
+"Why did the computer show up late?|It had a hard drive.",
+"I told a joke about a roof once…|It went over everyone’s head.",
+"Why was the computer cold?|It left its Windows open.",
+"I cut my finger chopping cheese…|I think I have grater problems.",
+"Singing in the shower is fun…|Until it’s a soap opera.",
+"Why did the orange stop?|It ran out of juice.",
+"I used to be a gardener…|But my celery wasn’t high enough.",
+"How do you make holy water?|Boil the hell out of it.",
+"I told my dog to stop chasing bikes…|He said he couldn’t handle the wheels.",
+"Why did the golfer wear two socks?|In case he got a hole in one.",
+"What do you call a knight who’s afraid?|Sir Render.",
+"Why did the keyboard break up with the computer?|It wasn’t their type.",
+"Books on paranoia in the library?|They’re right behind you.",
+"What’s orange and sounds like a parrot?|A carrot.",
+"I used to date a baker…|She was a real sweetie pie.",
+"What do clouds wear?|Thunderwear.",
+"Why did the kid bring a ladder to school?|He wanted to go to high school.",
+"I asked my dog what’s two minus two…|He said nothing.",
+"What did one wall say to the other?|I’ll meet you at the corner.",
+"Avoid the sushi if I were you…|It’s a little fishy.",
+"What do you call a dinosaur with a big vocabulary?|A thesaurus.",
+"How does the moon cut his hair?|Eclipse it.",
+"Why don’t seagulls fly over the bay?|Then they’d be bagels.",
+"Claustrophobic astronaut?|He just needed a little space.",
+"I used to play tennis…|Kept raising a racquet.",
+"What do you call a can opener that doesn’t work?|A can’t opener.",
+"I bought shoes from a drug dealer…|No idea what they were laced with; I’ve been tripping all day.",
+"Why are peppers good at archery?|Because they habanero.",
+"My friend asked what rhymes with orange…|I said, no it doesn’t.",
+"I told my plants jokes…|They’re still not rooting for me.",
+"Why did the smartphone need glasses?|It lost contacts.",
+"I ate a clock yesterday…|It was time-consuming.",
+"Why did the scarecrow win an award?|Outstanding in his field. (Still.)",
+"What did the grape do when stepped on?|Let out a little wine.",
+"What do you call a very small valentine?|A valentiny.",
+"Why don’t programmers like nature?|Too many bugs.",
+"Why did the picture go to prison… again?|Framed. Classic.",
+"What do you call a fish with no eyes?|Fsh.",
+"Why did the belt get arrested?|Holding up a pair of pants.",
+"How do you stop a bull from charging?|Cancel its credit card.",
+"What do you call a boomerang that won’t come back?|A stick.",
+"Why did the scarecrow keep getting promoted?|He was outstanding, consistently.",
+"What do you call a lazy kangaroo?|A pouch potato.",
+"Why did the barber win the race?|He knew a shortcut.",
+"What’s brown and sticky?|A stick.",
+"Parallel lines have so much in common…|It’s a shame they’ll never meet.",
+"I used to be a baker…|Couldn’t make enough dough. (Still true.)",
+"Why did the clock get fat?|It went back for seconds.",
+"What concert costs just 45 cents?|50 Cent featuring Nickelback.",
+"Why did the stadium get hot after the game?|All the fans left.",
+"How do you make a lemon drop?|Just let it fall.",
+"Want to hear a pizza joke?|Never mind, it’s cheesy.",
+"Why did the M&M go to school?|It wanted to be a Smartie.",
+"How do you throw a space party?|You planet. (Double booked!)",
+"Why did the computer sneeze?|It had a bad case of cookies.",
+"How does a scientist freshen her breath?|With experi-mints.",
+"Why do bees have sticky hair?|Because they use honeycombs.",
+"What do you call an apology written in dots and dashes?|Re-morse code.",
+"Why did the scarecrow keep getting emails?|He subscribed to field notes.",
+"How do you organize a haunted house?|You pre-boo-k.",
+"Why did the coffee call the police?|It got mugged.",
+"What do you call a flashlight’s batteries?|Power couple.",
+"Why don’t vampires have many friends?|Because they are a pain in the neck.",
+"Why did the banana go to the doctor?|It wasn’t peeling well.",
+"Why did the cookie visit the therapist?|Crumbled under pressure.",
+"What do you call a snowman with a six-pack?|An abdominal snowman.",
+"How does a taco say grace?|Lettuce pray.",
+"Why did the broom show up late?|It swept in.",
+"What do you call a sleeping dinosaur?|A dino-snore.",
+"What did zero say to eight?|Nice belt.",
+"Why did the golfer bring an extra shirt?|In case of a hole in one. (We love golf.)",
+"What do you call a pig that does karate?|A pork chop.",
+"How do you make an octopus laugh?|Ten-tickles.",
+"What do you call a deer with no eyes?|No-eye-deer.",
+"What do you call a deer with no eyes and no legs?|Still no-eye-deer.",
+"Why did the scarecrow read motivational quotes?|To field better.",
+"What did the buffalo say to his son?|Bison.",
+"Why don’t koalas count as bears?|They don’t have the koalafications.",
+"How do you get a squirrel to like you?|Act like a nut.",
+"Why did the math book look sad?|Too many problems.",
+"What do you call a fish that practices medicine?|A sturgeon.",
+"What do you call a factory that makes okay electronics?|A satis-factory.",
+"Why did the bicycle collapse?|It was two-tired. (Legacy.)",
+"How does a cucumber become a pickle?|It goes through a jarring experience.",
+"Why did the scarecrow bring a ladder?|To take his career to the next level.",
+"What kind of shoes do ninjas wear?|Sneakers.",
+"What do you call a potato with glasses?|A spectator.",
+"Why did the stadium lights go out?|Too many fans blew a fuse.",
+"What do you call an educated tube?|A graduated cylinder.",
+"Why did the musician get locked out?|She left her keys on the piano.",
+"How do you fix a broken tomato?|Tomato paste.",
+"What do you call a sheep covered in chocolate?|A candy baa.",
+"What did the fisherman say to the magician?|Pick a cod, any cod.",
+"Why did the scarecrow meditate?|To find inner piece (of straw).",
+"What do you call an elephant that doesn’t matter?|Irrelephant.",
+"Why did the cookie get kicked out of class?|For being too crumby.",
+"What do you call a sleeping bull in winter?|A snow-dozer.",
+"What do you call a belt with a clock on it?|A waist of time. (Reissue.)",
+"Why are skeletons so calm?|Nothing gets under their skin.",
+"How does a penguin drink its coffee?|Ice-cold brew.",
+"What do you call a beehive without an exit?|Un-bee-lievable traffic.",
+"Why did the scarecrow break up?|He needed space in the relationship.",
+"Why did the picture go to therapy?|It had too many frames of reference.",
+"How does a vampire start a letter?|Tomb it may concern.",
+"Why did the gardener plant a light bulb?|He wanted a power plant.",
+"What kind of music do balloons hate?|Pop.",
+"Why can’t you hear a pterodactyl go to the bathroom?|Because the P is silent.",
+"What do you call a cow in an earthquake?|A milkshake.",
+"Why did the cat sit on the computer?|It wanted to keep an eye on the mouse.",
+"What’s a computer’s favorite snack?|Microchips.",
+"Why did the student eat his homework?|The teacher said it was a piece of cake.",
+"What’s brown, hairy, and wears sunglasses?|A coconut on vacation.",
+"How does the ocean say hello?|It waves. (Encore.)",
+"Why did the scarecrow take up podcasting?|He had great field recordings.",
+"What do you call a group of disorganized cats?|A cat-astrophe.",
+"Why did the lemon stop halfway?|It ran out of zest.",
+"Why was the broom promoted?|It swept the competition.",
+"What do you call a singing laptop?|A Dell.",
+"Why did the egg hide?|It was a little chicken.",
+"Why did the coffee file a complaint?|Too much grounds for dismissal.",
+"How do you make a Kleenex dance?|Put a little boogie in it. (Classic.)",
+"Why did the golfer bring three socks?|Optimism.",
+"Why did the scarecrow start coding?|To handle field exceptions.",
+"What do you call a nervous javelin thrower?|Shakespeare—he had the shakes-peer.",
+"Why did the baker always win debates?|Great counter-arguments.",
+"What kind of photos do turtles take?|Shell-fies.",
+"Why did the cookie fail the driving test?|Couldn’t crumble under pressure correctly.",
+"Why did the banana apply sunscreen?|It peels.",
+"What kind of button can’t be unbuttoned?|A belly button.",
+"What do you call a bear in the rain?|A drizzly bear.",
+"Why did the skeleton go to the party alone?|He had no body to go with.",
+"Why did the scarecrow stay calm?|He knew the drill—field work.",
+"Why did the dairy farmer get an award?|Outstanding in his field of cream.",
+"How do you make a water bed more bouncy?|Use spring water.",
+"What do you call a tired laptop?|A Dell-drained.",
+"What do you call a rabbit with fleas?|Bugs Bunny.",
+"Why don’t pirates shower before walking the plank?|They’ll just wash up on shore.",
+"Why did the math teacher love parks?|They’re full of natural logs.",
+"What do you call a cow with two legs?|Lean beef.",
+"What do you call a cow with three legs?|Tri-tip.",
+"What do you call a fake noodle again?|An impasta. (Staple.)",
+"Why was the belt stressed?|It was under a lot of pressure.",
+"Why did the scarecrow love stand-up?|He could really field a crowd.",
+"What’s a tree’s least favorite month?|Sep-timber.",
+"How do you organize bills in space?|You planetarium.",
+"Why did the stadium get louder?|More fans installed.",
+"What did the buffalo text his kid at college?|Bison.",
+"Why are peppers always busy?|They’re jalapeño business.",
+"Why did the bicycle need a nap?|Two-tired, timeless.",
+"What did the grape say after the sunburn?|I’m feeling a little wine-y.",
+"What do you call an alligator in a vest again?|An investigator (case reopened).",
+"Why did the chicken join a band?|It had drumsticks.",
+"How do you make a goldfish old?|Take away the gold.",
+"Why did the scarecrow get Wi-Fi?|Better field connection.",
+"Why did the picture apply for a job?|It wanted more exposure.",
+"Why did the shovel get promoted?|It was ground-breaking.",
+"Why did the cookie bring an umbrella?|Possible sprinkle.",
+"Why did the farmer ride his horse to school?|Because it was stable.",
+"Why did the scarecrow get a smartphone?|Field applications.",
+"How do candles say goodbye?|Wick ya later.",
+"Why did the tomato turn to the dark side?|It saw Darth Tater.",
+"How do mountains stay warm in winter?|They wear snowcaps.",
+"Why did the stadium break the internet?|Too many fans followed.",
+"What’s a car’s favorite meal?|Brake-fast.",
+"What do computers eat for dessert?|Apple pie charts.",
+"Why did the broom join the meeting?|To sweep up action items.",
+"How does the barber win arguments?|He always makes a good point—clip.",
+"Why did the music note get good grades?|Perfect pitch.",
+"Why did the scarecrow love emails?|All those field updates.",
+"Why did the light bulb relax?|It needed to unwind its filament.",
+"Why did the fridge apply to college?|It had great cool-extracurriculars.",
+"Why did the potato sit in the corner?|Because it was a little fried.",
+"Why did the bicycle keep a diary?|To handle its cycle-logical thoughts.",
+"Why did the ruler break up?|It felt taken for granted.",
+"Why did the stapler get invited?|He always keeps it together.",
+"Why did the printer get therapy?|Paper jams from childhood.",
+"Why did the sticky note meditate?|To find inner adhesive.",
+"Why did the spoon join the team?|It could stir things up.",
+"Why did the calendar get promoted?|It had a lot of dates.",
+"Why did the keyboard win employee of the month?|It had great type.",
+"Why did the scarecrow read leadership books?|To grow in his field.",
+"Why did the grape stop in the middle of the road?|It ran out of juice.",
+"Why did the sandwich get good grades?|It was on a roll.",
+"Why did the basketball team go to the bank?|To get their bounce back.",
+"Why did the cloud stay home?|Under the weather.",
+"Why did the cookie ace chemistry?|Great with solutions.",
+"Why did the scarecrow invest?|Strong field returns.",
+"Why did the coffee take a break?|It needed a little espresso-self.",
+"Why did the broom take notes?|To sweep through the syllabus.",
+"Why did the laptop meditate?|To clear its cache.",
+"Why did the banana win the race?|It split at the right time.",
+"Why did the microwave get promoted?|Quick thinker.",
+"Why did the stapler get a medal?|Outstanding in its clip.",
+"Why did the library get stronger Wi-Fi?|So readers could connect to more stories.",
+"Why did the tree go online?|To improve its log-in.",
+"Why did the scarecrow start mentoring?|Field experience matters."
+];
 
-  // elements
-  const elJoke = document.getElementById('joke');
-  const elRandom = document.getElementById('random');
-  const elPrev = document.getElementById('prev');
-  const elFav = document.getElementById('fav');
-  const elStar = document.getElementById('star');
-  const elBadge = document.getElementById('badge');
-  const elToast = document.getElementById('toast');
-  const card = document.getElementById('card');
+/* ——— Render ——— */
+const [qEl, aEl, card, pill] = [
+  document.getElementById('q'),
+  document.getElementById('a'),
+  document.getElementById('card'),
+  document.getElementById('datePill')
+];
 
-  // state
-  const store = {
-    keyFav: 'dorm_faves_v1',
-    keyIdx: 'dorm_last_idx',
-    history: [],
-    ptr: -1,
-    favorites: new Set(JSON.parse(localStorage.getItem('dorm_faves_v1')||'[]')),
-  };
+function showToday(){
+  const idx = dailyIndex(jokes.length);
+  const [q,a] = jokes[idx].split("|");
+  qEl.textContent = q;
+  aEl.textContent = a;
+  aEl.style.display = "none";
 
-  const setToast = (ok=true)=>{
-    elToast.classList.add('show');
-    setTimeout(()=>elToast.classList.remove('show'), 900);
-  };
+  // show UTC date so people know it's fixed for the day
+  const d = new Date();
+  const y = d.getUTCFullYear();
+  const m = String(d.getUTCMonth()+1).padStart(2,"0");
+  const da = String(d.getUTCDate()).padStart(2,"0");
+  pill.textContent = `UTC ${y}-${m}-${da}`;
+}
 
-  const starOn = (on)=> {
-    elStar.style.fill = on ? '#ffd86b' : 'none';
-    elStar.style.stroke = on ? '#ffd86b' : '#cfe8ff';
-    elBadge.classList.toggle('on', on);
-  };
+// reveal on tap
+card.addEventListener('click', (e)=>{
+  if (aEl.style.display === "none") {
+    aEl.style.display = "block";
+  }
+});
 
-  const inBounds = i => i>=0 && i<jokes.length;
-
-  const pickRandom = (excludeIdx) => {
-    if (jokes.length <= 1) return 0;
-    let idx;
-    do { idx = Math.floor(Math.random()*jokes.length); }
-    while (idx === excludeIdx);
-    return idx;
-  };
-
-  const showIndex = (idx, pushHist=true)=>{
-    if (!inBounds(idx)) return;
-    elJoke.textContent = jokes[idx];
-    localStorage.setItem(store.keyIdx, String(idx));
-    // star state
-    starOn(store.favorites.has(idx));
-    // history
-    if (pushHist){
-      if (store.ptr < store.history.length - 1) {
-        store.history = store.history.slice(0, store.ptr+1);
-      }
-      store.history.push(idx);
-      store.ptr = store.history.length - 1;
-    }
-  };
-
-  // interactions
-  const nextRandom = ()=>{
-    buzz(10);
-    const current = store.ptr>=0 ? store.history[store.ptr] : -1;
-    const idx = pickRandom(current);
-    showIndex(idx, true);
-  };
-
-  const prev = ()=>{
-    if (store.ptr>0){ store.ptr--; showIndex(store.history[store.ptr], false); buzz(8); }
-  };
-
-  const favToggle = ()=>{
-    const idx = store.ptr>=0 ? store.history[store.ptr] : -1;
-    if (!inBounds(idx)) return;
-    if (store.favorites.has(idx)) store.favorites.delete(idx);
-    else store.favorites.add(idx);
-    localStorage.setItem(store.keyFav, JSON.stringify([...store.favorites]));
-    starOn(store.favorites.has(idx));
-    buzz(12);
-  };
-
-  // copy on long-press
-  let pressTimer=null;
-  const startPress = ()=>{
-    clearTimeout(pressTimer);
-    pressTimer = setTimeout(async ()=>{
-      try{
-        await navigator.clipboard.writeText(elJoke.textContent||'');
-        setToast(true); buzz(18);
-      }catch(e){ /* ignore */ }
-    }, 450);
-  };
-  const endPress = ()=> clearTimeout(pressTimer);
-
-  // gestures
-  let x0=null, y0=null, t0=0;
-  const onTouchStart = (e)=>{
-    const t = e.touches[0];
-    x0 = t.clientX; y0 = t.clientY; t0=Date.now();
-    startPress();
-  };
-  const onTouchMove = (e)=>{ /* cancel long-press if moving a lot */ 
-    if (!x0) return;
-    const t = e.touches[0];
-    if (Math.hypot(t.clientX-x0, t.clientY-y0) > 10) endPress();
-  };
-  const onTouchEnd = (e)=>{
-    endPress();
-    if (x0===null) return;
-    const dx = (e.changedTouches[0].clientX - x0);
-    const dy = (e.changedTouches[0].clientY - y0);
-    const dt = Date.now()-t0;
-    const ax = Math.abs(dx), ay = Math.abs(dy);
-    // quick swipe
-    if (dt<500 && ax>40 && ax>ay){
-      if (dx<0) nextRandom(); else prev();
-    } else if (dt<250 && ax<10 && ay<10){
-      // quick tap = next
-      nextRandom();
-    }
-    x0=y0=null;
-  };
-
-  // double tap favorite
-  let lastTap=0;
-  const onDoubleTap = ()=>{
-    const now = Date.now();
-    if (now - lastTap < 300){ favToggle(); }
-    lastTap = now;
-  };
-
-  // click handlers (desktop or mobile)
-  elRandom.addEventListener('click', nextRandom);
-  elPrev.addEventListener('click', prev);
-  elFav.addEventListener('click', favToggle);
-
-  // card interactions
-  card.addEventListener('touchstart', onTouchStart, {passive:true});
-  card.addEventListener('touchmove', onTouchMove, {passive:true});
-  card.addEventListener('touchend', onTouchEnd, {passive:true});
-  card.addEventListener('click', (e)=>{
-    // avoid triggering when top icons clicked
-    if (e.target.closest('.icon')) return;
-    nextRandom();
-  });
-  card.addEventListener('pointerdown', ()=>startPress());
-  card.addEventListener('pointerup', ()=>endPress());
-  card.addEventListener('pointercancel', ()=>endPress());
-  card.addEventListener('pointerdown', onDoubleTap);
-
-  // init
-  (function init(){
-    const last = Number(localStorage.getItem(store.keyIdx));
-    const startIdx = inBounds(last) ? pickRandom(last) : Math.floor(Math.random()*jokes.length);
-    showIndex(startIdx, true);
-    // subtle first buzz
-    buzz(6);
-  })();
+showToday();
 </script>
 </body>
 </html>
