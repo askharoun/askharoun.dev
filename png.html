@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Image Paste → Save | askharoun.dev</title>
+  <link rel="icon" href="images/favicon.png" type="image/x-icon">
+  <!-- Your site styles / fonts -->
+  <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <style>
+    main { padding-top: 110px; }
+    .img-tool { max-width: 800px; margin: 0 auto; padding: 20px; }
+
+    .panel { 
+      background: var(--surface); 
+      border: 1px solid var(--border); 
+      border-radius: 12px; 
+      padding: 24px;
+      box-shadow: 0 2px 8px var(--shadow);
+    }
+
+    .dropzone { 
+      border: 2px dashed var(--border); 
+      border-radius: 8px; 
+      padding: 32px; 
+      text-align: center; 
+      cursor: pointer; 
+      transition: all 0.2s ease;
+      margin-bottom: 20px;
+    }
+    .dropzone:hover { border-color: var(--primary); }
+    .dropzone.dragover { border-color: var(--primary); background: rgba(45,108,223,.05); }
+    .dropzone strong { display: block; margin-bottom: 8px; font-size: 1.1rem; color: var(--text-primary); }
+    .dropzone .hint { color: var(--text-secondary); font-size: 0.9rem; }
+
+    .canvas-wrap { 
+      border-radius: 8px; 
+      overflow: hidden; 
+      border: 1px solid var(--border); 
+      background: repeating-conic-gradient(#e5e5e5 0% 25%, #f5f5f5 0% 50%) 50%/16px 16px;
+      margin-bottom: 20px;
+      min-height: 200px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .dark-mode .canvas-wrap {
+      background: repeating-conic-gradient(#1a1f2c 0% 25%, #242936 0% 50%) 50%/16px 16px;
+    }
+    canvas { display: block; max-width: 100%; height: auto; background: transparent; }
+
+    .controls { 
+      display: flex; 
+      flex-wrap: wrap; 
+      align-items: center; 
+      gap: 12px; 
+      margin-bottom: 20px;
+    }
+    .controls label { color: var(--text-secondary); font-size: 0.9rem; }
+    .controls input[type="text"], 
+    .controls select { 
+      border: 1px solid var(--border); 
+      background: var(--background); 
+      color: var(--text-primary); 
+      padding: 10px 14px; 
+      border-radius: 6px; 
+      font: inherit;
+      transition: border-color 0.2s;
+    }
+    .controls input[type="text"]:focus,
+    .controls select:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+    
+    .controls .btn { 
+      cursor: pointer; 
+      transition: all 0.2s; 
+      border: 1px solid var(--border); 
+      background: var(--surface); 
+      color: var(--text-primary); 
+      padding: 10px 18px; 
+      border-radius: 6px; 
+      font: inherit;
+      font-weight: 500;
+    }
+    .controls .btn:hover { background: var(--background); transform: translateY(-1px); }
+    .controls .btn:active { transform: translateY(0); }
+    .controls .btn.primary { background: var(--primary); border-color: var(--primary); color: #fff; }
+    .controls .btn.primary:hover { background: var(--primary-dark-color); }
+    .controls .btn.ghost { background: transparent; }
+
+    .info { 
+      padding-top: 16px; 
+      border-top: 1px solid var(--border);
+      color: var(--text-secondary); 
+      font-size: 0.9rem; 
+    }
+    .info strong { display: block; margin-bottom: 12px; color: var(--text-primary); }
+    .info dl { display: grid; grid-template-columns: 110px 1fr; gap: 8px 16px; }
+    .info dt { color: var(--text-secondary); }
+    .info dd { margin: 0; font-family: 'Courier New', monospace; color: var(--text-primary); }
+  </style>
+</head>
+<body>
+  <!-- ====== Header (exact structure/classes so your JS controls it) ====== -->
+  <header>
+        <div class="logo-container">
+            <a href="index.html" class="logo-text">ASKHAROUN.DEV</a>
+        </div>
+        
+        <nav>
+            <ul>
+                <li><a href="index.html" class="nav-link">Home</a></li>
+                <li><a href="index.html#about" class="nav-link">About</a></li>
+                <li><a href="certifications.html" class="nav-link">Certifications</a></li>
+                <li><a href="index.html#experience" class="nav-link">Experience</a></li>
+                <li><a href="index.html#contact" class="nav-link">Contact</a></li>
+            </ul>
+        </nav>
+        
+        <div class="theme-toggle-container">
+            <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode"></button>
+        </div>
+        
+        <div class="menu-toggle">
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+        </div>
+    </header>
+
+  <main>
+    <section class="section">
+      <div class="section-header">
+        <h2 class="section-title" data-text="Paste → Save PNG">Paste → Save PNG</h2>
+        <div class="section-line"></div>
+      </div>
+
+      <div class="img-tool">
+        <div class="panel">
+          <div id="dropzone" class="dropzone" tabindex="0" aria-label="Paste, drop, or pick an image">
+            <strong>Paste, Drag, or Click to Upload</strong>
+            <div class="hint">100% local processing - no upload required</div>
+          </div>
+
+          <div class="canvas-wrap">
+            <canvas id="canvas" width="0" height="0" aria-label="Canvas preview"></canvas>
+          </div>
+
+          <div class="controls">
+            <input id="fileInput" type="file" accept="image/*" hidden />
+            <button id="btnPick" class="btn" aria-label="Choose image">Choose Image</button>
+            
+            <input id="nameInput" type="text" placeholder="filename" aria-label="Filename" style="flex: 1; min-width: 120px;" />
+            
+            <select id="format" aria-label="Format">
+              <option value="image/png">PNG</option>
+              <option value="image/jpeg">JPEG</option>
+            </select>
+            
+            <select id="quality" aria-label="JPEG quality" style="display:none;">
+              <option value="0.92">High</option>
+              <option value="0.8">Medium</option>
+              <option value="0.6">Low</option>
+            </select>
+            
+            <button id="btnSave" class="btn primary" disabled aria-label="Save">Save</button>
+            <button id="btnClear" class="btn ghost" aria-label="Clear">Clear</button>
+          </div>
+
+          <div class="info" aria-live="polite">
+            <strong>Image Info</strong>
+            <dl>
+              <dt>Type</dt><dd id="metaType">—</dd>
+              <dt>Name</dt><dd id="metaName">—</dd>
+              <dt>Size</dt><dd id="metaSize">—</dd>
+              <dt>DPR</dt><dd id="metaDPR">—</dd>
+            </dl>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ====== Footer (matches your site) ====== -->
+  <footer>
+        <div class="footer-content">
+          <div class="footer-left">
+            <div class="footer-logo">askharoun.dev</div>
+            <div class="footer-subtitle">Electrical Engineering Student @ Penn State</div>
+          </div>
+          
+          <div class="footer-center">
+            <a target = "_blank" href="https://github.com/askharoun/askharoun.dev/blob/main/images/Askharoun_Thomas_Current_Resume.pdf" class="resume-button">
+              <span class="button-text">View Resume</span>
+              </span>
+            </a>
+          </div>
+          
+          <div class="footer-right">
+            <div class="footer-contact">
+              <div class="contact-item">
+                <span class="contact-label">Email:</span>
+                <span class="contact-value">askharoun2005@gmail.com</span>
+              </div>
+              <div class="contact-item">
+                <span class="contact-label">Phone:</span>
+                <span class="contact-value">(484) 510-6083</span>
+              </div>
+              <div class="contact-item">
+                <span class="contact-label">Location:</span>
+                <span class="contact-value">State College, PA</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="footer-bottom">
+          <p>This site was designed with the future in mind. All trademarks belong to their respective owners.</p>
+        </div>
+      </footer>
+
+  <!-- Your global behavior (theme toggle, mobile nav, etc.) -->
+  <script src="script.js"></script>
+  <!-- Tool logic (isolated) -->
+  <script>
+    (function(){
+      const d = document;
+      const dz = d.getElementById('dropzone');
+      const fileInput = d.getElementById('fileInput');
+      const btnPick = d.getElementById('btnPick');
+      const btnClear = d.getElementById('btnClear');
+      const btnSave = d.getElementById('btnSave');
+      const nameInput = d.getElementById('nameInput');
+      const fmtSel = d.getElementById('format');
+      const qSel = d.getElementById('quality');
+      const canvas = d.getElementById('canvas');
+      const ctx = canvas.getContext('2d');
+      const meta = { type: d.getElementById('metaType'), name: d.getElementById('metaName'), size: d.getElementById('metaSize'), dpr: d.getElementById('metaDPR') };
+
+      let currentFile = null;
+
+      // helpers
+      const sanitize = (s)=> (s||'image').toLowerCase().replace(/[^a-z0-9-_]+/g,'-').replace(/^-+|-+$/g,'');
+
+      function toggleQual(){ qSel.style.display = (fmtSel.value === 'image/jpeg') ? '' : 'none'; }
+
+      function draw(img){
+        // make canvas pixels match image pixels; CSS will only max-width scale (no distort)
+        const w = img.naturalWidth; const h = img.naturalHeight; const dpr = Math.max(1, window.devicePixelRatio||1);
+        canvas.width = Math.floor(w*dpr); canvas.height = Math.floor(h*dpr);
+        // do NOT set CSS width/height explicitly; let max-width:100% keep aspect
+        ctx.setTransform(dpr,0,0,dpr,0,0);
+        ctx.imageSmoothingQuality = 'high';
+        ctx.clearRect(0,0,w,h);
+        ctx.drawImage(img,0,0,w,h);
+        meta.size.textContent = `${w} × ${h}`;
+        meta.dpr.textContent = `${dpr}×`;
+      }
+
+      async function handleFile(file){
+        if(!file || !file.type?.startsWith('image/')) return;
+        currentFile = file;
+        meta.type.textContent = file.type;
+        meta.name.textContent = file.name || '(clipboard)';
+        nameInput.value = sanitize((file.name||'image').replace(/\.[^.]+$/,''));
+        btnSave.disabled = false;
+
+        const url = URL.createObjectURL(file);
+        const img = new Image();
+        img.onload = ()=>{ draw(img); URL.revokeObjectURL(url); };
+        img.src = url;
+      }
+
+      // paste
+      window.addEventListener('paste', (e)=>{
+        const items = e.clipboardData?.items; if(!items) return;
+        for(const it of items){ if(it.type?.startsWith('image/')){ e.preventDefault(); return handleFile(it.getAsFile()); } }
+      });
+
+      // drag-drop
+      ['dragenter','dragover'].forEach(ev=> dz.addEventListener(ev, e=>{ e.preventDefault(); dz.classList.add('dragover'); }));
+      ;['dragleave','drop'].forEach(ev=> dz.addEventListener(ev, e=>{ e.preventDefault(); dz.classList.remove('dragover'); }));
+      dz.addEventListener('drop', e=>{ const f = e.dataTransfer?.files?.[0]; if(f) handleFile(f); });
+
+      // clicks
+      btnPick.addEventListener('click', ()=> fileInput.click());
+      dz.addEventListener('click', ()=> fileInput.click());
+      fileInput.addEventListener('change', ()=>{ const f = fileInput.files?.[0]; if(f) handleFile(f); });
+
+      // format + quality
+      fmtSel.addEventListener('change', toggleQual); toggleQual();
+
+      // save
+      btnSave.addEventListener('click', ()=>{
+        if(!canvas.width || !canvas.height) return;
+        const type = fmtSel.value;
+        const q = type==='image/jpeg' ? parseFloat(qSel.value||'0.92') : undefined;
+        const base = sanitize(nameInput.value.trim()) || 'image';
+        const a = document.createElement('a');
+        const ext = (type==='image/jpeg')? 'jpg' : 'png';
+        a.download = `${base}.${ext}`;
+        a.href = canvas.toDataURL(type, q);
+        a.click();
+      });
+
+      // clear
+      btnClear.addEventListener('click', ()=>{
+        currentFile = null; fileInput.value = '';
+        canvas.width = canvas.height = 0;
+        meta.type.textContent = meta.name.textContent = meta.size.textContent = meta.dpr.textContent = '—';
+        nameInput.value = ''; btnSave.disabled = true;
+      });
+
+      // accessibility
+      dz.addEventListener('keydown', (e)=>{ if(e.key==='Enter' || e.key===' '){ e.preventDefault(); fileInput.click(); } });
+    })();
+  </script>
+</body>
+</html>

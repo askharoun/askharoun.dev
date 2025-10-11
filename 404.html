@@ -1,0 +1,1032 @@
+<!DOCTYPE html>
+<html lang="jp" translate="no">
+<head>
+  <script type="text/javascript">
+    (function(c,l,a,r,i,t,y){
+        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+    })(window, document, "clarity", "script", "rmcsekaion");
+  </script>
+  <meta charset="UTF-8">
+  <meta name="google" content="notranslate">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>404 - Page Not Found | askharoun.dev</title>
+  <link rel="icon" href="images/favicon.png" type="image/x-icon">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <style>
+    /* ========================================
+       GLOBAL STYLES & VARIABLES
+       ======================================== */
+    :root {
+      /* Light Mode */
+      --primary-light: #2d6cdf;
+      --primary-dark-light: #1a4ba6;
+      --secondary-light: #00c2ff;
+      --background-light: #f8f9fc;
+      --surface-light: #ffffff;
+      --text-primary-light: #1a1c25;
+      --text-secondary-light: #4a4d60;
+      --border-light: #e0e3f0;
+      --shadow-light: rgba(0, 24, 69, 0.08);
+      --success-light: #00c853;
+      --error-light: #ff3d71;
+
+      /* Dark Mode */
+      --primary-dark: #4d8df6;
+      --primary-dark-dark: #2c5bb8;
+      --secondary-dark: #00e5ff;
+      --background-dark: #12151d;
+      --surface-dark: #1a1f2c;
+      --text-primary-dark: #ffffff;
+      --text-secondary-dark: #a0a3b8;
+      --border-dark: #2a3042;
+      --shadow-dark: rgba(0, 0, 0, 0.2);
+      --success-dark: #00e676;
+      --error-dark: #ff5c8d;
+
+      /* Active Vars */
+      --primary: var(--primary-light);
+      --primary-dark-color: var(--primary-dark-light);
+      --secondary: var(--secondary-light);
+      --background: var(--background-light);
+      --surface: var(--surface-light);
+      --text-primary: var(--text-primary-light);
+      --text-secondary: var(--text-secondary-light);
+      --border: var(--border-light);
+      --shadow: var(--shadow-light);
+      --success: var(--success-light);
+      --error: var(--error-light);
+
+      /* Sizing & Fonts */
+      --space-sm: 0.5rem;
+      --space-md: 1rem;
+      --space-lg: 1.5rem;
+      --space-xl: 2rem;
+      --space-xxl: 4rem;
+      --font-heading: "Orbitron", sans-serif;
+      --font-body: "Roboto", sans-serif;
+      --transition-normal: 0.3s ease;
+      --transition-fast: 0.2s ease;
+    }
+
+    .dark-mode {
+      --primary: var(--primary-dark);
+      --primary-dark-color: var(--primary-dark-dark);
+      --secondary: var(--secondary-dark);
+      --background: var(--background-dark);
+      --surface: var(--surface-dark);
+      --text-primary: var(--text-primary-dark);
+      --text-secondary: var(--text-secondary-dark);
+      --border: var(--border-dark);
+      --shadow: var(--shadow-dark);
+      --success: var(--success-dark);
+      --error: var(--error-dark);
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      font-size: 16px;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: var(--font-body);
+      background-color: var(--background);
+      color: var(--text-primary);
+      line-height: 1.6;
+      overflow: hidden;
+      transition: background-color var(--transition-normal), color var(--transition-normal);
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ========================================
+       HEADER & NAVIGATION
+       ======================================== */
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: var(--space-md) var(--space-lg);
+      background-color: rgba(255, 255, 255, 0.7);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      z-index: 100;
+      transition: all var(--transition-normal);
+      border-bottom: 1px solid transparent;
+    }
+
+    .dark-mode header {
+      background-color: rgba(26, 31, 44, 0.7);
+    }
+
+    .logo-text {
+      font-family: var(--font-heading);
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      text-decoration: none;
+    }
+
+    .theme-toggle-container {
+      position: relative;
+    }
+
+    .theme-toggle {
+      position: relative;
+      width: 60px;
+      height: 30px;
+      background: var(--border);
+      border-radius: 25px;
+      border: none;
+      cursor: pointer;
+      transition: all var(--transition-normal);
+      overflow: hidden;
+    }
+
+    .theme-toggle::before {
+      content: "";
+      position: absolute;
+      top: 3px;
+      left: 3px;
+      width: 24px;
+      height: 24px;
+      background: var(--surface);
+      border-radius: 50%;
+      transition: all var(--transition-normal);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+
+    .dark-mode .theme-toggle {
+      background: var(--primary);
+    }
+
+    .dark-mode .theme-toggle::before {
+      transform: translateX(30px);
+    }
+
+    .theme-toggle:hover {
+      transform: scale(1.05);
+    }
+
+    .theme-toggle:focus,
+    .theme-toggle:focus-visible {
+      outline: none;
+    }
+
+    .konami-hint {
+      position: absolute;
+      top: 100%;
+      right: 0;
+      margin-top: var(--space-sm);
+      font-family: var(--font-heading);
+      font-size: 0.7rem;
+      color: white;
+      opacity: 0.6;
+      white-space: nowrap;
+      transition: opacity var(--transition-normal);
+    }
+
+    .theme-toggle-container:hover .konami-hint {
+      opacity: 1;
+    }
+
+    /* Hide translation button */
+    .goog-te-banner-frame {
+      display: none !important;
+    }
+
+    .goog-te-gadget {
+      display: none !important;
+    }
+
+    /* Cheat code popup */
+    .cheat-popup {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: var(--surface);
+      border: 2px solid var(--primary);
+      border-radius: 12px;
+      padding: var(--space-xl);
+      z-index: 10002;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      text-align: center;
+      max-width: 400px;
+      animation: popupSlideIn 0.3s ease-out;
+    }
+
+    .cheat-popup::before {
+      content: "";
+      position: absolute;
+      top: -2px;
+      left: -2px;
+      right: -2px;
+      bottom: -2px;
+      background: linear-gradient(45deg, var(--primary), var(--secondary));
+      border-radius: 12px;
+      z-index: -1;
+      animation: borderGlow 2s ease-in-out infinite;
+    }
+
+    @keyframes borderGlow {
+      0%, 100% { opacity: 0.5; }
+      50% { opacity: 1; }
+    }
+
+    @keyframes popupSlideIn {
+      0% { transform: translate(-50%, -50%) scale(0.8); opacity: 0; }
+      100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+    }
+
+    .cheat-popup h3 {
+      font-family: var(--font-heading);
+      color: var(--primary);
+      margin-bottom: var(--space-md);
+      font-size: 1.2rem;
+    }
+
+    .cheat-popup p {
+      color: var(--text-secondary);
+      margin-bottom: var(--space-lg);
+      line-height: 1.5;
+    }
+
+    .cheat-code {
+      font-family: var(--font-heading);
+      font-size: 1.1rem;
+      color: var(--secondary);
+      background: var(--background);
+      padding: var(--space-md);
+      border-radius: 8px;
+      margin: var(--space-md) 0;
+      border: 1px solid var(--border);
+      letter-spacing: 2px;
+    }
+
+    .cheat-close {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: var(--space-sm) var(--space-lg);
+      border-radius: 6px;
+      font-family: var(--font-heading);
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all var(--transition-normal);
+    }
+
+    .cheat-close:hover {
+      background: var(--primary-dark-color);
+      transform: translateY(-2px);
+    }
+
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 10001;
+      animation: fadeIn 0.3s ease-out;
+    }
+
+    @keyframes fadeIn {
+      0% { opacity: 0; }
+      100% { opacity: 1; }
+    }
+
+    /* ========================================
+       404 PAGE STYLES
+       ======================================== */
+    .error-container {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: var(--space-xxl) var(--space-lg);
+      height: 100vh;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .error-container::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(135deg, 
+        rgba(45, 108, 223, 0.1) 0%, 
+        rgba(0, 194, 255, 0.1) 50%, 
+        rgba(45, 108, 223, 0.1) 100%);
+      z-index: -1;
+    }
+
+    .dark-mode .error-container::before {
+      background: linear-gradient(135deg, 
+        rgba(77, 141, 246, 0.1) 0%, 
+        rgba(0, 229, 255, 0.1) 50%, 
+        rgba(77, 141, 246, 0.1) 100%);
+    }
+
+    .error-content {
+      text-align: center;
+      max-width: 600px;
+      z-index: 1;
+    }
+
+    .error-number {
+      font-family: var(--font-heading);
+      font-size: 8rem;
+      font-weight: 700;
+      color: var(--primary);
+      text-shadow: 0 0 30px rgba(45, 108, 223, 0.3);
+      margin-bottom: var(--space-lg);
+      position: relative;
+      display: inline-block;
+    }
+
+    .dark-mode .error-number {
+      text-shadow: 0 0 30px rgba(77, 141, 246, 0.3);
+    }
+
+    .error-number::before {
+      content: "404";
+      position: absolute;
+      top: 0;
+      left: 0;
+      color: var(--secondary);
+      animation: glitch 2s infinite;
+      clip-path: polygon(0 0, 100% 0, 100% 45%, 0 45%);
+    }
+
+    .error-number::after {
+      content: "404";
+      position: absolute;
+      top: 0;
+      left: 0;
+      color: var(--error);
+      animation: glitch 2s infinite reverse;
+      clip-path: polygon(0 55%, 100% 55%, 100% 100%, 0 100%);
+    }
+
+    @keyframes glitch {
+      0%, 100% { transform: translate(0); }
+      20% { transform: translate(-2px, 2px); }
+      40% { transform: translate(-2px, -2px); }
+      60% { transform: translate(2px, 2px); }
+      80% { transform: translate(2px, -2px); }
+    }
+
+    .error-title {
+      font-family: var(--font-heading);
+      font-size: 2.5rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: var(--space-md);
+    }
+
+    .error-message {
+      font-size: 1.1rem;
+      color: var(--text-secondary);
+      margin-bottom: var(--space-xl);
+      line-height: 1.6;
+    }
+
+    .error-actions {
+      display: flex;
+      gap: var(--space-lg);
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-sm);
+      padding: var(--space-md) var(--space-xl);
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark-color) 100%);
+      color: white;
+      text-decoration: none;
+      border-radius: 8px;
+      font-family: var(--font-heading);
+      font-weight: 500;
+      font-size: 0.9rem;
+      transition: all var(--transition-normal);
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(45, 108, 223, 0.3);
+    }
+
+    .dark-mode .btn-primary {
+      box-shadow: 0 4px 15px rgba(77, 141, 246, 0.3);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(45, 108, 223, 0.4);
+    }
+
+    .dark-mode .btn-primary:hover {
+      box-shadow: 0 8px 25px rgba(77, 141, 246, 0.4);
+    }
+
+    .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-sm);
+      padding: var(--space-md) var(--space-xl);
+      background: transparent;
+      color: var(--text-secondary);
+      text-decoration: none;
+      border-radius: 8px;
+      font-family: var(--font-heading);
+      font-weight: 500;
+      font-size: 0.9rem;
+      transition: all var(--transition-normal);
+      border: 2px solid var(--border);
+    }
+
+    .btn-secondary:hover {
+      color: var(--primary);
+      border-color: var(--primary);
+      transform: translateY(-2px);
+    }
+
+    .btn-icon {
+      width: 16px;
+      height: 16px;
+      transition: transform var(--transition-normal);
+    }
+
+    .btn-primary:hover .btn-icon,
+    .btn-secondary:hover .btn-icon {
+      transform: translateX(2px);
+    }
+
+    /* Project Notice Styles */
+    .project-notice {
+      background: linear-gradient(135deg, rgba(45, 108, 223, 0.1) 0%, rgba(0, 194, 255, 0.1) 100%);
+      border: 2px solid var(--primary);
+      border-radius: 16px;
+      padding: var(--space-lg);
+      margin: var(--space-xl) 0;
+      position: relative;
+      overflow: hidden;
+      animation: noticePulse 3s ease-in-out infinite;
+    }
+
+    .dark-mode .project-notice {
+      background: linear-gradient(135deg, rgba(77, 141, 246, 0.1) 0%, rgba(0, 229, 255, 0.1) 100%);
+      border-color: var(--primary);
+    }
+
+    .project-notice::before {
+      content: "";
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+      transform: rotate(45deg);
+      animation: shimmer 4s infinite;
+    }
+
+    @keyframes noticePulse {
+      0%, 100% { transform: scale(1); box-shadow: 0 0 20px rgba(45, 108, 223, 0.2); }
+      50% { transform: scale(1.02); box-shadow: 0 0 30px rgba(45, 108, 223, 0.4); }
+    }
+
+    .dark-mode .project-notice {
+      animation: noticePulseDark 3s ease-in-out infinite;
+    }
+
+    @keyframes noticePulseDark {
+      0%, 100% { transform: scale(1); box-shadow: 0 0 20px rgba(77, 141, 246, 0.2); }
+      50% { transform: scale(1.02); box-shadow: 0 0 30px rgba(77, 141, 246, 0.4); }
+    }
+
+    @keyframes shimmer {
+      0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+      100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+    }
+
+    .notice-icon {
+      font-size: 2rem;
+      margin-bottom: var(--space-md);
+      animation: rocketBounce 2s ease-in-out infinite;
+    }
+
+    @keyframes rocketBounce {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      25% { transform: translateY(-5px) rotate(5deg); }
+      75% { transform: translateY(-5px) rotate(-5deg); }
+    }
+
+    .notice-text {
+      font-size: 1.1rem;
+      color: var(--text-primary);
+      line-height: 1.6;
+      position: relative;
+      z-index: 1;
+    }
+
+    .highlight {
+      color: var(--primary);
+      font-weight: 600;
+      font-family: var(--font-heading);
+      animation: textGlow 2s ease-in-out infinite alternate;
+    }
+
+    @keyframes textGlow {
+      0% { text-shadow: 0 0 5px rgba(45, 108, 223, 0.5); }
+      100% { text-shadow: 0 0 15px rgba(45, 108, 223, 0.8); }
+    }
+
+    .dark-mode .highlight {
+      animation: textGlowDark 2s ease-in-out infinite alternate;
+    }
+
+    @keyframes textGlowDark {
+      0% { text-shadow: 0 0 5px rgba(77, 141, 246, 0.5); }
+      100% { text-shadow: 0 0 15px rgba(77, 141, 246, 0.8); }
+    }
+
+    .countdown {
+      color: var(--secondary);
+      font-weight: 700;
+      font-family: var(--font-heading);
+      animation: countdownPulse 1.5s ease-in-out infinite;
+    }
+
+    @keyframes countdownPulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+
+    .subtext {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      font-style: italic;
+      opacity: 0.8;
+    }
+
+    /* Floating particles animation */
+    .particles {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      z-index: -1;
+    }
+
+    .particle {
+      position: absolute;
+      width: 4px;
+      height: 4px;
+      background: var(--primary);
+      border-radius: 50%;
+      opacity: 0.3;
+      animation: float 6s infinite linear;
+    }
+
+    .particle:nth-child(1) {
+      left: 10%;
+      animation-delay: 0s;
+      animation-duration: 8s;
+    }
+
+    .particle:nth-child(2) {
+      left: 20%;
+      animation-delay: 2s;
+      animation-duration: 10s;
+    }
+
+    .particle:nth-child(3) {
+      left: 30%;
+      animation-delay: 4s;
+      animation-duration: 12s;
+    }
+
+    .particle:nth-child(4) {
+      left: 40%;
+      animation-delay: 1s;
+      animation-duration: 9s;
+    }
+
+    .particle:nth-child(5) {
+      left: 50%;
+      animation-delay: 3s;
+      animation-duration: 11s;
+    }
+
+    .particle:nth-child(6) {
+      left: 60%;
+      animation-delay: 5s;
+      animation-duration: 7s;
+    }
+
+    .particle:nth-child(7) {
+      left: 70%;
+      animation-delay: 0.5s;
+      animation-duration: 13s;
+    }
+
+    .particle:nth-child(8) {
+      left: 80%;
+      animation-delay: 2.5s;
+      animation-duration: 8.5s;
+    }
+
+    .particle:nth-child(9) {
+      left: 90%;
+      animation-delay: 4.5s;
+      animation-duration: 10.5s;
+    }
+
+
+
+    /* Matrix rain effect */
+    .matrix-rain {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: -2;
+      opacity: 0.1;
+    }
+
+    .matrix-column {
+      position: absolute;
+      top: -100%;
+      color: var(--primary);
+      font-family: 'Courier New', monospace;
+      font-size: 14px;
+      animation: matrixFall linear infinite;
+    }
+
+    @keyframes matrixFall {
+      0% { transform: translateY(-100vh); }
+      100% { transform: translateY(100vh); }
+    }
+
+    /* Easter egg hover effects */
+    .error-number:hover {
+      animation: numberShake 0.5s ease-in-out;
+    }
+
+    @keyframes numberShake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-5px); }
+      75% { transform: translateX(5px); }
+    }
+
+    .error-title:hover {
+      animation: titleWiggle 0.3s ease-in-out;
+    }
+
+    @keyframes titleWiggle {
+      0%, 100% { transform: rotate(0deg); }
+      25% { transform: rotate(1deg); }
+      75% { transform: rotate(-1deg); }
+    }
+
+
+
+    @keyframes float {
+      0% {
+        transform: translateY(100vh) rotate(0deg);
+        opacity: 0;
+      }
+      10% {
+        opacity: 0.3;
+      }
+      90% {
+        opacity: 0.3;
+      }
+      100% {
+        transform: translateY(-100px) rotate(360deg);
+        opacity: 0;
+      }
+    }
+
+    /* ========================================
+       RESPONSIVE DESIGN
+       ======================================== */
+    @media (max-width: 768px) {
+      .error-number {
+        font-size: 6rem;
+      }
+
+      .error-title {
+        font-size: 2rem;
+      }
+
+      .error-message {
+        font-size: 1rem;
+      }
+
+      .error-actions {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .btn-primary,
+      .btn-secondary {
+        width: 100%;
+        max-width: 300px;
+        justify-content: center;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .error-number {
+        font-size: 4rem;
+      }
+
+      .error-title {
+        font-size: 1.5rem;
+      }
+
+      .error-container {
+        padding: var(--space-xl) var(--space-md);
+      }
+    }
+
+    /* ========================================
+       ACCESSIBILITY
+       ======================================== */
+    @media (prefers-reduced-motion: reduce) {
+      .error-number::before,
+      .error-number::after,
+      .particle {
+        animation: none;
+      }
+
+      .btn-primary:hover,
+      .btn-secondary:hover {
+        transform: none;
+      }
+    }
+
+    @media (prefers-contrast: high) {
+      :root {
+        --primary-light: #0056b3;
+        --primary-dark: #0078d4;
+        --text-secondary-light: #2d2d2d;
+        --text-secondary-dark: #e0e0e0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header>
+    <div class="logo-container">
+      <a href="index.html" class="logo-text">ASKHAROUN.DEV</a>
+    </div>
+    
+    <div class="theme-toggle-container">
+      <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode"></button>
+      <div class="konami-hint" id="konamiHint">↑↑↓↓←→←→BA</div>
+    </div>
+  </header>
+
+  <!-- 404 Content -->
+  <main class="error-container">
+    <!-- Matrix rain effect -->
+    <div class="matrix-rain" id="matrixRain"></div>
+    
+    <!-- Floating particles -->
+    <div class="particles">
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+    </div>
+
+
+
+    <div class="error-content">
+      <h1 class="error-number">404</h1>
+      <h2 class="error-title">Page Not Found</h2>
+      <p class="error-message">
+        Oops! The page you're looking for seems to have wandered off into the digital void!!! 
+        Don't worry, even the best engineers encounter 404 errors from time to time 🙂
+      </p>
+    
+      <!--  
+      <div class="project-notice">
+        <div class="notice-icon">🚀</div>
+        <p class="notice-text">
+          <span class="highlight">If you clicked on projects...</span><br>
+          They'll be launching in <span class="countdown">August 2025</span>!
+          <br><span class="subtext">(Working on exciting new projects this summer)</span>
+        </p>
+      </div>
+      -->
+      
+      <div class="error-actions">
+        <a href="https://askharoun.dev/" class="btn-primary">
+          <svg class="btn-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+          </svg>
+          Go Back Home
+        </a>
+        
+        <button onclick="history.back()" class="btn-secondary">
+          <svg class="btn-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+          </svg>
+          Go Back
+        </button>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    // Theme toggle functionality
+    const themeToggle = document.getElementById('themeToggle');
+    const body = document.body;
+    
+    // Check for saved theme preference or default to light mode
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'dark') {
+      body.classList.add('dark-mode');
+    }
+    
+    // Theme toggle event listener
+    themeToggle.addEventListener('click', () => {
+      body.classList.toggle('dark-mode');
+      
+      // Save theme preference
+      const isDark = body.classList.contains('dark-mode');
+      localStorage.setItem('theme', isDark ? 'dark' : 'light');
+    });
+    
+    // Check for system preference on load
+    if (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+      body.classList.add('dark-mode');
+      localStorage.setItem('theme', 'dark');
+    }
+
+    // Matrix rain effect
+    function createMatrixRain() {
+      const matrixRain = document.getElementById('matrixRain');
+      const characters = '01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン';
+      const columns = Math.floor(window.innerWidth / 20);
+      
+      for (let i = 0; i < columns; i++) {
+        const column = document.createElement('div');
+        column.className = 'matrix-column';
+        column.style.left = i * 20 + 'px';
+        column.style.animationDuration = (Math.random() * 3 + 2) + 's';
+        column.style.animationDelay = Math.random() * 2 + 's';
+        
+        let text = '';
+        for (let j = 0; j < 20; j++) {
+          text += characters[Math.floor(Math.random() * characters.length)] + '<br>';
+        }
+        column.innerHTML = text;
+        
+        matrixRain.appendChild(column);
+      }
+    }
+
+
+
+    // Easter egg: Konami code
+    let konamiCode = [];
+    const konamiSequence = [38, 38, 40, 40, 37, 39, 37, 39, 66, 65]; // ↑↑↓↓←→←→BA
+
+    document.addEventListener('keydown', (e) => {
+      konamiCode.push(e.keyCode);
+      if (konamiCode.length > konamiSequence.length) {
+        konamiCode.shift();
+      }
+      
+      if (konamiCode.join(',') === konamiSequence.join(',')) {
+        // Easter egg activated!
+        document.body.style.animation = 'rainbow 2s infinite';
+        setTimeout(() => {
+          document.body.style.animation = '';
+        }, 5000);
+        
+        // Add rainbow animation
+        const style = document.createElement('style');
+        style.textContent = `
+          @keyframes rainbow {
+            0% { filter: hue-rotate(0deg); }
+            100% { filter: hue-rotate(360deg); }
+          }
+        `;
+        document.head.appendChild(style);
+      }
+    });
+
+    // Fun interactive elements
+    function addClickEffects() {
+      document.addEventListener('click', (e) => {
+        const ripple = document.createElement('div');
+        ripple.style.position = 'fixed';
+        ripple.style.left = e.clientX - 10 + 'px';
+        ripple.style.top = e.clientY - 10 + 'px';
+        ripple.style.width = '20px';
+        ripple.style.height = '20px';
+        ripple.style.background = 'var(--primary)';
+        ripple.style.borderRadius = '50%';
+        ripple.style.pointerEvents = 'none';
+        ripple.style.zIndex = '10000';
+        ripple.style.animation = 'rippleEffect 0.6s ease-out';
+        
+        document.body.appendChild(ripple);
+        
+        setTimeout(() => {
+          ripple.remove();
+        }, 600);
+      });
+    }
+
+    // Add ripple animation
+    const rippleStyle = document.createElement('style');
+    rippleStyle.textContent = `
+      @keyframes rippleEffect {
+        0% { transform: scale(0); opacity: 1; }
+        100% { transform: scale(4); opacity: 0; }
+      }
+    `;
+    document.head.appendChild(rippleStyle);
+
+
+
+    // Cheat code popup functionality
+    function showCheatPopup() {
+      const overlay = document.createElement('div');
+      overlay.className = 'overlay';
+      
+      const popup = document.createElement('div');
+      popup.className = 'cheat-popup';
+      popup.innerHTML = `
+        <h3>🎮 Secret Cheat Code!</h3>
+        <p>Type this sequence on your keyboard to activate rainbow mode:</p>
+        <div class="cheat-code">↑ ↑ ↓ ↓ ← → ← → B A</div>
+        <p><small>Use arrow keys, then B and A keys</small></p>
+        <button class="cheat-close" onclick="closeCheatPopup()">Got it!</button>
+      `;
+      
+      document.body.appendChild(overlay);
+      document.body.appendChild(popup);
+      
+      // Close on overlay click
+      overlay.addEventListener('click', closeCheatPopup);
+    }
+
+    function closeCheatPopup() {
+      const overlay = document.querySelector('.overlay');
+      const popup = document.querySelector('.cheat-popup');
+      if (overlay) overlay.remove();
+      if (popup) popup.remove();
+    }
+
+    // Initialize all fun features
+    document.addEventListener('DOMContentLoaded', () => {
+      createMatrixRain();
+      addClickEffects();
+      
+      // Add click event to konami hint
+      const konamiHint = document.getElementById('konamiHint');
+      konamiHint.style.cursor = 'pointer';
+      konamiHint.addEventListener('click', showCheatPopup);
+    });
+  </script>
+</body>
+</html>

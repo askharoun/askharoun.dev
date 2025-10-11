@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Smart Home Automation - askharoun.dev</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="images/favicon.png" type="image/x-icon">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  
+  <!-- Header -->
+  <header>
+    <div class="logo-container">
+      <a href="index.html" class="logo-text">ASKHAROUN.DEV</a>
+    </div>
+    
+    <nav>
+      <ul>
+        <li><a href="index.html" class="nav-link">Home</a></li>
+        <li><a href="index.html#about" class="nav-link">About</a></li>
+        <li><a href="projects.html" class="nav-link">Projects</a></li>
+        <li><a href="certifications.html" class="nav-link">Certifications</a></li>
+        <li><a href="index.html#experience" class="nav-link">Experience</a></li>
+        <li><a href="index.html#contact" class="nav-link">Contact</a></li>
+      </ul>
+    </nav>
+    
+    <div class="theme-toggle-container">
+      <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode"></button>
+    </div>
+    
+    <div class="menu-toggle">
+      <div class="bar"></div>
+      <div class="bar"></div>
+      <div class="bar"></div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="project-page">
+    <div class="container">
+      <a href="projects.html" class="back-to-projects">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="19" y1="12" x2="5" y2="12"></line>
+          <polyline points="12 19 5 12 12 5"></polyline>
+        </svg>
+        Back to Projects
+      </a>
+
+      <div class="project-hero">
+        <div class="project-hero-content">
+          <div class="project-info">
+            <h1 class="project-title">Smart Home Automation</h1>
+            <p class="project-subtitle">An IoT-based home automation system featuring voice control, mobile app integration, and real-time monitoring capabilities for modern smart living.</p>
+            
+            <div class="project-meta-grid">
+              <div class="meta-item">
+                <span class="meta-label">Category</span>
+                <span class="meta-value">Personal Project</span>
+              </div>
+              <div class="meta-item">
+                <span class="meta-label">Duration</span>
+                <span class="meta-value">6 Months</span>
+              </div>
+              <div class="meta-item">
+                <span class="meta-label">Team Size</span>
+                <span class="meta-value">Individual</span>
+              </div>
+              <div class="meta-item">
+                <span class="meta-label">Status</span>
+                <span class="meta-value">Ongoing</span>
+              </div>
+            </div>
+          </div>
+          
+          <div class="project-hero-image">
+            <img loading="lazy" src="/placeholder.svg?height=400&width=600&text=Smart+Home+Dashboard" alt="Smart Home System Dashboard" class="hero-image">
+          </div>
+        </div>
+      </div>
+
+      <div class="project-content">
+        <section class="content-section">
+          <h2 class="section-title">Project Overview</h2>
+          <p>This comprehensive smart home automation system integrates multiple IoT devices and sensors to create an intelligent living environment. The system provides centralized control over lighting, temperature, security, and entertainment systems through both voice commands and a custom mobile application.</p>
+          
+          <p>The project demonstrates practical application of embedded systems, wireless communication protocols, and user interface design, creating a seamless smart home experience that prioritizes both functionality and user convenience.</p>
+        </section>
+
+        <section class="content-section">
+          <h2 class="section-title">System Architecture</h2>
+          <div class="features-grid">
+            <div class="feature-card">
+              <span class="feature-icon"></span>
+              <h3 class="feature-title">Central Hub</h3>
+              <p class="feature-description">Raspberry Pi-based central controller managing all connected devices and communications.</p>
+            </div>
+            <div class="feature-card">
+              <span class="feature-icon"></span>
+              <h3 class="feature-title">Mobile App</h3>
+              <p class="feature-description">Custom React Native application for remote monitoring and control of all home systems.</p>
+            </div>
+            <div class="feature-card">
+              <span class="feature-icon"></span>
+              <h3 class="feature-title">Voice Control</h3>
+              <p class="feature-description">Integration with Amazon Alexa and Google Assistant for hands-free operation.</p>
+            </div>
+            <div class="feature-card">
+              <span class="feature-icon"></span>
+              <h3 class="feature-title">Real-time Analytics</h3>
+              <p class="feature-description">Comprehensive monitoring and analytics dashboard with historical data visualization.</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="content-section">
+          <h2 class="section-title">Connected Devices</h2>
+          <p>The system integrates a wide variety of smart devices and sensors to provide comprehensive home automation capabilities:</p>
+          
+          <div class="tech-list">
+            <span class="tech-item"><span>Smart Lighting (Philips Hue)</span></span>
+            <span class="tech-item"><span>Temperature Sensors</span></span>
+            <span class="tech-item"><span>Motion Detectors</span></span>
+            <span class="tech-item"><span>Smart Locks</span></span>
+            <span class="tech-item"><span>Security Cameras</span></span>
+            <span class="tech-item"><span>Smart Thermostat</span></span>
+            <span class="tech-item"><span>Door/Window Sensors</span></span>
+            <span class="tech-item"><span>Smart Speakers</span></span>
+          </div>
+        </section>
+
+        <section class="content-section">
+          <h2 class="section-title">Technical Implementation</h2>
+          <div class="design-process">
+            <div class="process-step">
+              <div class="step-number">1</div>
+              <div class="step-content">
+                <h4>Hardware Setup</h4>
+                <p>Configured Raspberry Pi as the central hub with Arduino nodes for sensor data collection and device control throughout the home.</p>
+              </div>
+            </div>
+            <div class="process-step">
+              <div class="step-number">2</div>
+              <div class="step-content">
+                <h4>Network Architecture</h4>
+                <p>Implemented mesh network using WiFi and Zigbee protocols for reliable communication between all connected devices.</p>
+              </div>
+            </div>
+            <div class="process-step">
+              <div class="step-number">3</div>
+              <div class="step-content">
+                <h4>Software Development</h4>
+                <p>Developed Python-based backend services and React Native mobile application with real-time synchronization capabilities.</p>
+              </div>
+            </div>
+            <div class="process-step">
+              <div class="step-number">4</div>
+              <div class="step-content">
+                <h4>Integration & Testing</h4>
+                <p>Integrated voice assistants, implemented automation rules, and conducted extensive testing for reliability and security.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="content-section">
+          <h2 class="section-title">Key Features</h2>
+          <ul class="learnings-list">
+            <li>Automated lighting control based on occupancy, time of day, and ambient light levels</li>
+            <li>Intelligent climate control with learning algorithms for energy optimization</li>
+            <li>Comprehensive security system with real-time alerts and remote monitoring</li>
+            <li>Voice-activated control for all connected devices and systems</li>
+            <li>Energy usage monitoring and optimization recommendations</li>
+            <li>Customizable automation scenes and scheduling capabilities</li>
+            <li>Remote access and control through secure mobile application</li>
+          </ul>
+        </section>
+
+        <section class="content-section">
+          <h2 class="section-title">Technologies Used</h2>
+          <div class="tech-list">
+            <span class="tech-item"><span>Raspberry Pi</span></span>
+            <span class="tech-item"><span>Arduino</span></span>
+            <span class="tech-item"><span>Python</span></span>
+            <span class="tech-item"><span>React Native</span></span>
+            <span class="tech-item"><span>Node.js</span></span>
+            <span class="tech-item"><span>MQTT Protocol</span></span>
+            <span class="tech-item"><span>WiFi & Zigbee</span></span>
+            <span class="tech-item"><span>Amazon Alexa SDK</span></span>
+            <span class="tech-item"><span>Firebase</span></span>
+            <span class="tech-item"><span>Docker</span></span>
+          </div>
+        </section>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-content">
+      <div class="footer-left">
+        <div class="footer-logo">askharoun.dev</div>
+        <div class="footer-subtitle">Electrical Engineering Student @ Penn State</div>
+      </div>
+      
+      <div class="footer-center">
+        <a target = "_blank" href="https://github.com/askharoun/askharoun.dev/blob/main/images/Askharoun_Thomas_Current_Resume.pdf" class="resume-button">
+          <span class="button-text">View Resume</span>
+          <span class="button-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="7 10 12 15 17 10"></polyline>
+              <line x1="12" y1="15" x2="12" y2="3"></line>
+            </svg>
+          </span>
+        </a>
+      </div>
+      
+      <div class="footer-right">
+        <div class="footer-contact">
+          <div class="contact-item">
+            <span class="contact-label">Email:</span>
+            <span class="contact-value">askharoun2005@gmail.com</span>
+          </div>
+          <div class="contact-item">
+            <span class="contact-label">Phone:</span>
+            <span class="contact-value">(484) 510-6083</span>
+          </div>
+          <div class="contact-item">
+            <span class="contact-label">Location:</span>
+            <span class="contact-value">State College, PA</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="footer-bottom">
+      <p>This site was designed with the future in mind. All trademarks belong to their respective owners.</p>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

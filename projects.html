@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script type="text/javascript">
+    (function(c,l,a,r,i,t,y){
+        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+    })(window, document, "clarity", "script", "rmcsekaion");
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Askharoun.dev - Projects</title>
+    <link rel="icon" href="images/favicon.png" type="image/x-icon">
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: #f3f2ef;
+            color: #191919;
+            line-height: 1.5;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .dark-mode {
+            background-color: #12151d;
+            color: #ffffff;
+        }
+
+        .container {
+            max-width: 1128px;
+            margin: 0 auto;
+            padding: 0 16px;
+        }
+
+        /* Main Content */
+        .main {
+            padding: 24px 0;
+            margin-top: 80px; /* Add space below navigation bar */
+        }
+
+        /* Profile Section */
+        .profile-card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 0 0 1px rgba(0,0,0,0.08);
+            margin-bottom: 24px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .dark-mode .profile-card {
+            background: #1a1f2c;
+            box-shadow: 0 0 0 1px rgba(255,255,255,0.1);
+        }
+
+        .profile-cover {
+            height: 200px;
+            overflow: hidden;
+            background-image: url('images/banner.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        .profile-info {
+            padding: 24px;
+            position: relative;
+        }
+
+        .profile-avatar {
+            width: 152px;
+            height: 152px;
+            border-radius: 50%;
+            border: 4px solid white;
+            position: absolute;
+            top: -76px;
+            left: 24px;
+            overflow: hidden;
+        }
+
+        .avatar-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .profile-details {
+            margin-left: 176px;
+            margin-top: 8px;
+        }
+
+        .profile-name {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 4px;
+            color: #191919;
+            transition: color 0.3s ease;
+        }
+
+        .dark-mode .profile-name {
+            color: #ffffff;
+        }
+
+        .profile-title {
+            color: #666;
+            margin-bottom: 8px;
+            transition: color 0.3s ease;
+        }
+
+        .dark-mode .profile-title {
+            color: #a0a3b8;
+        }
+
+        .profile-location {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 16px;
+            transition: color 0.3s ease;
+        }
+
+        .dark-mode .profile-location {
+            color: #a0a3b8;
+        }
+
+        .profile-stats {
+            display: flex;
+            gap: 24px;
+            margin-bottom: 16px;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-weight: 600;
+            color: #0a66c2;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #666;
+            transition: color 0.3s ease;
+        }
+
+        .dark-mode .stat-label {
+            color: #a0a3b8;
+        }
+
+        /* Projects Grid */
+        .projects-section {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 0 0 1px rgba(0,0,0,0.08);
+            padding: 24px;
+            transition: all 0.3s ease;
+        }
+
+        .dark-mode .projects-section {
+            background: #1a1f2c;
+            box-shadow: 0 0 0 1px rgba(255,255,255,0.1);
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: #191919;
+            transition: color 0.3s ease;
+        }
+
+        .dark-mode .section-title {
+            color: #ffffff;
+        }
+
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 16px;
+        }
+
+        .project-card {
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 20px;
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.2s;
+            background: white;
+        }
+
+        .dark-mode .project-card {
+            background: #1a1f2c;
+            border-color: #2a3042;
+        }
+
+        .project-card:hover {
+            border-color: #0a66c2;
+            box-shadow: 0 4px 12px rgba(10, 102, 194, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .project-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #191919;
+            transition: color 0.3s ease;
+        }
+
+        .dark-mode .project-title {
+            color: #ffffff;
+        }
+
+        .project-description {
+            color: #666;
+            margin-bottom: 16px;
+            line-height: 1.4;
+            transition: color 0.3s ease;
+        }
+
+        .dark-mode .project-description {
+            color: #a0a3b8;
+        }
+
+        .project-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin: 12px 0 2px;
+        }
+
+        .project-tag {
+            background: #f3f2ef;
+            color: #666;
+            padding: 4px 12px;
+            border-radius: 16px;
+            font-size: 12px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .dark-mode .project-tag {
+            background: #2a3042;
+            color: #a0a3b8;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .profile-avatar {
+                position: static;
+                margin: 0 auto 16px;
+            }
+
+            .profile-details {
+                margin-left: 0;
+                text-align: center;
+            }
+
+            .profile-stats {
+                justify-content: center;
+            }
+
+            .projects-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+</style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="logo-container">
+            <a href="index.html" class="logo-text">ASKHAROUN.DEV</a>
+        </div>
+        
+        <nav>
+            <ul>
+                <li><a href="index.html" class="nav-link">Home</a></li>
+                <li><a href="index.html#about" class="nav-link">About</a></li>
+                <li><a href="certifications.html" class="nav-link">Certifications</a></li>
+                <li><a href="index.html#experience" class="nav-link">Experience</a></li>
+                <li><a href="index.html#contact" class="nav-link">Contact</a></li>
+            </ul>
+        </nav>
+        
+        <div class="theme-toggle-container">
+            <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode"></button>
+        </div>
+        
+        <div class="menu-toggle">
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main">
+        <div class="container">
+            <!-- Profile Card -->
+            <div class="profile-card">
+                <div class="profile-cover"></div>
+                <div class="profile-info">
+                    <div class="profile-avatar">
+                        <img loading="lazy" src="images/my-profile-image.jpeg" alt="Profile Picture" class="avatar-image">
+                    </div>
+                    <div class="profile-details">
+                        <h1 class="profile-name">Thomas Askharoun</h1>
+                        <p class="profile-title">Electrical Engineer</p>
+                        <p class="profile-location">📍 State College, PA • Available for opportunities in the USA</p>
+                        
+                        <div class="profile-stats">
+                            <div class="stat">
+                                <div class="stat-number">2</div>
+                                <div class="stat-label">Projects</div>
+                            </div>
+                            <div class="stat">
+                                <div class="stat-number">2+</div>
+                                <div class="stat-label">Years Engineering Experience</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Projects Section -->
+            <div class="projects-section">
+                <h2 class="section-title">Featured Projects</h2>
+                <div class="projects-grid" id="projectsGrid">
+                    <!-- Projects will be populated by JavaScript -->
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+          <div class="footer-left">
+            <div class="footer-logo">askharoun.dev</div>
+            <div class="footer-subtitle">Electrical Engineering Student @ Penn State</div>
+          </div>
+          
+          <div class="footer-center">
+            <a target = "_blank" href="https://github.com/askharoun/askharoun.dev/blob/main/images/Askharoun_Thomas_Current_Resume.pdf" class="resume-button">
+              <span class="button-text">View Resume</span>
+              </span>
+            </a>
+          </div>
+          
+          <div class="footer-right">
+            <div class="footer-contact">
+              <div class="contact-item">
+                <span class="contact-label">Email:</span>
+                <span class="contact-value">askharoun2005@gmail.com</span>
+              </div>
+              <div class="contact-item">
+                <span class="contact-label">Phone:</span>
+                <span class="contact-value">(484) 510-6083</span>
+              </div>
+              <div class="contact-item">
+                <span class="contact-label">Location:</span>
+                <span class="contact-value">State College, PA</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="footer-bottom">
+          <p>This site was designed with the future in mind. All trademarks belong to their respective owners.</p>
+        </div>
+      </footer>
+
+    <script src="script.js"></script>
+<script>
+        const projects = [
+            {
+                title: "Tone Control / Karaoke Circuit",
+                description: "Tone Control / Karaoke Circuit with five-stage op-amp chain, Baxandall EQ, and VU meter integration.",
+                tags: ["NI Multisim", "Electronics", "PCB"],
+                href: "karaoke.html"
+            },
+            {
+                title: "Image Paste & Save Tool",
+                description: "Professional browser-based image conversion tool. Paste, drag-drop, or upload images and save as PNG or JPEG with quality control. 100% local processing.",
+                tags: ["HTML", "CSS", "JavaScript"],
+                href: "png.html"
+            },
+            
+        ];
+
+        function createProjectCard(project) {
+            return `
+                <a href="${project.href}" class="project-card">
+                    <h3 class="project-title">${project.title}</h3>
+                    <p class="project-description">${project.description}</p>
+                    <div class="project-tags">
+                        ${project.tags.map(tag => `<span class="project-tag">${tag}</span>`).join('')}
+                    </div>
+                </a>
+            `;
+        }
+
+        // Populate projects grid
+        document.addEventListener('DOMContentLoaded', () => {
+            const projectsGrid = document.getElementById('projectsGrid');
+            projectsGrid.innerHTML = projects.map(createProjectCard).join('');
+        });
+</script>
+</body>
+</html>
