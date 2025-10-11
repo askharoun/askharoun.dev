@@ -1,17 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <!--
-    Triangle Fraternity — Interactive NFC Welcome Card
-    Author Credit: Made by Thomas Askharoun
-    How to use:
-      1) Host this single file at: https://<your-domain>/triangle/welcome/index.html
-      2) Write THAT URL to your NFC tag (NDEF URI record).
-      3) Tap -> enjoy the multi-step unlock flow.
-    Notes:
-      - 100% vanilla HTML/CSS/JS. No external libs.
-      - Works on iOS/Android. Motion has tap fallback.
-      - All copy and variables are editable in CONFIG below.
+  <!-- Triangle Fraternity — Interactive NFC Welcome Card
+       Author Credit: Made by Thomas Askharoun
+       How to use:
+         Host at https://<your-domain>/triangle/welcome/index.html
+         Write that URL to your NFC tag (NDEF URI). Enjoy!
   -->
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -19,54 +13,77 @@
   <meta name="description" content="A playful, multi-step welcome card for a Triangle guest." />
   <meta name="theme-color" content="#ffbd59" />
   <style>
+    /* THEME — Auto light/dark with manual override via [data-theme] */
     :root{
       --accent:#ffbd59;
+      --radius:16px;
+      --shadow-dark:0 10px 30px rgba(0,0,0,.35);
+      --shadow-light:0 10px 25px rgba(0,0,0,.08);
+    }
+    /* defaults (dark) */
+    :root{
       --bg:#0b0b0c; --card:#141418; --text:#f2f2f2; --muted:#b9b9be;
-      --ok:#3ddc84; --warn:#ff6b6b; --shadow:0 10px 30px rgba(0,0,0,.35);
+      --ink:#111; --line:rgba(255,255,255,.15);
+      --ok:#3ddc84; --warn:#ff6b6b; --shadow:var(--shadow-dark);
+      color-scheme: dark;
     }
+    /* auto light */
     @media (prefers-color-scheme: light){
-      :root{ --bg:#fafafa; --card:#ffffff; --text:#111; --muted:#555; --shadow:0 10px 25px rgba(0,0,0,.08);}
+      :root{ --bg:#fafafa; --card:#ffffff; --text:#111; --muted:#555; --ink:#111; --line:#e6e6e6; --shadow:var(--shadow-light); color-scheme: light; }
     }
+    /* manual overrides */
+    [data-theme="dark"]{ --bg:#0b0b0c; --card:#141418; --text:#f2f2f2; --muted:#b9b9be; --ink:#111; --line:rgba(255,255,255,.15); --shadow:var(--shadow-dark); color-scheme: dark;}
+    [data-theme="light"]{ --bg:#fafafa; --card:#ffffff; --text:#111; --muted:#555; --ink:#111; --line:#e6e6e6; --shadow:var(--shadow-light); color-scheme: light;}
+
     *{box-sizing:border-box}
     html,body{height:100%}
     body{
       margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial, sans-serif;
       background:var(--bg); color:var(--text); display:flex; flex-direction:column;
     }
+
     .site-header,.site-footer{
       display:flex; align-items:center; justify-content:space-between;
-      padding:12px 16px; max-width:840px; margin:0 auto; width:100%;
+      padding:12px 16px; max-width:860px; margin:0 auto; width:100%;
     }
-    .site-footer{opacity:.85; font-size:.92rem; padding-bottom:22px; justify-content:center}
-    .brand{display:flex; align-items:center; gap:10px}
-    .logo{width:22px; height:22px; fill:var(--accent)}
+    .site-footer{justify-content:center; opacity:.85; font-size:.92rem; padding-bottom:22px}
+    .crest{
+      height:56px; width:auto; display:block;
+      filter: drop-shadow(0 2px 6px rgba(0,0,0,.25));
+    }
+    .brand{display:flex; align-items:center; gap:12px}
     .ghost{
-      background:transparent; border:1px solid rgba(255,255,255,.2);
+      background:transparent; border:1px solid var(--line);
       color:var(--text); padding:8px 12px; border-radius:12px; cursor:pointer;
     }
-    main#app{max-width:840px; margin:0 auto; width:100%; padding:24px 16px; flex:1}
+
+    main#app{max-width:860px; margin:0 auto; width:100%; padding:24px 16px; flex:1}
     .view{display:none; gap:14px}
     .view.active{display:flex; flex-direction:column; animation:fade .25s ease}
-    h1{font-size:clamp(1.6rem,6vw,2.4rem); margin:0 0 8px}
-    h2{font-size:clamp(1.3rem,5vw,1.8rem); margin:8px 0}
+
+    h1{font-size:clamp(1.6rem, 6vw, 2.4rem); margin:0 0 8px}
+    h2{font-size:clamp(1.3rem, 5vw, 1.8rem); margin:8px 0}
     p{margin:0 0 8px}
     .lead{font-size:1.05rem}
     .muted{color:var(--muted)}
     .accent{color:var(--accent); font-weight:700}
     .credit{opacity:.85}
     .small{font-size:.9rem}
+
     .cta,.secondary{
-      background:var(--accent); border:none; color:#111; font-weight:700; padding:14px 16px;
-      border-radius:14px; cursor:pointer; box-shadow:var(--shadow); transform:translateY(0);
-      transition:transform .12s ease, filter .2s ease;
+      background:var(--accent); border:none; color:var(--ink); font-weight:700; padding:14px 16px;
+      border-radius:14px; cursor:pointer; box-shadow: var(--shadow); transform: translateY(0);
+      transition: transform .12s ease, filter .2s ease;
     }
-    .secondary{background:#222; color:#fff; border:1px solid rgba(255,255,255,.15)}
+    .secondary{background:#222; color:#fff; border:1px solid var(--line)}
+    @media (prefers-color-scheme: light){ .secondary{background:#f2f2f2; color:#111} }
     .secondary:hover{filter:brightness(1.06)}
-    .cta:active{transform:translateY(1px)}
-    .card{background:var(--card); padding:16px; border-radius:16px; box-shadow:var(--shadow)}
+    .cta:active{transform: translateY(1px)}
+
+    .card{background:var(--card); padding:16px; border-radius:var(--radius); box-shadow:var(--shadow)}
     .form{display:grid; gap:10px}
     input[type=text], input[type=password]{
-      background:#0f0f12; color:var(--text); border:1px solid rgba(255,255,255,.15);
+      background:color-mix(in srgb, var(--card), black 10%); color:var(--text); border:1px solid var(--line);
       padding:12px 14px; border-radius:12px; outline:none; width:100%;
     }
     @media (prefers-color-scheme: light){
@@ -75,42 +92,60 @@
     .form-msg{min-height:20px; font-size:.95rem}
     .form-msg.ok{color:var(--ok)}
     .form-msg.err{color:var(--warn)}
+
     .hint{color:var(--muted); font-size:.95rem}
-    .hint-box{margin-top:8px}
     .callout{
-      background:linear-gradient(0deg, rgba(255,189,89,.08), rgba(255,189,89,.08));
-      border:1px solid rgba(255,189,89,.3);
+      background:linear-gradient(0deg, rgba(255,189,89,.09), rgba(255,189,89,.09));
+      border:1px solid color-mix(in srgb, var(--accent), transparent 60%);
       padding:12px 14px; border-radius:14px;
     }
-    .tilt-pad{
-      width:140px; height:140px; margin:8px auto; border-radius:99px;
-      background: radial-gradient(120px 120px at 50% 50%, var(--accent), #ffdba1);
-      display:grid; place-items:center; cursor:pointer; box-shadow:var(--shadow);
+
+    /* PRESS & HOLD HEART */
+    .hold-wrap{display:grid; place-items:center; margin:8px 0 2px}
+    .heart{
+      width:120px; height:120px; border-radius:22px; background:
+        radial-gradient(120px 120px at 50% 50%, var(--accent), #ffdba1);
+      display:grid; place-items:center; box-shadow:var(--shadow); position:relative; cursor:pointer;
+      user-select:none; -webkit-user-select:none; touch-action:manipulation;
     }
-    .pulse{width:36px; height:36px; border-radius:999px; background:#fff8; animation:pulse 1.4s infinite}
+    .heart::before{
+      content:"❤"; font-size:56px; filter: drop-shadow(0 2px 4px rgba(0,0,0,.25));
+    }
+    .ring{
+      position:absolute; inset:8px; border-radius:18px; border:3px solid rgba(255,255,255,.6);
+      clip-path: inset(0 round 18px);
+      transform: scaleX(0); transform-origin:left; transition: transform .2s linear;
+    }
+    .ring.fill{ transform: scaleX(1) }
+
     .keypad{display:grid; gap:10px}
     .keys{display:grid; grid-template-columns: repeat(3, 1fr); gap:10px}
-    .keys button{padding:14px 0; border-radius:12px; border:1px solid rgba(255,255,255,.15); background:#1a1a1f; color:#fff; font-size:1.1rem; cursor:pointer}
+    .keys button{padding:14px 0; border-radius:12px; border:1px solid var(--line); background:color-mix(in srgb, var(--card), black 10%); color:var(--text); font-size:1.1rem; cursor:pointer}
+    @media (prefers-color-scheme: light){ .keys button{ background:#fff; color:#111; } }
+
     .grid{display:grid; grid-template-columns: repeat(2, 1fr); gap:10px; margin:10px 0}
     .tile{
       aspect-ratio:1/1; border-radius:14px; position:relative; cursor:pointer; box-shadow:var(--shadow);
       background: linear-gradient(135deg, #1f1f25, #2a2a33);
-      border:1px solid rgba(255,255,255,.08);
+      border:1px solid var(--line);
     }
+    @media (prefers-color-scheme: light){ .tile{ background: linear-gradient(135deg, #f2f2f7, #ffffff); } }
     .tile .digit{
       position:absolute; right:8px; bottom:8px; font-weight:800;
       background:#000a; color:#fff; padding:6px 9px; border-radius:10px; opacity:0; transform:translateY(6px);
       transition:opacity .2s ease, transform .2s ease;
     }
     .tile.revealed .digit{opacity:1; transform:translateY(0)}
+
     .accordion{margin-top:12px; display:grid; gap:8px}
-    .accordion details{background:var(--card); border-radius:12px; padding:10px 12px; box-shadow:var(--shadow)}
+    .accordion details{background:var(--card); border-radius:12px; padding:10px 12px; box-shadow:var(--shadow); border:1px solid var(--line)}
     .accordion summary{cursor:pointer; font-weight:600}
-    .noscript{max-width:840px; margin:16px auto; padding:12px 14px; background:#ffdba1; color:#111; border-radius:12px}
+
+    .noscript{max-width:860px; margin:16px auto; padding:12px 14px; background:#ffdba1; color:#111; border-radius:12px}
     .sr{position:absolute; left:-10000px; top:auto; width:1px; height:1px; overflow:hidden}
     .actions{display:flex; gap:10px; flex-wrap:wrap; margin:10px 0}
     #confetti{width:100%; height:220px; display:block}
-    @keyframes pulse { 0%{transform:scale(1); opacity:.9} 70%{transform:scale(1.3); opacity:.4} 100%{transform:scale(1); opacity:.9}}
+
     @keyframes fade { from{opacity:0; transform:translateY(6px)} to{opacity:1; transform:none}}
     .shake{animation:shake .2s linear}
     @keyframes shake{0%{transform:translateX(0)}25%{transform:translateX(-4px)}50%{transform:translateX(4px)}75%{transform:translateX(-3px)}100%{transform:translateX(0)}}
@@ -119,14 +154,13 @@
 <body>
   <noscript>
     <div class="noscript">
-      <p>This interactive card needs JavaScript enabled. If it’s off, here’s the message:</p>
-      <p>Welcome to the weekend! We’re glad you’re here at Triangle Fraternity. — <strong>Made by Thomas Askharoun</strong></p>
+      <p>This interactive card needs JavaScript enabled. If it’s off: Welcome to the weekend! Triangle Fraternity is happy you’re here. — <strong>Made by Thomas Askharoun</strong></p>
     </div>
   </noscript>
 
   <header class="site-header">
     <div class="brand">
-      <svg aria-hidden="true" viewBox="0 0 24 24" class="logo"><path d="M12 2l10 20H2L12 2z"/></svg>
+      <img alt="Triangle Fraternity Crest" class="crest" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAARgAAAFkCAYAAAD7biQ2AAAACXBIWXMAAAsTAAALEwEAmpwYAAEAAElEQVR4nOx9d5wdVfn+856Z28v2XtJ2791sKqSStgm9...REPLACE_IF_NEEDED..." />
       <span>Triangle Fraternity</span>
     </div>
     <button id="themeToggle" class="ghost" aria-label="Toggle theme">🌓</button>
@@ -136,25 +170,19 @@
     <!-- Landing -->
     <section id="landing" class="view active" aria-labelledby="landingTitle">
       <h1 id="landingTitle">Welcome, <span class="accent" data-bind="guestName">Sophia</span>! 🎉</h1>
-      <p>We’re hyped you’re here for <span data-bind="weekendDates">Oct 11–13</span>. Tap below to open your card.</p>
-      <button class="cta" id="startBtn">Open Your Card</button>
+      <p class="muted">We’re hyped you’re here for <span data-bind="weekendDates">Oct 11–13</span>. Tap below to open your card.</p>
+      <div class="hold-wrap">
+        <div class="heart" id="holdHeart" role="button" aria-label="Press and hold to start">
+          <div class="ring" id="holdRing"></div>
+        </div>
+      </div>
+      <p class="hint" id="holdHint">Press & hold the heart for 2 seconds.</p>
       <p class="credit">Designed &amp; built by <strong>Thomas Askharoun</strong></p>
     </section>
 
-    <!-- Step 1 -->
-    <section id="step1" class="view" aria-labelledby="step1Title" aria-hidden="true">
-      <h2 id="step1Title">Step 1 — Wake the Card</h2>
-      <p class="muted" id="motionCopy">Gently tilt your phone to wake the card.</p>
-      <div class="tilt-pad" id="tiltPad" role="button" tabindex="0" aria-label="Tap the circle if tilt isn’t available">
-        <div class="pulse"></div>
-      </div>
-      <p class="hint">No motion? Tap the peach circle 3×.</p>
-      <button class="ghost" id="skip1" aria-label="Skip motion and continue">Can’t tilt? Continue</button>
-    </section>
-
-    <!-- Step 2 -->
+    <!-- Step 2 (was Step 1 previously) -->
     <section id="step2" class="view" aria-labelledby="step2Title" aria-hidden="true">
-      <h2 id="step2Title">Step 2 — Tiny Riddle</h2>
+      <h2 id="step2Title">Quick riddle</h2>
       <p>What has keys but can’t open locks?</p>
       <form id="riddleForm" class="card form" autocomplete="off">
         <label for="riddleInput" class="sr">Your answer</label>
@@ -162,14 +190,6 @@
         <button class="cta" type="submit">Check</button>
         <div class="form-msg" id="riddleMsg" aria-live="polite"></div>
       </form>
-      <details class="hint-box">
-        <summary>Need a hint?</summary>
-        <ul>
-          <li>It makes music.</li>
-          <li>You can sit at it.</li>
-          <li>Answer is a single word.</li>
-        </ul>
-      </details>
       <div class="callout">
         <strong>Passcode hint:</strong> the year Penn State’s Triangle chapter was founded.
       </div>
@@ -177,11 +197,9 @@
 
     <!-- Step 3 -->
     <section id="step3" class="view" aria-labelledby="step3Title" aria-hidden="true">
-      <h2 id="step3Title">Step 3 — Final Code</h2>
-      <p>Tap the tiles, then enter the 4-digit code.</p>
-      <div class="grid" id="digitGrid" aria-label="Digit clue grid">
-        <!-- Tiles injected by JS -->
-      </div>
+      <h2 id="step3Title">Final code</h2>
+      <p>Tap the tiles, then enter the 4 digits.</p>
+      <div class="grid" id="digitGrid" aria-label="Digit clue grid"></div>
       <form id="codeForm" class="keypad card" autocomplete="off">
         <label for="codeInput" class="sr">Enter code</label>
         <input id="codeInput" type="password" inputmode="numeric" pattern="\\d{4}" maxlength="4" placeholder="••••" aria-describedby="codeMsg" required />
@@ -197,16 +215,14 @@
       <h2 id="successTitle">Welcome to the weekend, <span data-bind="guestName">Sophia</span>! 💫</h2>
       <p class="lead">We’re so glad you’re here with <span data-bind="fratName">Triangle Fraternity</span>.</p>
       <div class="card">
-        <p>Open the tips for quick recs, grab the Wi-Fi, or add this to your Home Screen for easy access. If you need anything—directions, food recs, or a mini tour—just ask.</p>
+        <p>Open the tips for quick recs, grab the Wi-Fi, or add this to your Home Screen. If you need anything—directions, food recs, or a mini tour—just ask. 💛</p>
         <p class="credit small">Made by <strong>Thomas Askharoun</strong></p>
       </div>
       <div class="actions">
         <button class="secondary" id="tipsToggle">Weekend Tips</button>
         <button class="secondary" id="wifiCopy">Copy Wi-Fi</button>
-        <button class="secondary" id="installBtn" hidden>Add to Home Screen</button>
         <button class="ghost" id="replay">Replay Confetti</button>
       </div>
-
       <div id="tips" class="accordion" hidden></div>
       <audio id="successAudio" preload="auto"></audio>
     </section>
@@ -217,30 +233,27 @@
   </footer>
 
   <script>
-    /* =======================
-       CONFIG — edit here
-    ======================= */
+    /* CONFIG */
     const CONFIG = {
       GUEST_NAME: "Sophia",
       FRAT_NAME: "Triangle Fraternity",
       AUTHOR_NAME: "Made by Thomas Askharoun",
       WEEKEND_DATES: "Oct 11–13",
       ACCENT_HEX: "#ffbd59",
-      PASSCODE: "1928", // Final code
-      SONG_URL: "",     // Optional audio on success
+      PASSCODE: "1928",
+      SONG_URL: "",
       WIFI_SSID: "Triangle_House",
       WIFI_PASS: "guest123",
       TIPS: [
-        {title: "Best Coffee", body: "Saint's Cafe — cozy vibes."},
-        {title: "Late-Night Bite", body: "Canyon Pizza. No questions asked."},
-        {title: "Quick Pro Tip", body: "Coat hangers: hall closet on the left."}
+        {title: "Brunch", body: "The Waffle Shop — always a win."},
+        {title: "Late Night", body: "Canyon Pizza — it’s a rite of passage."},
+        {title: "Photo Spot", body: "Old Main lawn at golden hour."}
       ]
     };
 
-    /* ============== helpers/state ============== */
     const qs = s => document.querySelector(s);
     const qsa = s => [...document.querySelectorAll(s)];
-    function showView(id){
+    function next(id){
       qsa(".view").forEach(v=>{
         const active = v.id === id;
         v.classList.toggle("active", active);
@@ -248,14 +261,11 @@
       });
       localStorage.setItem("triangle:progress", JSON.stringify({id}));
     }
-    function next(id){ showView(id); }
-    function restoreProgress(){
+    function restore(){
       const saved = JSON.parse(localStorage.getItem("triangle:progress")||"{}");
-      if (saved.id && qs("#"+saved.id)) showView(saved.id);
+      if (saved.id && qs("#"+saved.id)) next(saved.id);
     }
-
-    /* ============== bind content/theme ============== */
-    function bindContent(){
+    function bind(){
       qsa("[data-bind='guestName']").forEach(n=> n.textContent = CONFIG.GUEST_NAME);
       qsa("[data-bind='fratName']").forEach(n=> n.textContent = CONFIG.FRAT_NAME);
       qsa("[data-bind='weekendDates']").forEach(n=> n.textContent = CONFIG.WEEKEND_DATES);
@@ -263,119 +273,97 @@
       document.documentElement.style.setProperty('--accent', CONFIG.ACCENT_HEX);
       if (CONFIG.SONG_URL) qs("#successAudio").src = CONFIG.SONG_URL;
     }
-    function setupTheme(){
-      const btn = qs("#themeToggle");
-      btn.addEventListener("click", ()=>{
-        const attr = document.documentElement.getAttribute("data-theme");
-        const next = attr === "light" ? "dark" : (attr === "dark" ? null : "light");
-        if (next) document.documentElement.setAttribute("data-theme", next);
+
+    /* Theme toggle */
+    (function(){
+      const toggle = qs("#themeToggle");
+      toggle.addEventListener("click", ()=>{
+        const cur = document.documentElement.getAttribute("data-theme");
+        const nextTheme = cur === "light" ? "dark" : (cur === "dark" ? "" : "light");
+        if (nextTheme) document.documentElement.setAttribute("data-theme", nextTheme);
         else document.documentElement.removeAttribute("data-theme");
       });
-    }
+    })();
 
-    /* ============== router ============== */
-    function setupRouter(){
-      qs("#startBtn").addEventListener("click", ()=> next("step1"));
-    }
+    /* PRESS & HOLD */
+    (function(){
+      const heart = qs("#holdHeart");
+      const ring = qs("#holdRing");
+      const hint = qs("#holdHint");
+      let timer = null, start = 0, held = false;
 
-    /* ============== step 1: motion/tap ============== */
-    function setupStep1(){
-      const pad = qs("#tiltPad");
-      const skip = qs("#skip1");
-      const motionCopy = qs("#motionCopy");
-      let unlocked = false;
-      let taps = 0;
-
-      function complete(){
-        if (unlocked) return;
-        unlocked = true;
-        next("step2");
+      function begin(){
+        if (held) return;
+        start = performance.now();
+        ring.classList.add("fill");
+        timer = setTimeout(()=> {
+          held = true;
+          hint.textContent = "Nice. Let’s go ✨";
+          next("step2");
+        }, 2000);
       }
-
-      pad.addEventListener("click", ()=>{
-        taps++;
-        if (taps>=3) complete();
-      });
-      skip.addEventListener("click", complete);
-
-      function onMotion(e){
-        const ax = Math.abs(e.accelerationIncludingGravity?.x||0);
-        const ay = Math.abs(e.accelerationIncludingGravity?.y||0);
-        const az = Math.abs(e.accelerationIncludingGravity?.z||0);
-        if ((ax+ay+az) > 40) complete();
+      function cancel(){
+        ring.classList.remove("fill");
+        if (timer){ clearTimeout(timer); timer=null; }
       }
+      heart.addEventListener("pointerdown", (e)=>{ e.preventDefault(); begin(); });
+      document.addEventListener("pointerup", cancel);
+      document.addEventListener("pointercancel", cancel);
+      heart.addEventListener("keydown", (e)=>{ if (e.key === "Enter" || e.key === " ") begin(); });
+      heart.setAttribute("tabindex","0");
+    })();
 
-      async function requestMotion(){
-        try{
-          if (typeof DeviceMotionEvent !== "undefined" && typeof DeviceMotionEvent.requestPermission === "function"){
-            const res = await DeviceMotionEvent.requestPermission();
-            if (res === "granted") window.addEventListener("devicemotion", onMotion);
-            else motionCopy.textContent = "Tap the peach circle 3× to continue.";
-          } else if (typeof DeviceMotionEvent !== "undefined"){
-            window.addEventListener("devicemotion", onMotion);
-          } else {
-            motionCopy.textContent = "Tap the peach circle 3× to continue.";
-          }
-        }catch{
-          motionCopy.textContent = "Tap the peach circle 3× to continue.";
-        }
-      }
-      requestMotion();
-    }
-
-    /* ============== step 2: riddle ============== */
-    function setupStep2(){
+    /* Riddle */
+    (function(){
       const form = qs("#riddleForm");
+      if (!form) return;
       const input = qs("#riddleInput");
       const msg = qs("#riddleMsg");
       const answer = "piano";
-
       form.addEventListener("submit", (e)=>{
         e.preventDefault();
         const val = (input.value||"").trim().toLowerCase();
         if (val === answer){
-          msg.textContent = "Nice! You’ve got an ear for it. ➜ Next step.";
+          msg.textContent = "Correct! ➜ One last step…";
           msg.className = "form-msg ok";
-          setTimeout(()=> next("step3"), 650);
+          setTimeout(()=> next("step3"), 600);
         } else {
-          msg.textContent = "Close! Think instrument — with lots of keys.";
+          msg.textContent = "Think: instrument with lots of keys. 😉";
           msg.className = "form-msg err";
           input.classList.remove("shake"); void input.offsetWidth; input.classList.add("shake");
         }
       });
-    }
+    })();
 
-    /* ============== step 3: grid + keypad ============== */
-    function setupStep3(){
+    /* Digit grid + keypad */
+    (function(){
       const grid = qs("#digitGrid");
       const codeForm = qs("#codeForm");
       const codeInput = qs("#codeInput");
       const codeMsg = qs("#codeMsg");
       const keys = qs("#keys");
+      if (!grid) return;
 
-      // four tiles; reveal 1,9,2,8 in order
-      ["1","9","2","8"].forEach((d,i)=>{
+      ["1","9","2","8"].forEach(d=>{
         const tile = document.createElement("button");
-        tile.type = "button";
-        tile.className = "tile";
-        tile.setAttribute("aria-pressed","false");
+        tile.type="button"; tile.className="tile"; tile.setAttribute("aria-pressed","false");
         tile.innerHTML = `<span class="digit">${d}</span>`;
         tile.addEventListener("click", ()=>{
-          tile.classList.add("revealed"); tile.setAttribute("aria-pressed","true");
+          tile.classList.add("revealed");
+          tile.setAttribute("aria-pressed","true");
         });
         grid.appendChild(tile);
       });
 
-      // keypad layout
       const layout = ["1","2","3","4","5","6","7","8","9","←","0","OK"];
       layout.forEach(ch=>{
-        const b = document.createElement("button");
-        b.type = ch === "OK" ? "submit" : "button";
+        const b=document.createElement("button");
+        b.type = ch==="OK" ? "submit" : "button";
         b.textContent = ch;
-        if (ch === "←") b.setAttribute("aria-label","Backspace");
+        if (ch==="←") b.setAttribute("aria-label","Backspace");
         b.addEventListener("click", ()=>{
-          if (ch === "OK") return;
-          if (ch === "←"){ codeInput.value = codeInput.value.slice(0,-1); }
+          if (ch==="OK") return;
+          if (ch==="←"){ codeInput.value = codeInput.value.slice(0,-1); }
           else if (codeInput.value.length < 4){ codeInput.value += ch; }
           codeMsg.textContent = "";
         });
@@ -387,8 +375,8 @@
         if (codeInput.value === CONFIG.PASSCODE){
           codeMsg.textContent = "Unlocked ✅";
           codeMsg.className = "form-msg ok";
-          setTimeout(()=> next("success"), 500);
-          setTimeout(runConfetti, 600);
+          setTimeout(()=> next("success"), 450);
+          setTimeout(runConfetti, 550);
           if (CONFIG.SONG_URL){ qs("#successAudio")?.play().catch(()=>{}); }
         } else {
           codeMsg.textContent = "Not quite. Hint: the year PSU Triangle was founded.";
@@ -396,43 +384,42 @@
           codeInput.classList.remove("shake"); void codeInput.offsetWidth; codeInput.classList.add("shake");
         }
       });
-    }
+    })();
 
-    /* ============== success: tips/wifi/confetti ============== */
-    function setupSuccess(){
+    /* Success extras */
+    (function(){
       const tipsBtn = qs("#tipsToggle");
       const tips = qs("#tips");
       const wifiBtn = qs("#wifiCopy");
-      const replay = qs("#replay");
+      const audio = qs("#successAudio");
 
-      // tips
-      CONFIG.TIPS.forEach(({title, body})=>{
-        const d = document.createElement("details");
-        const s = document.createElement("summary"); s.textContent = title;
-        const p = document.createElement("p"); p.textContent = body;
-        d.append(s,p); tips.appendChild(d);
-      });
-      tipsBtn.addEventListener("click", ()=>{
-        tips.hidden = !tips.hidden;
-        tipsBtn.setAttribute("aria-expanded", String(!tips.hidden));
-      });
+      if (tipsBtn){
+        CONFIG.TIPS.forEach(({title, body})=>{
+          const d=document.createElement("details");
+          const s=document.createElement("summary"); s.textContent = title;
+          const p=document.createElement("p"); p.textContent = body;
+          d.append(s,p); tips.appendChild(d);
+        });
+        tipsBtn.addEventListener("click", ()=>{
+          tips.hidden = !tips.hidden;
+          tipsBtn.setAttribute("aria-expanded", String(!tips.hidden));
+        });
+      }
 
-      // wifi copy
-      wifiBtn.addEventListener("click", async ()=>{
-        try{
-          await navigator.clipboard.writeText(`${CONFIG.WIFI_SSID} / ${CONFIG.WIFI_PASS}`);
-          wifiBtn.textContent = "Wi-Fi Copied ✅";
-          setTimeout(()=> wifiBtn.textContent = "Copy Wi-Fi", 1400);
-        }catch{
-          alert(`Wi-Fi:\nSSID: ${CONFIG.WIFI_SSID}\nPASS: ${CONFIG.WIFI_PASS}`);
-        }
-      });
+      if (wifiBtn){
+        wifiBtn.addEventListener("click", async ()=>{
+          try{
+            await navigator.clipboard.writeText(`${CONFIG.WIFI_SSID} / ${CONFIG.WIFI_PASS}`);
+            wifiBtn.textContent = "Wi-Fi Copied ✅";
+            setTimeout(()=> wifiBtn.textContent = "Copy Wi-Fi", 1400);
+          }catch{
+            alert(`Wi-Fi:\\nSSID: ${CONFIG.WIFI_SSID}\\nPASS: ${CONFIG.WIFI_PASS}`);
+          }
+        });
+      }
+    })();
 
-      // replay confetti
-      replay.addEventListener("click", runConfetti);
-    }
-
-    /* ============== confetti (lightweight) ============== */
+    /* Confetti */
     function runConfetti(){
       if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
       const canvas = qs("#confetti");
@@ -448,52 +435,25 @@
         vy: 1 + Math.random()*2.5,
         a: Math.random()*Math.PI*2
       }));
-      let alive = true;
-      const stopAt = performance.now() + 2500;
+      const end = performance.now()+2500;
       (function tick(){
-        const now = performance.now();
-        if (now > stopAt) { alive = false; }
         ctx.clearRect(0,0,W,H);
         parts.forEach(p=>{
-          p.x += p.vx; p.y += p.vy; p.a += 0.05;
-          if (p.y > H){ p.y = -10; p.x = Math.random()*W; }
-          ctx.save();
-          ctx.translate(p.x, p.y);
-          ctx.rotate(p.a);
+          p.x+=p.vx; p.y+=p.vy; p.a+=0.05;
+          if (p.y>H){ p.y=-10; p.x=Math.random()*W; }
+          ctx.save(); ctx.translate(p.x,p.y); ctx.rotate(p.a);
           ctx.fillStyle = Math.random()>.5 ? CONFIG.ACCENT_HEX : "#ffffff";
-          ctx.fillRect(-p.r, -p.r, p.r*2, p.r*2);
+          ctx.fillRect(-p.r,-p.r,p.r*2,p.r*2);
           ctx.restore();
         });
-        if (alive) requestAnimationFrame(tick);
+        if (performance.now()<end) requestAnimationFrame(tick);
       })();
     }
 
-    /* ============== PWA "install" hint (deferred prompt) ============== */
-    let deferredPrompt = null;
-    window.addEventListener("beforeinstallprompt", (e)=>{
-      e.preventDefault(); deferredPrompt = e;
-      const btn = qs("#installBtn"); btn.hidden = false;
-      btn.addEventListener("click", async ()=>{
-        btn.disabled = true;
-        deferredPrompt.prompt();
-        const outcome = await deferredPrompt.userChoice;
-        deferredPrompt = null;
-        btn.textContent = outcome.outcome === "accepted" ? "Added ✅" : "Add to Home Screen";
-        btn.disabled = false;
-      }, {once:true});
-    });
-
-    /* ============== init ============== */
+    /* Init */
     document.addEventListener("DOMContentLoaded", ()=>{
-      bindContent();
-      setupTheme();
-      setupRouter();
-      setupStep1();
-      setupStep2();
-      setupStep3();
-      setupSuccess();
-      // start at landing unless there's saved state
-      restoreProgress();
+      bind();
+      restore(); // if refreshed mid-flow, keep place
     });
   </script>
 </body>
