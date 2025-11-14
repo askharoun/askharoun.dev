@@ -1,0 +1,1769 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Microsoft Clarity (unchanged) -->
+  <script type="text/javascript">
+    (function(c,l,a,r,i,t,y){
+        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+    })(window, document, "clarity", "script", "rmcsekaion");
+  </script>
+
+  <!-- Primary SEO title -->
+  <title>Arabizi to English Translator | Franco Arabic Online</title>
+
+  <!-- Meta description for SEO -->
+  <meta name="description" content="Free Arabizi to English translator. Type Franco Arabic like “a3mel eh?” and get natural English translations instantly. Supports slang, numbers, and chat phrases.">
+
+  <!-- Open Graph tags -->
+  <meta property="og:title" content="Arabizi to English Translator – A3mel Eh? | askharoun.dev">
+  <meta property="og:description" content="Type Arabizi like a3mel eh? and get instant English like What should I do? Free Franco Arabic to English translator with slang support.">
+  <meta property="og:image"  content="https://askharoun.dev/images/title%20for%20messages.png">
+  <meta property="og:url"    content="https://askharoun.dev/arabizi-to-english-translator">
+  <meta property="og:type"   content="website">
+
+  <!-- Canonical URL / slug -->
+  <link rel="canonical" href="https://askharoun.dev/arabizi-to-english-translator">
+
+  <!-- Favicon -->
+  <link   rel="icon"        href="https://askharoun.dev/favicon.ico">
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Keep same branding -->
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="images/favicon.png" type="image/x-icon">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+  <noscript><link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet"></noscript>
+
+  <!-- FAQ JSON-LD for rich snippets -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What is Arabizi?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Arabizi, also called Franco Arabic, is Arabic written with English letters and numbers like 3, 7 and 5 to represent Arabic sounds. It is commonly used in chats, WhatsApp and social media."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How do I translate Arabizi to English?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Paste your Arabizi sentence into this translator, for example “a3mel eh?”, click Translate, and you will see both the Arabic script and a natural English meaning."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Does this tool support slang and shortened words?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. This Arabizi translator is designed for Franco Arabic chat slang and supports numbers like 3 and 7, different spellings and common shortcuts."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Is this Arabizi to English translator free to use?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. The Arabizi to English translator runs in your browser and is completely free to use."
+        }
+      }
+    ]
+  }
+  </script>
+
+  <!-- Extra styles just for the translator page (uses your design system) -->
+  <style>
+    /* Page spacing to clear fixed header */
+    main.translator-page-main {
+      padding-top: 100px;
+      min-height: 100vh;
+    }
+
+    .translator-hero {
+      padding: var(--space-xxl) var(--space-lg) var(--space-xl);
+      text-align: center;
+    }
+
+    .translator-hero-inner {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .translator-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.35rem 0.9rem;
+      border-radius: 999px;
+      background: rgba(45, 108, 223, 0.08);
+      border: 1px solid var(--border);
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      margin-bottom: var(--space-md);
+    }
+
+    .translator-badge-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: var(--primary);
+    }
+
+    .translator-title {
+      font-size: 2.5rem;
+      font-family: var(--font-heading);
+      margin-bottom: var(--space-sm);
+      color: var(--text-primary);
+    }
+
+    .translator-tagline {
+      font-size: 1.05rem;
+      color: var(--text-secondary);
+      max-width: 650px;
+      margin: 0 auto;
+    }
+
+    .translator-tagline strong {
+      color: var(--primary);
+    }
+
+    .translator-note {
+      margin-top: var(--space-md);
+      font-size: 0.9rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.35rem 0.8rem;
+      border-radius: 999px;
+      border: 1px dashed var(--border);
+      background: var(--surface);
+      color: var(--text-secondary);
+    }
+
+    .translator-note span:first-child {
+      font-size: 1.1rem;
+    }
+
+    .translator-layout {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 var(--space-lg) var(--space-xxl);
+      display: grid;
+      gap: var(--space-xl);
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+    }
+
+    @media (max-width: 900px) {
+      .translator-layout {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .translator-card {
+      background: var(--surface);
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      box-shadow: 0 8px 25px var(--shadow);
+      padding: var(--space-xl);
+    }
+
+    .translator-card-header {
+      margin-bottom: var(--space-md);
+    }
+
+    .translator-card-title {
+      font-size: 1.3rem;
+      font-family: var(--font-heading);
+      color: var(--text-primary);
+      margin-bottom: 0.25rem;
+    }
+
+    .translator-card-subtitle {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+    }
+
+    .translator-label {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      margin-bottom: 0.35rem;
+      display: block;
+      font-weight: 500;
+    }
+
+    .translator-textarea {
+      width: 100%;
+      min-height: 130px;
+      border-radius: 12px;
+      border: 2px solid var(--border);
+      background: var(--background);
+      color: var(--text-primary);
+      padding: var(--space-md);
+      font-family: var(--font-body);
+      font-size: 0.95rem;
+      resize: vertical;
+      transition: border-color var(--transition-normal),
+                  box-shadow var(--transition-normal),
+                  background-color var(--transition-normal),
+                  transform 0.15s ease;
+    }
+
+    .translator-textarea::placeholder {
+      color: var(--text-secondary);
+      opacity: 0.8;
+    }
+
+    .translator-textarea:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(45, 108, 223, 0.15);
+      background: var(--surface);
+      transform: translateY(-1px);
+    }
+
+    .translator-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-sm);
+      align-items: center;
+      margin-top: var(--space-md);
+    }
+
+    .translator-btn-primary {
+      padding: 0.6rem 1.4rem;
+      border-radius: 999px;
+      border: none;
+      background: var(--primary);
+      color: white;
+      font-family: var(--font-heading);
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      transition: all var(--transition-normal);
+      box-shadow: 0 8px 20px var(--shadow);
+    }
+
+    .translator-btn-primary:hover:not(:disabled) {
+      background: var(--primary-dark-color);
+      transform: translateY(-1px);
+      box-shadow: 0 10px 26px var(--shadow);
+    }
+
+    .translator-btn-primary:disabled {
+      opacity: 0.7;
+      cursor: default;
+      box-shadow: none;
+      position: relative;
+    }
+
+    /* Loading spinner */
+    .loading-spinner {
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .translator-status {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .translator-status strong {
+      color: var(--primary);
+    }
+
+    .status-loading {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--primary);
+      animation: pulse 1.5s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% {
+        opacity: 1;
+        transform: scale(1);
+      }
+      50% {
+        opacity: 0.5;
+        transform: scale(0.8);
+      }
+    }
+
+    .translator-examples {
+      margin-top: var(--space-md);
+      border-top: 1px dashed var(--border);
+      padding-top: var(--space-md);
+    }
+
+    .translator-examples-label {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      margin-bottom: 0.4rem;
+    }
+
+    .translator-example-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+    }
+
+    .translator-chip {
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: var(--background);
+      padding: 0.35rem 0.75rem;
+      font-size: 0.8rem;
+      color: var(--text-primary);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      transition: all 0.2s ease;
+    }
+
+    .translator-chip span {
+      color: var(--text-secondary);
+      font-size: 0.75rem;
+    }
+
+    .translator-chip:hover {
+      background: rgba(45,108,223,0.06);
+      border-color: var(--primary);
+      transform: translateY(-1px);
+    }
+
+    .translator-error {
+      margin-top: 0.45rem;
+      font-size: 0.8rem;
+      color: var(--error);
+      display: none;
+    }
+
+    .translator-output-grid {
+      display: grid;
+      gap: var(--space-md);
+    }
+
+    .translator-output-block {
+      background: var(--background);
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      padding: var(--space-md);
+    }
+
+    .translator-output-label {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      margin-bottom: 0.25rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .translator-output-value {
+      font-size: 0.98rem;
+      color: var(--text-primary);
+      word-wrap: break-word;
+      line-height: 1.5;
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(5px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .translator-output-empty {
+      color: var(--text-secondary);
+      opacity: 0.8;
+      font-size: 0.9rem;
+    }
+
+    .translator-output-loading {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--text-secondary);
+    }
+
+    .loading-bubbles {
+      display: flex;
+      gap: 4px;
+      align-items: center;
+    }
+
+    .loading-bubble {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--primary);
+      animation: bubble 1.4s ease-in-out infinite;
+    }
+
+    .loading-bubble:nth-child(1) {
+      animation-delay: 0s;
+    }
+
+    .loading-bubble:nth-child(2) {
+      animation-delay: 0.2s;
+    }
+
+    .loading-bubble:nth-child(3) {
+      animation-delay: 0.4s;
+    }
+
+    @keyframes bubble {
+      0%, 80%, 100% {
+        transform: scale(0.8);
+        opacity: 0.5;
+      }
+      40% {
+        transform: scale(1.2);
+        opacity: 1;
+      }
+    }
+
+    .translator-copy-row {
+      margin-top: 0.4rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: var(--space-sm);
+      font-size: 0.8rem;
+    }
+
+    .translator-btn-secondary {
+      padding: 0.45rem 1rem;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text-secondary);
+      font-size: 0.8rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      transition: all var(--transition-normal);
+      font-family: var(--font-heading);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .translator-btn-secondary:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px var(--shadow);
+    }
+
+    .translator-btn-secondary.copied {
+      background: var(--success);
+      border-color: var(--success);
+      color: white;
+      animation: copySuccess 0.3s ease;
+    }
+
+    @keyframes copySuccess {
+      0% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.05);
+      }
+      100% {
+        transform: scale(1);
+      }
+    }
+
+    .translator-copy-status {
+      color: var(--text-secondary);
+      transition: color 0.3s ease;
+    }
+
+    .translator-copy-status.success {
+      color: var(--success);
+      font-weight: 600;
+    }
+
+    /* SEO content below translator */
+    .translator-seo-section {
+      max-width: 900px;
+      margin: 0 auto var(--space-xxl);
+      padding: 0 var(--space-lg);
+    }
+
+    .translator-seo-section h2 {
+      font-size: 2rem;
+      font-family: var(--font-heading);
+      color: var(--text-primary);
+      margin-bottom: var(--space-sm);
+    }
+
+    .translator-seo-section p {
+      color: var(--text-secondary);
+      font-size: 0.98rem;
+      line-height: 1.7;
+      margin-bottom: 0.6rem;
+    }
+
+    .translator-seo-section ul {
+      padding-left: 1.2rem;
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+      margin-bottom: 0.7rem;
+    }
+
+    .translator-seo-section li {
+      margin-bottom: 0.25rem;
+    }
+
+    .translator-table-wrapper {
+      overflow-x: auto;
+      margin-top: 0.6rem;
+    }
+
+    .translator-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .translator-table th,
+    .translator-table td {
+      border: 1px solid var(--border);
+      padding: 0.4rem 0.6rem;
+      text-align: left;
+    }
+
+    .translator-table th {
+      background: var(--surface);
+      font-weight: 600;
+    }
+
+    .translator-table tbody tr:nth-child(even) {
+      background: rgba(0,0,0,0.02);
+    }
+
+    .translator-faq-item {
+      margin-bottom: var(--space-md);
+    }
+
+    .translator-faq-item h3 {
+      font-size: 1.1rem;
+      font-family: var(--font-heading);
+      color: var(--text-primary);
+      margin-bottom: 0.3rem;
+    }
+
+    .translator-faq-item p {
+      margin-bottom: 0;
+    }
+
+    @media (max-width: 768px) {
+      .translator-hero {
+        padding: var(--space-xxl) var(--space-md) var(--space-xl);
+      }
+      .translator-title {
+        font-size: 2.1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  
+  <!-- Header (unchanged) -->
+  <header>
+    <div class="logo-container">
+      <a href="index.html" class="logo-text">ASKHAROUN.DEV</a>
+    </div>
+    
+    <nav>
+      <ul>
+        <li><a href="index.html#about" class="nav-link">About</a></li>
+        <li><a href="index.html#projects" class="nav-link">Projects</a></li>
+        <li><a href="index.html#projects" class="nav-link">Certifications</a></li>
+        <li><a href="index.html#experience" class="nav-link">Experience</a></li>
+        <li><a href="index.html#contact" class="nav-link">Contact</a></li>
+      </ul>
+    </nav>
+    
+    <div class="theme-toggle-container">
+      <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode"></button>
+    </div>
+    
+    <div class="menu-toggle">
+      <div class="bar"></div>
+      <div class="bar"></div>
+      <div class="bar"></div>
+    </div>
+  </header>
+
+  <!-- Main Content for Arabizi page -->
+  <main class="translator-page-main">
+    <!-- Hero / heading -->
+    <section class="translator-hero">
+      <div class="translator-hero-inner">
+        <h1 class="translator-title">Arabizi to English Translator – A3mel Eh?</h1>
+        <p class="translator-tagline">
+          Type Arabizi like <strong>a3mel eh?</strong> and get instant English like
+          <strong>What should I do?</strong> Built for Franco Arabic chat slang.
+        </p>
+        <div class="translator-note">
+          <span>⚡</span>
+          <span>Supports Arabizi, Franco, and Arabic chat slang (3, 7, 5, 2, etc.).</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Translator UI -->
+    <section class="translator-layout" aria-label="Arabizi to English translation tool">
+      <!-- Left: Input + examples -->
+      <section class="translator-card" aria-label="Arabizi input">
+        <div class="translator-card-header">
+          <h2 class="translator-card-title">Type your Arabizi / Franco-Arabic</h2>
+          <p class="translator-card-subtitle">
+            We’ll detect Arabizi, map it to Arabic script, then translate it into natural English.
+          </p>
+        </div>
+
+        <label for="arabizi-input" class="translator-label">
+          Type your Arabizi / Franco-Arabic here…
+        </label>
+        <textarea
+          id="arabizi-input"
+          class="translator-textarea"
+          placeholder="Examples: a3mel eh?, enta fein?, fe eh ya man?, la2, msh kda"
+        ></textarea>
+
+        <div class="translator-actions">
+          <button id="translate-btn" class="translator-btn-primary">
+            <span id="translate-btn-label">Translate</span>
+          </button>
+          <span id="translator-status" class="translator-status">
+            Tip: You can click an example below to auto-fill and translate.
+          </span>
+        </div>
+
+        <div id="translator-error" class="translator-error" role="alert"></div>
+
+        <div class="translator-examples" aria-label="Example Arabizi phrases">
+          <div class="translator-examples-label">Example presets:</div>
+          <div class="translator-example-chips">
+            <button class="translator-chip" data-arabizi="a3mel eh?">
+              a3mel eh? <span>→ What should I do?</span>
+            </button>
+            <button class="translator-chip" data-arabizi="enta fein?">
+              enta fein? <span>→ Where are you?</span>
+            </button>
+            <button class="translator-chip" data-arabizi="fe eh ya man?">
+              fe eh ya man? <span>→ What’s going on, man?</span>
+            </button>
+            <button class="translator-chip" data-arabizi="la2, msh kda">
+              la2, msh kda <span>→ No, not like that.</span>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Right: Output -->
+      <section class="translator-card" aria-label="Translation output">
+        <div class="translator-card-header">
+          <h2 class="translator-card-title">Translation output</h2>
+          <p class="translator-card-subtitle">
+            See the intermediate Arabic script and the final English translation.
+          </p>
+        </div>
+
+        <div class="translator-output-grid">
+          <div class="translator-output-block">
+            <div class="translator-output-label">
+              <span>Arabic:</span>
+            </div>
+            <div id="arabic-output" class="translator-output-value translator-output-empty">
+              Your Arabic script will appear here.
+            </div>
+          </div>
+
+          <div class="translator-output-block">
+            <div class="translator-output-label">
+              <span>English:</span>
+            </div>
+            <div id="english-output" class="translator-output-value translator-output-empty">
+              Your English translation will appear here.
+            </div>
+            <div class="translator-copy-row">
+              <button id="copy-btn" class="translator-btn-secondary">
+                <span>Copy result</span>
+              </button>
+              <span id="copy-status" class="translator-copy-status"></span>
+            </div>
+          </div>
+        </div>
+      </section>
+    </section>
+
+    <!-- SEO text sections -->
+
+    <section class="translator-seo-section">
+      <h2>What is Arabizi / Franco Arabic?</h2>
+      <p>
+        Arabizi, also called <strong>Franco Arabic</strong>, is Arabic written with Latin letters and numbers.
+        Instead of typing the Arabic alphabet, people use English letters and digits to represent sounds:
+      </p>
+      <ul>
+        <li><strong>3</strong> is used for <strong>ع</strong></li>
+        <li><strong>7</strong> is used for <strong>ح</strong></li>
+        <li><strong>5</strong> or <strong>7&#x27;</strong> can represent <strong>خ</strong></li>
+        <li><strong>2</strong> can represent a glottal stop <strong>ء</strong></li>
+      </ul>
+      <p>
+        It’s common in WhatsApp chats, Instagram DMs, Messenger, gaming chats, and more. A lot of people search for
+        phrases like <em>“Arabizi to English”</em>, <em>“Franco Arabic translator”</em>,
+        <em>“Franco to English”</em>, or even specific phrases like <em>“a3mel eh meaning”</em> or
+        <em>“mesh fahim 7aga meaning”</em>.
+      </p>
+      <p>
+        This online Arabizi translator takes your Franco Arabic text, converts it to Arabic script, and then to
+        natural English so you can quickly understand what a sentence means.
+      </p>
+    </section>
+
+    <section class="translator-seo-section">
+      <h2>How to use this Arabizi to English translator</h2>
+      <p>Using this Arabizi tool is simple:</p>
+      <ul>
+        <li><strong>Step 1:</strong> Type or paste your Arabizi sentence into the input box, e.g. <code>a3mel eh?</code>.</li>
+        <li><strong>Step 2:</strong> Click the <strong>Translate</strong> button.</li>
+        <li><strong>Step 3:</strong> Read the Arabic script and the English meaning in the output panel.</li>
+      </ul>
+      <p>
+        The tool is built around a modern language model that can handle Arabizi → Arabic normalization and then
+        Arabic → English translation. The final English is meant to sound like a normal chat message, not like a
+        stiff textbook sentence.
+      </p>
+    </section>
+
+    <section class="translator-seo-section">
+      <h2>Examples of Arabizi phrases and meanings</h2>
+      <p>Here are some common Arabizi / Franco Arabic phrases and what they mean:</p>
+      <div class="translator-table-wrapper">
+        <table class="translator-table" aria-label="Arabizi examples and meanings">
+          <thead>
+            <tr>
+              <th>Arabizi / Franco Arabic</th>
+              <th>Arabic script</th>
+              <th>English meaning</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>a3mel eh?</td>
+              <td>اعمل ايه؟</td>
+              <td>What should I do?</td>
+            </tr>
+            <tr>
+              <td>enta fein?</td>
+              <td>انت فين؟</td>
+              <td>Where are you?</td>
+            </tr>
+            <tr>
+              <td>fe eh?</td>
+              <td>فيه إيه؟</td>
+              <td>What’s wrong?</td>
+            </tr>
+            <tr>
+              <td>3andi mashakel</td>
+              <td>عندي مشاكل</td>
+              <td>I have problems / issues.</td>
+            </tr>
+            <tr>
+              <td>mesh fahim 7aga</td>
+              <td>مش فاهم حاجة</td>
+              <td>I don’t understand anything.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="translator-seo-section" id="faq">
+      <h2>FAQ: Arabizi, Franco Arabic, and chat slang</h2>
+
+      <div class="translator-faq-item">
+        <h3>What is Arabizi?</h3>
+        <p>
+          Arabizi, or Franco Arabic, is Arabic written using the English alphabet plus numbers like 3, 7, and 5
+          to represent Arabic sounds. It’s widely used in chats, text messages, and social media.
+        </p>
+      </div>
+
+      <div class="translator-faq-item">
+        <h3>How do I translate Arabizi to English?</h3>
+        <p>
+          Paste your Arabizi sentence into the input box, for example <strong>“a3mel eh?”</strong>, and click
+          <strong>Translate</strong>. The tool will show the Arabic script and a natural English translation.
+        </p>
+      </div>
+
+      <div class="translator-faq-item">
+        <h3>Does this tool support slang and shortened words?</h3>
+        <p>
+          Yes. The translator is designed for Arabizi chat slang, including different spellings and shortcuts.
+          It understands common patterns like <strong>3</strong> for <strong>ع</strong> and <strong>7</strong> for <strong>ح</strong>.
+        </p>
+      </div>
+
+      <div class="translator-faq-item">
+        <h3>Is this Arabizi to English translator free to use?</h3>
+        <p>
+          Yes. The tool is completely free and runs in your browser. You can use it anytime for Arabizi to English,
+          Franco Arabic translator needs, or just to check the meaning of a phrase.
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer (unchanged) -->
+  <footer>
+    <div class="footer-content">
+      <div class="footer-left">
+        <div class="footer-logo">askharoun.dev</div>
+        <div class="footer-subtitle">Electrical Engineering Student @ Penn State</div>
+      </div>
+      
+      <div class="footer-center">
+        <a target="_blank" href="https://askharoun.github.io/askharoun.dev/images/Askharoun_Thomas_Current_Resume.pdf" class="resume-button">
+          <span class="button-text">View Resume</span>
+        </a>
+      </div>
+      
+      <div class="footer-right">
+        <div class="footer-contact">
+          <div class="contact-item">
+            <span class="contact-label">Email:</span>
+            <span class="contact-value">askharoun2005@gmail.com</span>
+          </div>
+          <div class="contact-item">
+            <span class="contact-label">Phone:</span>
+            <span class="contact-value">(484) 510-6083</span>
+          </div>
+          <div class="contact-item">
+            <span class="contact-label">Location:</span>
+            <span class="contact-value">State College, PA</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="footer-bottom">
+      <p>This site was designed with the future in mind. All trademarks belong to their respective owners.</p>
+      <p style="margin-top: 0.5rem; font-size: 0.8rem;">
+        Translation powered by <a href="https://jigsawstack.com/" target="_blank" rel="noopener noreferrer" style="color: var(--primary); text-decoration: none;">JigsawStack</a> - Thank you for providing excellent translation services!
+      </p>
+    </div>
+  </footer>
+
+  <!-- Your existing JS (theme toggle, menu, etc.) -->
+  <script>// Theme Toggle Functionality
+    document.addEventListener('DOMContentLoaded', function() {
+      const themeToggle = document.getElementById('themeToggle');
+      const body = document.body;
+      
+      // Check for saved theme preference or default to light mode
+      const currentTheme = localStorage.getItem('theme') || 'light';
+      
+      // Apply saved theme
+      if (currentTheme === 'dark') {
+        body.classList.add('dark-mode');
+      } else {
+        body.classList.remove('dark-mode');
+      }
+      
+      // Theme toggle button click handler
+      if (themeToggle) {
+        themeToggle.addEventListener('click', function() {
+          body.classList.toggle('dark-mode');
+          
+          // Save theme preference
+          const newTheme = body.classList.contains('dark-mode') ? 'dark' : 'light';
+          localStorage.setItem('theme', newTheme);
+        });
+      }
+      
+      // Menu Toggle Functionality (for mobile)
+      const menuToggle = document.querySelector('.menu-toggle');
+      const nav = document.querySelector('nav');
+      
+      if (menuToggle && nav) {
+        menuToggle.addEventListener('click', function() {
+          menuToggle.classList.toggle('active');
+          nav.classList.toggle('active');
+        });
+        
+        // Close menu when clicking on a nav link
+        const navLinks = document.querySelectorAll('.nav-link');
+        navLinks.forEach(link => {
+          link.addEventListener('click', function() {
+            menuToggle.classList.remove('active');
+            nav.classList.remove('active');
+          });
+        });
+        
+        // Close menu when clicking outside
+        document.addEventListener('click', function(event) {
+          if (!nav.contains(event.target) && !menuToggle.contains(event.target)) {
+            menuToggle.classList.remove('active');
+            nav.classList.remove('active');
+          }
+        });
+      }
+      
+      // Header scroll behavior
+      const header = document.querySelector('header');
+      if (header) {
+        let lastScroll = 0;
+        
+        window.addEventListener('scroll', function() {
+          const currentScroll = window.pageYOffset;
+          
+          if (currentScroll > 50) {
+            header.classList.add('scrolled');
+          } else {
+            header.classList.remove('scrolled');
+          }
+          
+          lastScroll = currentScroll;
+        });
+      }
+    });
+    
+    </script>
+
+  <!-- Arabizi translator JS -->
+  <script>
+    /********************************************
+     * Arabizi → Arabic Phonetic Engine (Starter)
+     ********************************************/
+  
+    // Simple normalization for keys (for overrides)
+    function normalizeKey(str) {
+      return (str || "")
+        .toLowerCase()
+        .replace(/\s+/g, " ")
+        .trim();
+    }
+  
+    // Phrase-level overrides for super common stuff
+    const arabiziPhraseOverrides = {
+      [normalizeKey("a3mel eh?")]: "اعمل ايه؟",
+      [normalizeKey("a3mel eh")]: "اعمل ايه؟",
+      [normalizeKey("enta fein?")]: "انت فين؟",
+      [normalizeKey("enta fein")]: "انت فين؟",
+      [normalizeKey("enta feyn?")]: "انت فين؟",
+      [normalizeKey("enta feyn")]: "انت فين؟",
+      [normalizeKey("enta fen?")]: "انت فين؟",
+      [normalizeKey("enta fen")]: "انت فين؟",
+      [normalizeKey("enta fen ya wala")]: "انت فين يا والا؟",
+      [normalizeKey("enta fen ya wala?")]: "انت فين يا والا؟",
+      [normalizeKey("fe eh ya man?")]: "فيه ايه يا مان؟",
+      [normalizeKey("fe eh ya man")]: "فيه ايه يا مان؟",
+      [normalizeKey("fe eh?")]: "فيه ايه؟",
+      [normalizeKey("fe eh")]: "فيه ايه؟",
+      [normalizeKey("la2, msh kda")]: "لأ، مش كده",
+      [normalizeKey("la2 msh kda")]: "لأ، مش كده",
+      [normalizeKey("3ayez amshi")]: "عايز امشي",
+      [normalizeKey("3andi mashakel")]: "عندي مشاكل",
+      [normalizeKey("mesh fahim 7aga")]: "مش فاهم حاجة",
+      [normalizeKey("ezayak")]: "ازيك",
+      [normalizeKey("ezayak?")]: "ازيك؟",
+      [normalizeKey("ezayek")]: "ازيك",
+      [normalizeKey("ezayek?")]: "ازيك؟",
+      [normalizeKey("kefak")]: "كيفك",
+      [normalizeKey("kefak?")]: "كيفك؟",
+      [normalizeKey("kefek")]: "كيفك",
+      [normalizeKey("kefek?")]: "كيفك؟",
+      [normalizeKey("wenta bete3mel eh?")]: "وانت بتعمل ايه؟",
+      [normalizeKey("wenta bete3mel eh")]: "وانت بتعمل ايه؟",
+      [normalizeKey("enta bete3mel eh?")]: "انت بتعمل ايه؟",
+      [normalizeKey("enta bete3mel eh")]: "انت بتعمل ايه؟"
+    };
+  
+    // Core mapping rules
+    const arabiziRules = {
+      digraphs: {
+        "kh": "خ",
+        "gh": "غ",
+        "sh": "ش",
+        "ch": "تش",   // for some people
+        "th": "ث",
+        "dh": "ذ",
+        "aa": "ا",
+        "ee": "ي",
+        "ii": "ي",
+        "oo": "و",
+        "ou": "و",
+        "ouh": "و"
+      },
+      numbers: {
+        "2": "ء",
+        "3": "ع",
+        "5": "خ",
+        "6": "ط",
+        "7": "ح",
+        "8": "ق",
+        "9": "ص"
+      },
+      letters: {
+        "a": "ا",
+        "b": "ب",
+        "t": "ت",
+        "g": "ج",
+        "j": "ج",
+        "h": "ه",
+        "d": "د",
+        "r": "ر",
+        "z": "ز",
+        "s": "س",
+        "f": "ف",
+        "q": "ق",
+        "k": "ك",
+        "l": "ل",
+        "m": "م",
+        "n": "ن",
+        "w": "و",
+        "y": "ي",
+        "e": "ِ", // treat like kasra-ish
+        "i": "ِ",
+        "o": "ُ",
+        "u": "ُ"
+      }
+    };
+  
+    function convertArabiziWordToArabic(word) {
+      const lower = word.toLowerCase();
+  
+      // If whole word is a known override Arabizi → Arabic, use that
+      const overrideArabic = arabiziPhraseOverrides[normalizeKey(lower)];
+      if (overrideArabic) return overrideArabic;
+  
+      let result = "";
+      let i = 0;
+  
+      while (i < lower.length) {
+        const ch = lower[i];
+        const next = lower[i + 1] || "";
+  
+        // Skip spaces here (handled at text level), but keep punctuation
+        if (/\s/.test(ch)) {
+          result += ch;
+          i++;
+          continue;
+        }
+  
+        // Punctuation / symbols: keep as-is
+        if (/[^a-z0-9]/.test(ch)) {
+          result += word[i]; // original char
+          i++;
+          continue;
+        }
+  
+        // Digraphs (kh, sh, gh, etc.)
+        const pair = ch + next;
+        if (arabiziRules.digraphs[pair]) {
+          result += arabiziRules.digraphs[pair];
+          i += 2;
+          continue;
+        }
+  
+        // Numbers
+        if (arabiziRules.numbers[ch]) {
+          result += arabiziRules.numbers[ch];
+          i++;
+          continue;
+        }
+  
+        // Single letters
+        if (arabiziRules.letters[ch]) {
+          result += arabiziRules.letters[ch];
+          i++;
+          continue;
+        }
+  
+        // Fallback: keep the char (so nothing silently disappears)
+        result += word[i];
+        i++;
+      }
+  
+      return result;
+    }
+  
+    // Remove diacritics (tashkeel) from Arabic text
+    function removeDiacritics(arabicText) {
+      if (!arabicText) return "";
+      // Remove all Arabic diacritics (tashkeel marks)
+      return arabicText
+        .replace(/[\u064B-\u065F\u0670]/g, "") // Remove all diacritics
+        .replace(/[\u0640]/g, "") // Remove tatweel (elongation mark)
+        .replace(/[َُِ]/g, "") // Remove fatha, damma, kasra
+        .replace(/[ًٌٍ]/g, "") // Remove tanween marks
+        .replace(/[ّ]/g, "") // Remove shadda
+        .replace(/[ْ]/g, ""); // Remove sukun
+    }
+
+    function convertArabiziToArabic(text) {
+      const key = normalizeKey(text);
+      if (arabiziPhraseOverrides[key]) {
+        let result = arabiziPhraseOverrides[key];
+        // Remove diacritics from the result
+        return removeDiacritics(result);
+      }
+
+      // Preserve original punctuation
+      const originalPunctuation = text.match(/[؟،.!,?]/g);
+      const hasQuestionMark = text.includes("?") || text.includes("؟");
+      
+      // Split by spaces but keep punctuation
+      let result = text
+        .split(/(\s+)/) // keep spaces as tokens
+        .map(token => {
+          if (/^\s+$/.test(token)) return token;
+          return convertArabiziWordToArabic(token);
+        })
+        .join("");
+
+      // Remove diacritics from the result
+      result = removeDiacritics(result);
+
+      // Ensure question mark is preserved (convert ? to ؟ if needed)
+      if (hasQuestionMark && !result.includes("؟") && !result.endsWith("?")) {
+        // Remove any existing ? and add ؟ at the end
+        result = result.replace(/\?/g, "").trim() + "؟";
+      } else if (hasQuestionMark && result.includes("?") && !result.includes("؟")) {
+        result = result.replace(/\?/g, "؟");
+      }
+
+      return result;
+    }
+  
+    /********************************************
+     * Arabic → English Lexicon (Starter)
+     * - phraseDictionary: full-sentence mappings
+     * - arabicLexicon: word-level mappings
+     ********************************************/
+  
+    // Phrase-level for clean examples & common stuff
+    const phraseDictionary = {
+      "اعمل ايه؟": "What should I do?",
+      "اعمل ايه": "What should I do?",
+      "انت فين؟": "Where are you?",
+      "انت فين": "Where are you?",
+      "انت فين يا والا؟": "Where are you, man?",
+      "انت فين يا والا": "Where are you, man?",
+      "فيه إيه؟": "What's wrong?",
+      "فيه ايه؟": "What's wrong?",
+      "فيه إيه": "What's wrong?",
+      "فيه ايه": "What's wrong?",
+      "فيه ايه يا مان؟": "What's going on, man?",
+      "فيه ايه يا مان": "What's going on, man?",
+      "لأ، مش كده": "No, not like that.",
+      "لا، مش كده": "No, not like that.",
+      "عندي مشاكل": "I have problems.",
+      "مش فاهم حاجة": "I don't understand anything.",
+      "عايز امشي": "I want to leave.",
+      "عايز امشي.": "I want to leave.",
+      "ازيك": "How are you?",
+      "ازيك؟": "How are you?",
+      "كيفك": "How are you?",
+      "كيفك؟": "How are you?",
+      "ازيك انت": "How are you?",
+      "ازيك انت؟": "How are you?",
+      "كيفك انت": "How are you?",
+      "كيفك انت؟": "How are you?",
+      "وانت بتعمل ايه؟": "What are you doing?",
+      "وانت بتعمل ايه": "What are you doing?",
+      "انت بتعمل ايه؟": "What are you doing?",
+      "انت بتعمل ايه": "What are you doing?"
+    };
+  
+    // Word-level dictionary – expandable
+    const arabicLexicon = {
+      // pronouns
+      "أنا": { type: "pronoun", meaning: "I" },
+      "انا": { type: "pronoun", meaning: "I" },
+      "انت": { type: "pronoun", meaning: "you" },
+      "انتي": { type: "pronoun", meaning: "you (f)" },
+      "هو": { type: "pronoun", meaning: "he" },
+      "هي": { type: "pronoun", meaning: "she" },
+      "احنا": { type: "pronoun", meaning: "we" },
+      "هما": { type: "pronoun", meaning: "they" },
+  
+      // question words / particles
+      "ايه": { type: "question", meaning: "what" },
+      "إيه": { type: "question", meaning: "what" },
+      "فين": { type: "question", meaning: "where" },
+      "فن": { type: "question", meaning: "where" },
+      "فن؟": { type: "question", meaning: "where" },
+      "ليه": { type: "question", meaning: "why" },
+      "ازاي": { type: "question", meaning: "how" },
+      "ازيك": { type: "question", meaning: "how are you" },
+      "كيفك": { type: "question", meaning: "how are you" },
+      "امتى": { type: "question", meaning: "when" },
+      "كام": { type: "question", meaning: "how much / how many" },
+  
+      // common verbs / phrases
+      "اعمل": { type: "verb", meaning: "do" },
+      "عمل": { type: "verb", meaning: "do / make" },
+      "بتعمل": { type: "verb", meaning: "you are doing" },
+      "باعمل": { type: "verb", meaning: "I am doing" },
+      "عايز": { type: "verb-like", meaning: "want" },
+      "عاوز": { type: "verb-like", meaning: "want" },
+      "امشي": { type: "verb", meaning: "walk / leave" },
+      "روح": { type: "verb", meaning: "go" },
+      "جاي": { type: "verb", meaning: "coming" },
+      "رايح": { type: "verb", meaning: "going" },
+      "فاهم": { type: "verb", meaning: "understand" },
+      "عرف": { type: "verb", meaning: "know" },
+      "قول": { type: "verb", meaning: "say / tell" },
+      "شوف": { type: "verb", meaning: "see / look" },
+      "سمع": { type: "verb", meaning: "hear / listen" },
+      "اكل": { type: "verb", meaning: "eat" },
+      "شرب": { type: "verb", meaning: "drink" },
+      "نام": { type: "verb", meaning: "sleep" },
+      "قوم": { type: "verb", meaning: "get up / wake up" },
+      "روح": { type: "verb", meaning: "go" },
+      "تعال": { type: "verb", meaning: "come" },
+      "ابقي": { type: "verb", meaning: "be / become" },
+  
+      // nouns
+      "مشاكل": { type: "noun", meaning: "problems" },
+      "حاجة": { type: "noun", meaning: "thing" },
+      "مان": { type: "noun", meaning: "man" },
+      "والا": { type: "noun", meaning: "man / dude" },
+      "بنت": { type: "noun", meaning: "girl" },
+      "ولد": { type: "noun", meaning: "boy" },
+      "بيت": { type: "noun", meaning: "house" },
+      "شغل": { type: "noun", meaning: "work" },
+      "مدرسة": { type: "noun", meaning: "school" },
+      "كتاب": { type: "noun", meaning: "book" },
+      "اكل": { type: "noun", meaning: "food" },
+      "مشروب": { type: "noun", meaning: "drink" },
+      "سيارة": { type: "noun", meaning: "car" },
+      "موبايل": { type: "noun", meaning: "phone" },
+      "فلوس": { type: "noun", meaning: "money" },
+      "وقت": { type: "noun", meaning: "time" },
+      "يوم": { type: "noun", meaning: "day" },
+      "ليل": { type: "noun", meaning: "night" },
+      "صباح": { type: "noun", meaning: "morning" },
+      "مساء": { type: "noun", meaning: "evening" },
+  
+      // misc
+      "فيه": { type: "particle", meaning: "there is / is there" },
+      "في": { type: "preposition", meaning: "in / at" },
+      "يا": { type: "particle", meaning: "hey / oh" },
+      "مش": { type: "negation", meaning: "not" },
+      "مش": { type: "negation", meaning: "not" },
+      "لأ": { type: "particle", meaning: "no" },
+      "لا": { type: "particle", meaning: "no" },
+      "كده": { type: "adverb", meaning: "like that" },
+      "كدا": { type: "adverb", meaning: "like that" },
+      "كذا": { type: "adverb", meaning: "like this / so" },
+      "دلوقتي": { type: "adverb", meaning: "now" },
+      "بعدين": { type: "adverb", meaning: "later" },
+      "بكرة": { type: "adverb", meaning: "tomorrow" },
+      "امبارح": { type: "adverb", meaning: "yesterday" },
+      "النهاردة": { type: "adverb", meaning: "today" },
+      "تمام": { type: "adverb", meaning: "okay / fine" },
+      "صح": { type: "adverb", meaning: "right / correct" },
+      "غلط": { type: "adverb", meaning: "wrong" },
+      "ممكن": { type: "adverb", meaning: "maybe / possible" },
+      "لازم": { type: "adverb", meaning: "must / have to" },
+      "عادي": { type: "adverb", meaning: "normal / fine" },
+      "زود": { type: "adverb", meaning: "more" },
+      "قليل": { type: "adverb", meaning: "a little" },
+      "كثير": { type: "adverb", meaning: "a lot" },
+      "شوية": { type: "adverb", meaning: "a little bit" },
+      "مع": { type: "preposition", meaning: "with" },
+      "بدون": { type: "preposition", meaning: "without" },
+      "على": { type: "preposition", meaning: "on" },
+      "تحت": { type: "preposition", meaning: "under" },
+      "فوق": { type: "preposition", meaning: "above" },
+      "جنب": { type: "preposition", meaning: "next to" },
+      "ورا": { type: "preposition", meaning: "behind" },
+      "قدام": { type: "preposition", meaning: "in front of" }
+    };
+  
+    // Super minimal "morphology" helper (just a hook to expand later)
+    function analyzeMorphology(word) {
+      const prefixes = ["و", "ف", "ب", "ل", "ال"];
+      const suffixes = ["ي", "ك", "ه", "ها", "هم", "نا"];
+  
+      let base = word;
+      let prefix = null;
+      let suffix = null;
+  
+      for (const p of prefixes) {
+        if (base.startsWith(p) && base.length > p.length + 1) {
+          prefix = p;
+          base = base.slice(p.length);
+          break;
+        }
+      }
+  
+      for (const s of suffixes) {
+        if (base.endsWith(s) && base.length > s.length + 1) {
+          suffix = s;
+          base = base.slice(0, -s.length);
+          break;
+        }
+      }
+  
+      return { base, prefix, suffix };
+    }
+  
+    // Word-level translation with morphology hook
+    function translateArabicWordToEnglish(word) {
+      if (!word) return "";
+
+      const clean = word.replace(/[؟،.!,]/g, "").trim();
+      if (!clean) return "";
+
+      // Direct hit (with punctuation)
+      if (arabicLexicon[word]) {
+        return arabicLexicon[word].meaning;
+      }
+
+      // Direct hit (without punctuation)
+      if (arabicLexicon[clean]) {
+        return arabicLexicon[clean].meaning;
+      }
+
+      // Try with different Arabic character variations
+      const variations = [
+        clean,
+        clean.replace(/ي/g, "ي"),
+        clean.replace(/ى/g, "ي"),
+        clean.replace(/ة/g, "ه"),
+        clean.replace(/أ/g, "ا"),
+        clean.replace(/إ/g, "ا"),
+        clean.replace(/آ/g, "ا")
+      ];
+
+      for (const variant of variations) {
+        if (arabicLexicon[variant]) {
+          return arabicLexicon[variant].meaning;
+        }
+      }
+
+      // Try morphological strip
+      const { base } = analyzeMorphology(clean);
+      if (arabicLexicon[base]) {
+        return arabicLexicon[base].meaning;
+      }
+
+      // Try base with variations
+      for (const variant of variations) {
+        const { base: baseVariant } = analyzeMorphology(variant);
+        if (arabicLexicon[baseVariant]) {
+          return arabicLexicon[baseVariant].meaning;
+        }
+      }
+
+      // Fallback – return empty string instead of brackets to avoid ugly output
+      return "";
+    }
+  
+    function normalizeArabicForLookup(text) {
+      return (text || "")
+        .replace(/\s+/g, " ")
+        .replace(/ي/g, "ي")
+        .replace(/ى/g, "ي")
+        .replace(/ة/g, "ه") // super rough
+        .trim();
+    }
+  
+    // Translate Arabic to English using JigsawStack API
+    async function translateArabicToEnglish(arabicText) {
+      const trimmed = arabicText.trim();
+      if (!trimmed) return "";
+
+      // First check phrase dictionary for common phrases (fast lookup)
+      if (phraseDictionary[trimmed]) {
+        return phraseDictionary[trimmed];
+      }
+      const normalized = normalizeArabicForLookup(trimmed);
+      if (phraseDictionary[normalized]) {
+        return phraseDictionary[normalized];
+      }
+
+      // Use JigsawStack Translation API
+      // Documentation: https://jigsawstack.com/docs/api-reference/ai/translate/translate
+      const JIGSAWSTACK_API_KEY = "sk_5b996d0a89b320904f0fd1eebfa6f8745cc9e4a5160ce7a75f07dab438859c9cd3255e21ebd99e1224378e7442223fb0e0a386cc269e4c05c6fb5c96363c4c4e024XtXtBS2sxveouBozlx";
+      
+      if (!JIGSAWSTACK_API_KEY || JIGSAWSTACK_API_KEY.trim() === "") {
+        console.warn("JigsawStack API key not set. Please add your API key to enable translations.");
+        return translateArabicToEnglishFallback(trimmed);
+      }
+      
+      try {
+        const response = await fetch("https://api.jigsawstack.com/v1/ai/translate", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "x-api-key": JIGSAWSTACK_API_KEY
+          },
+          body: JSON.stringify({
+            text: trimmed,
+            current_language: "ar",
+            target_language: "en"
+          })
+        });
+        
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => ({}));
+          throw new Error(`Translation API error: ${response.status} - ${errorData.message || response.statusText}`);
+        }
+        
+        const data = await response.json();
+        
+        // According to JigsawStack docs, response has 'translated_text' field
+        // It can be a string or string[] depending on input
+        let translation = null;
+        
+        if (data.success && data.translated_text) {
+          // Handle both string and array responses
+          if (Array.isArray(data.translated_text)) {
+            translation = data.translated_text[0] || data.translated_text.join(" ");
+          } else {
+            translation = data.translated_text;
+          }
+        }
+        
+        if (!translation) {
+          throw new Error("No translation received from API");
+        }
+        
+        // Clean up the translation
+        translation = translation.trim();
+        
+        // Capitalize first letter
+        if (translation.length > 0) {
+          translation = translation.charAt(0).toUpperCase() + translation.slice(1);
+        }
+        
+        // Preserve punctuation from original if translation doesn't have it
+        const hasQuestionMark = trimmed.includes("؟") || trimmed.includes("?");
+        const hasExclamation = trimmed.includes("!");
+        
+        if (hasQuestionMark && !translation.endsWith("?")) {
+          translation += "?";
+        } else if (hasExclamation && !translation.endsWith("!")) {
+          translation += "!";
+        }
+        
+        return translation;
+      } catch (error) {
+        console.error("JigsawStack Translation API error:", error);
+        // Fallback to local dictionary if API fails
+        return translateArabicToEnglishFallback(trimmed);
+      }
+    }
+
+    // Fallback translation using local dictionary (used if API fails)
+    function translateArabicToEnglishFallback(arabicText) {
+      const trimmed = arabicText.trim();
+      if (!trimmed) return "";
+
+      // Extract punctuation to preserve it
+      const hasQuestionMark = trimmed.includes("؟") || trimmed.includes("?");
+      const hasExclamation = trimmed.includes("!");
+      const hasPeriod = trimmed.includes(".");
+
+      // Word-level translation with better sentence construction
+      const tokens = trimmed.split(/\s+/).filter(t => t.trim());
+      const englishWords = [];
+
+      for (let i = 0; i < tokens.length; i++) {
+        const token = tokens[i];
+        const translation = translateArabicWordToEnglish(token);
+        
+        if (translation && translation.trim()) {
+          englishWords.push(translation);
+        }
+      }
+
+      // Build proper English sentence
+      let sentence = englishWords.filter(w => w.trim()).join(" ").trim();
+      
+      // Handle common Arabic-to-English word order patterns
+      if (sentence.match(/\byou\s+where\b/i)) {
+        sentence = sentence.replace(/\byou\s+where\b/gi, "where are you");
+      }
+      if (sentence.match(/\bwhere\s+you\b/i)) {
+        sentence = sentence.replace(/\bwhere\s+you\b/gi, "where are you");
+      }
+      if (sentence.startsWith("where") && sentence.includes("you") && !sentence.includes("are")) {
+        sentence = sentence.replace(/\bwhere\s+you\b/gi, "where are you");
+      }
+      
+      // Capitalize first letter
+      if (sentence.length > 0) {
+        sentence = sentence.charAt(0).toUpperCase() + sentence.slice(1);
+      }
+
+      // Add punctuation
+      if (hasQuestionMark && !sentence.endsWith("?")) {
+        sentence += "?";
+      } else if (hasExclamation && !sentence.endsWith("!")) {
+        sentence += "!";
+      } else if (hasPeriod && !sentence.endsWith(".") && !hasQuestionMark && !hasExclamation) {
+        sentence += ".";
+      }
+
+      return sentence || "Translation not available.";
+    }
+  
+    /********************************************
+     * UI Wiring (same DOM IDs as your page)
+     ********************************************/
+  
+    // Wait for DOM to be ready
+    document.addEventListener("DOMContentLoaded", () => {
+      const arabiziInput   = document.getElementById("arabizi-input");
+      const translateBtn   = document.getElementById("translate-btn");
+      const translateLabel = document.getElementById("translate-btn-label");
+      const statusEl       = document.getElementById("translator-status");
+      const errorEl        = document.getElementById("translator-error");
+      const arabicOutput   = document.getElementById("arabic-output");
+      const englishOutput  = document.getElementById("english-output");
+      const copyBtn        = document.getElementById("copy-btn");
+      const copyStatus     = document.getElementById("copy-status");
+  
+      // Check if all required elements exist
+      if (!arabiziInput || !translateBtn || !arabicOutput || !englishOutput || !copyBtn) {
+        console.error("Translator: Missing required DOM elements");
+        return;
+      }
+  
+      // Autofocus input
+      arabiziInput.focus();
+  
+      function setOutputs(arabic, english) {
+        if (arabic && arabic.trim()) {
+          arabicOutput.textContent = arabic;
+          arabicOutput.classList.remove("translator-output-empty", "translator-output-loading");
+        } else {
+          arabicOutput.textContent = "No Arabic result.";
+          arabicOutput.classList.remove("translator-output-empty", "translator-output-loading");
+        }
+
+        if (english && english.trim()) {
+          englishOutput.textContent = english;
+          englishOutput.classList.remove("translator-output-empty", "translator-output-loading");
+        } else {
+          englishOutput.textContent = "No English result.";
+          englishOutput.classList.remove("translator-output-empty", "translator-output-loading");
+        }
+      }
+
+      function showLoadingState(element, message) {
+        element.innerHTML = `
+          <div class="translator-output-loading">
+            <div class="loading-bubbles">
+              <div class="loading-bubble"></div>
+              <div class="loading-bubble"></div>
+              <div class="loading-bubble"></div>
+            </div>
+            <span>${message}</span>
+          </div>
+        `;
+        element.classList.add("translator-output-loading");
+        element.classList.remove("translator-output-empty");
+      }
+  
+      async function handleTranslate(customText) {
+        const text = (customText ?? (arabiziInput.value || "")).trim();
+        if (errorEl) {
+          errorEl.style.display = "none";
+          errorEl.textContent = "";
+        }
+        if (copyStatus) {
+          copyStatus.textContent = "";
+        }
+
+        if (!text) {
+          if (errorEl) {
+            errorEl.textContent = "Please type some Arabizi / Franco Arabic text first.";
+            errorEl.style.display = "block";
+          }
+          return;
+        }
+
+        translateBtn.disabled = true;
+        if (translateLabel) {
+          translateLabel.innerHTML = '<span class="loading-spinner"></span> Translating…';
+        }
+        if (statusEl) {
+          statusEl.innerHTML = '<div class="status-loading"><span class="status-dot"></span> Converting Arabizi → Arabic…</div>';
+        }
+
+        // Show loading state for outputs
+        showLoadingState(arabicOutput, "Converting to Arabic…");
+        showLoadingState(englishOutput, "Waiting for translation…");
+
+        try {
+          // Convert Arabizi to Arabic (synchronous)
+          const arabic = convertArabiziToArabic(text);
+          
+          // Show Arabic result immediately
+          if (arabic && arabic.trim()) {
+            arabicOutput.textContent = arabic;
+            arabicOutput.classList.remove("translator-output-empty", "translator-output-loading");
+          } else {
+            arabicOutput.textContent = "No Arabic result.";
+            arabicOutput.classList.remove("translator-output-empty", "translator-output-loading");
+          }
+
+          // Update status for API translation
+          if (statusEl) {
+            statusEl.innerHTML = '<div class="status-loading"><span class="status-dot"></span> Translating Arabic → English via JigsawStack API…</div>';
+          }
+
+          // Show loading for English output
+          showLoadingState(englishOutput, "Translating to English…");
+
+          // Translate Arabic to English using API (async)
+          const english = await translateArabicToEnglish(arabic);
+          
+          // Set both outputs
+          setOutputs(arabic, english);
+          
+          if (statusEl) {
+            statusEl.innerHTML = '<strong style="color: var(--success);">✓ Done!</strong> Translation complete.';
+          }
+        } catch (err) {
+          console.error(err);
+          if (errorEl) {
+            errorEl.textContent = "Something went wrong with the translation. Please try again.";
+            errorEl.style.display = "block";
+          }
+          if (statusEl) {
+            statusEl.textContent = "Translation error. Please check your connection and try again.";
+          }
+        } finally {
+          translateBtn.disabled = false;
+          if (translateLabel) {
+            translateLabel.innerHTML = "Translate";
+          }
+        }
+      }
+  
+      translateBtn.addEventListener("click", () => {
+        handleTranslate();
+      });
+  
+      // Ctrl+Enter / Cmd+Enter to translate
+      arabiziInput.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) {
+          e.preventDefault();
+          handleTranslate();
+        }
+      });
+  
+      // Example chips
+      document.querySelectorAll(".translator-chip[data-arabizi]").forEach((chip) => {
+        chip.addEventListener("click", () => {
+          const val = chip.getAttribute("data-arabizi") || "";
+          arabiziInput.value = val;
+          handleTranslate(val);
+        });
+      });
+  
+      // Copy English result
+      copyBtn.addEventListener("click", async () => {
+        const text = englishOutput.classList.contains("translator-output-empty") || 
+                     englishOutput.classList.contains("translator-output-loading")
+          ? ""
+          : (englishOutput.textContent || "").trim();
+
+        if (!text) {
+          if (copyStatus) {
+            copyStatus.textContent = "Nothing to copy yet.";
+            copyStatus.classList.remove("success");
+          }
+          return;
+        }
+
+        try {
+          await navigator.clipboard.writeText(text);
+          
+          // Add green success state to button
+          copyBtn.classList.add("copied");
+          copyBtn.innerHTML = '<span>✓ Copied!</span>';
+          
+          if (copyStatus) {
+            copyStatus.textContent = "Copied to clipboard!";
+            copyStatus.classList.add("success");
+          }
+          
+          // Reset button after 2 seconds
+          setTimeout(() => {
+            copyBtn.classList.remove("copied");
+            copyBtn.innerHTML = '<span>Copy result</span>';
+            if (copyStatus) {
+              copyStatus.textContent = "";
+              copyStatus.classList.remove("success");
+            }
+          }, 2000);
+        } catch (err) {
+          console.error(err);
+          copyBtn.classList.remove("copied");
+          if (copyStatus) {
+            copyStatus.textContent = "Couldn't copy. Please select it manually.";
+            copyStatus.classList.remove("success");
+          }
+        }
+      });
+    });
+  </script>
+  
+</body>
+</html>
