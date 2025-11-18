@@ -1,0 +1,879 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Multivariable Calc Review Planner</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <style>
+    :root {
+      --bg: #050816;
+      --bg-alt: #0b1020;
+      --card: #111827;
+      --accent: #6366f1;
+      --accent-soft: rgba(99, 102, 241, 0.18);
+      --accent-strong: rgba(129, 140, 248, 0.35);
+      --text: #f9fafb;
+      --muted: #9ca3af;
+      --border: #1f2933;
+      --radius-lg: 18px;
+      --radius-md: 12px;
+      --shadow-soft: 0 16px 40px rgba(0, 0, 0, 0.45);
+      --shadow-sm: 0 8px 20px rgba(0, 0, 0, 0.35);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
+        "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top, #1e293b 0, #020617 60%);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 32px 16px;
+    }
+
+    .app {
+      width: 100%;
+      max-width: 1100px;
+      background: linear-gradient(145deg, var(--bg-alt), #020617);
+      border-radius: 24px;
+      box-shadow: var(--shadow-soft);
+      padding: 28px 24px 32px;
+      border: 1px solid rgba(148, 163, 184, 0.22);
+      backdrop-filter: blur(16px);
+    }
+
+    @media (min-width: 768px) {
+      .app {
+        padding: 32px 32px 36px;
+      }
+    }
+
+    header {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .title-block h1 {
+      font-size: 1.7rem;
+      letter-spacing: 0.03em;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .pill {
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      color: var(--muted);
+      letter-spacing: 0.08em;
+    }
+
+    .subtitle {
+      margin-top: 4px;
+      font-size: 0.95rem;
+      color: var(--muted);
+    }
+
+    .summary {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+      justify-content: flex-start;
+    }
+
+    .chip {
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.85);
+      border: 1px solid rgba(148, 163, 184, 0.25);
+      font-size: 0.82rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--muted);
+    }
+
+    .chip strong {
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    .chip.accent {
+      background: var(--accent-soft);
+      border-color: var(--accent-strong);
+      color: #c7d2fe;
+    }
+
+    main {
+      display: grid;
+      grid-template-columns: minmax(0, 1.5fr) minmax(0, 1.1fr);
+      gap: 20px;
+    }
+
+    @media (max-width: 900px) {
+      main {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    /* Left column: modules */
+    .card {
+      background: rgba(15, 23, 42, 0.95);
+      border-radius: var(--radius-lg);
+      padding: 18px 18px 20px;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .card-header h2 {
+      font-size: 1.15rem;
+    }
+
+    .card-header small {
+      font-size: 0.78rem;
+      color: var(--muted);
+    }
+
+    .progress-wrapper {
+      margin-top: 6px;
+    }
+
+    .progress-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 10px;
+      border-radius: 999px;
+      background: radial-gradient(circle at top left, #020617, #020617);
+      border: 1px solid rgba(51, 65, 85, 0.8);
+      overflow: hidden;
+      position: relative;
+    }
+
+    .progress-fill {
+      position: absolute;
+      inset: 0;
+      transform-origin: left center;
+      transform: scaleX(0);
+      background: linear-gradient(90deg, var(--accent), #22c55e);
+      box-shadow: 0 0 18px rgba(129, 140, 248, 0.6);
+      transition: transform 0.25s ease-out;
+    }
+
+    .module-list {
+      margin-top: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      max-height: 380px;
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+
+    .module {
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 10px;
+      border-radius: var(--radius-md);
+      background: radial-gradient(
+          circle at top left,
+          rgba(148, 163, 184, 0.12),
+          rgba(15, 23, 42, 0.95)
+        );
+      border: 1px solid rgba(30, 64, 175, 0.5);
+      transition: background 0.18s ease, border-color 0.18s ease,
+        transform 0.12s ease;
+      cursor: pointer;
+    }
+
+    .module:hover {
+      border-color: rgba(94, 234, 212, 0.8);
+      transform: translateY(-1px);
+      background: radial-gradient(
+          circle at top left,
+          rgba(94, 234, 212, 0.16),
+          rgba(15, 23, 42, 0.95)
+        );
+    }
+
+    .module.completed {
+      background: radial-gradient(
+          circle at top left,
+          rgba(52, 211, 153, 0.32),
+          rgba(15, 23, 42, 0.98)
+        );
+      border-color: rgba(34, 197, 94, 0.9);
+      opacity: 0.95;
+    }
+
+    .module-info {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .module-title {
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+
+    .module-subtitle {
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+
+    .module-time {
+      font-size: 0.8rem;
+      color: #e5e7eb;
+      font-variant-numeric: tabular-nums;
+      background: rgba(15, 23, 42, 0.9);
+      padding: 4px 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.3);
+    }
+
+    .module input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--accent);
+      cursor: pointer;
+    }
+
+    /* Right column: schedule */
+    .schedule-card {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .day-card {
+      background: rgba(15, 23, 42, 0.95);
+      border-radius: var(--radius-lg);
+      padding: 14px 14px 16px;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .day-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 6px;
+    }
+
+    .day-title {
+      font-size: 1rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .day-title span.dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: var(--accent);
+      box-shadow: 0 0 12px rgba(129, 140, 248, 0.9);
+    }
+
+    .day-time-range {
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    .schedule-list {
+      margin-top: 6px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      font-size: 0.85rem;
+    }
+
+    .slot {
+      display: grid;
+      grid-template-columns: 92px minmax(0, 1fr);
+      gap: 8px;
+      padding: 6px 8px;
+      border-radius: 10px;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(31, 41, 55, 0.9);
+    }
+
+    .slot-label {
+      font-variant-numeric: tabular-nums;
+      color: var(--muted);
+      font-size: 0.8rem;
+    }
+
+    .slot-main {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .slot-title {
+      font-size: 0.86rem;
+      font-weight: 500;
+    }
+
+    .slot-meta {
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+
+    .slot.break {
+      background: radial-gradient(circle at top left, #111827, #020617);
+      border-style: dashed;
+      border-color: rgba(148, 163, 184, 0.5);
+    }
+
+    .slot.break .slot-title {
+      color: #f97316;
+    }
+
+    .footer-note {
+      margin-top: 14px;
+      font-size: 0.78rem;
+      color: var(--muted);
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .footer-note span {
+      font-variant-numeric: tabular-nums;
+    }
+
+    .btn-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 8px;
+    }
+
+    button {
+      border: none;
+      cursor: pointer;
+      border-radius: 999px;
+      padding: 6px 14px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: transform 0.12s ease, box-shadow 0.16s ease,
+        background 0.16s ease, opacity 0.12s ease;
+      white-space: nowrap;
+    }
+
+    button.primary {
+      background: linear-gradient(135deg, var(--accent), #22c55e);
+      color: #020617;
+      box-shadow: 0 8px 24px rgba(34, 197, 94, 0.45);
+    }
+
+    button.primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 10px 28px rgba(34, 197, 94, 0.6);
+    }
+
+    button.secondary {
+      background: rgba(15, 23, 42, 0.95);
+      color: var(--muted);
+      border: 1px solid rgba(148, 163, 184, 0.5);
+    }
+
+    button.secondary:hover {
+      background: rgba(15, 23, 42, 1);
+      color: #e5e7eb;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="app">
+    <header>
+      <div class="title-block">
+        <div class="pill">Multivariable Calculus • Exam Prep</div>
+        <h1>Triple Integrals &amp; Vector Fields Planner</h1>
+        <p class="subtitle">
+          Realistic schedule with pauses, breaks, and YouTube detours built in.
+        </p>
+      </div>
+
+      <div class="summary">
+        <div class="chip accent">
+          <span>⏱️</span>
+          <span><strong id="totalTimeLabel">5h 23m 57s</strong> total video time</span>
+        </div>
+        <div class="chip">
+          <span>📅</span>
+          <span><strong>Tuesday:</strong> Parts 1–2 only &nbsp;•&nbsp; <strong>Wednesday:</strong> Parts 3–10</span>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <!-- LEFT: MODULES -->
+      <section class="card" aria-label="Module checklist">
+        <div class="card-header">
+          <div>
+            <h2>Video Modules</h2>
+            <small>Tap to mark videos as done and watch the bar fill up.</small>
+          </div>
+          <div class="btn-row">
+            <button class="secondary" id="resetBtn">Reset</button>
+            <button class="primary" id="markAllBtn">Mark all done</button>
+          </div>
+        </div>
+
+        <div class="progress-wrapper">
+          <div class="progress-labels">
+            <span id="progressPercentLabel">0% complete</span>
+            <span id="timeLeftLabel">5h 23m 57s left</span>
+          </div>
+          <div class="progress-bar" aria-hidden="true">
+            <div class="progress-fill" id="progressFill"></div>
+          </div>
+        </div>
+
+        <div class="module-list" id="moduleList">
+          <!-- Each module row -->
+          <label class="module" data-seconds="3077">
+            <input type="checkbox" />
+            <div class="module-info">
+              <div class="module-title">Part 1 – Triple Integrals (Rectangular Coordinates)</div>
+              <div class="module-subtitle">Core setup of triple integrals in xyz boxes.</div>
+            </div>
+            <div class="module-time">51:17</div>
+          </label>
+
+          <label class="module" data-seconds="2742">
+            <input type="checkbox" />
+            <div class="module-info">
+              <div class="module-title">Part 2 – Cylindrical &amp; Spherical Coordinates</div>
+              <div class="module-subtitle">Switching coordinates for nicer regions.</div>
+            </div>
+            <div class="module-time">45:42</div>
+          </label>
+
+          <label class="module" data-seconds="1100">
+            <input type="checkbox" />
+            <div class="module-info">
+              <div class="module-title">Part 3 – Applications of Multiple Integrals</div>
+              <div class="module-subtitle">Mass, averages, and real-world setups.</div>
+            </div>
+            <div class="module-time">18:20</div>
+          </label>
+
+          <label class="module" data-seconds="1168">
+            <input type="checkbox" />
+            <div class="module-info">
+              <div class="module-title">Part 4 – Change of Variables</div>
+              <div class="module-subtitle">Jacobian + mapping regions cleanly.</div>
+            </div>
+            <div class="module-time">19:28</div>
+          </label>
+
+          <label class="module" data-seconds="841">
+            <input type="checkbox" />
+            <div class="module-info">
+              <div class="module-title">Part 5 – Vector Fields</div>
+              <div class="module-subtitle">Visualizing flow, fields, and basic ops.</div>
+            </div>
+            <div class="module-time">14:01</div>
+          </label>
+
+          <label class="module" data-seconds="1477">
+            <input type="checkbox" />
+            <div class="module-info">
+              <div class="module-title">Part 6 – Line Integrals</div>
+              <div class="module-subtitle">Integrating along curves in space.</div>
+            </div>
+            <div class="module-time">24:37</div>
+          </label>
+
+          <label class="module" data-seconds="2565">
+            <input type="checkbox" />
+            <div class="module-info">
+              <div class="module-title">Part 7 – Line Integrals over Vector Fields</div>
+              <div class="module-subtitle">Work done, circulation, &amp; friends.</div>
+            </div>
+            <div class="module-time">42:45</div>
+          </label>
+
+          <label class="module" data-seconds="1769">
+            <input type="checkbox" />
+            <div class="module-info">
+              <div class="module-title">Part 8 – Parametric Surfaces</div>
+              <div class="module-subtitle">Building surfaces from parameters.</div>
+            </div>
+            <div class="module-time">29:29</div>
+          </label>
+
+          <label class="module" data-seconds="3015">
+            <input type="checkbox" />
+            <div class="module-info">
+              <div class="module-title">Part 9 – Surface Integrals &amp; Surface Area</div>
+              <div class="module-subtitle">Flux + area via surface integrals.</div>
+            </div>
+            <div class="module-time">50:15</div>
+          </label>
+
+          <label class="module" data-seconds="1683">
+            <input type="checkbox" />
+            <div class="module-info">
+              <div class="module-title">Part 10 – Surface Integrals over Vector Fields</div>
+              <div class="module-subtitle">Flux of vector fields across surfaces.</div>
+            </div>
+            <div class="module-time">28:03</div>
+          </label>
+        </div>
+      </section>
+
+      <!-- RIGHT: REALISTIC SCHEDULE -->
+      <section class="schedule-card">
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <h2>Realistic Study Schedule</h2>
+              <small>Assumes pausing, rewinding, and watching extra YouTube explanations.</small>
+            </div>
+          </div>
+
+          <!-- TUESDAY -->
+          <div class="day-card">
+            <div class="day-header">
+              <div class="day-title">
+                <span class="dot"></span>
+                Tuesday Night – Triple Integrals Focus
+              </div>
+              <div class="day-time-range">7:00 PM – 1:00 AM</div>
+            </div>
+            <div class="schedule-list">
+              <div class="slot">
+                <div class="slot-label">7:00–7:30</div>
+                <div class="slot-main">
+                  <div class="slot-title">Warm-up &amp; overview</div>
+                  <div class="slot-meta">Open notes, skim topics, maybe a short intro YouTube video.</div>
+                </div>
+              </div>
+
+              <div class="slot">
+                <div class="slot-label">7:30–9:15</div>
+                <div class="slot-main">
+                  <div class="slot-title">Part 1 – Triple Integrals (Rectangular)</div>
+                  <div class="slot-meta">51 min video + pauses + extra explanations + drawing regions.</div>
+                </div>
+              </div>
+
+              <div class="slot break">
+                <div class="slot-label">9:15–9:35</div>
+                <div class="slot-main">
+                  <div class="slot-title">Break</div>
+                  <div class="slot-meta">Snack, water, phone time. No math.</div>
+                </div>
+              </div>
+
+              <div class="slot">
+                <div class="slot-label">9:35–11:20</div>
+                <div class="slot-main">
+                  <div class="slot-title">Part 2 – Cylindrical &amp; Spherical</div>
+                  <div class="slot-meta">45 min video + lots of pausing for pictures and maybe another YouTube vid.</div>
+                </div>
+              </div>
+
+              <div class="slot break">
+                <div class="slot-label">11:20–11:40</div>
+                <div class="slot-main">
+                  <div class="slot-title">Break</div>
+                  <div class="slot-meta">Step away before your brain melts.</div>
+                </div>
+              </div>
+
+              <div class="slot">
+                <div class="slot-label">11:40–1:00</div>
+                <div class="slot-main">
+                  <div class="slot-title">Review Parts 1–2 (no new videos)</div>
+                  <div class="slot-meta">Rewatch hard moments, do a few problems, tighten notes, then sleep.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- WEDNESDAY -->
+          <div class="day-card">
+            <div class="day-header">
+              <div class="day-title">
+                <span class="dot"></span>
+                Wednesday – Finish &amp; Review
+              </div>
+              <div class="day-time-range">Roughly 10:00 AM – 10:50 PM</div>
+            </div>
+            <div class="schedule-list">
+              <!-- Morning block -->
+              <div class="slot">
+                <div class="slot-label">10:00–10:50</div>
+                <div class="slot-main">
+                  <div class="slot-title">Part 3 – Applications</div>
+                  <div class="slot-meta">18 min video stretched with pauses + 1–2 practice examples.</div>
+                </div>
+              </div>
+
+              <div class="slot break">
+                <div class="slot-label">10:50–11:00</div>
+                <div class="slot-main">
+                  <div class="slot-title">Short Break</div>
+                  <div class="slot-meta">Move around, reset.</div>
+                </div>
+              </div>
+
+              <div class="slot">
+                <div class="slot-label">11:00–11:50</div>
+                <div class="slot-main">
+                  <div class="slot-title">Part 4 – Change of Variables</div>
+                  <div class="slot-meta">Work through the Jacobian slowly and write one example by hand.</div>
+                </div>
+              </div>
+
+              <div class="slot break">
+                <div class="slot-label">11:50–12:05</div>
+                <div class="slot-main">
+                  <div class="slot-title">Short Break</div>
+                  <div class="slot-meta">Quick scroll / snack.</div>
+                </div>
+              </div>
+
+              <div class="slot">
+                <div class="slot-label">12:05–12:40</div>
+                <div class="slot-main">
+                  <div class="slot-title">Part 5 – Vector Fields</div>
+                  <div class="slot-meta">Short video but pause to really get what the arrows represent.</div>
+                </div>
+              </div>
+
+              <div class="slot break">
+                <div class="slot-label">12:40–1:10</div>
+                <div class="slot-main">
+                  <div class="slot-title">Practice 3–5</div>
+                  <div class="slot-meta">Do a few problems on triple integrals &amp; basic vector fields.</div>
+                </div>
+              </div>
+
+              <!-- Afternoon block -->
+              <div class="slot">
+                <div class="slot-label">2:30–3:30</div>
+                <div class="slot-main">
+                  <div class="slot-title">Part 6 – Line Integrals</div>
+                  <div class="slot-meta">24 min video + pausing to sketch curves and understand the setup.</div>
+                </div>
+              </div>
+
+              <div class="slot break">
+                <div class="slot-label">3:30–3:45</div>
+                <div class="slot-main">
+                  <div class="slot-title">Break</div>
+                  <div class="slot-meta">Reset before the heavier vector-field stuff.</div>
+                </div>
+              </div>
+
+              <div class="slot">
+                <div class="slot-label">3:45–5:25</div>
+                <div class="slot-main">
+                  <div class="slot-title">Part 7 – Line Integrals over Vector Fields</div>
+                  <div class="slot-meta">42 min video + pauses + maybe one extra explainer video.</div>
+                </div>
+              </div>
+
+              <div class="slot break">
+                <div class="slot-label">5:25–5:45</div>
+                <div class="slot-main">
+                  <div class="slot-title">Break</div>
+                  <div class="slot-meta">Snack, walk, eyes off the screen.</div>
+                </div>
+              </div>
+
+              <div class="slot">
+                <div class="slot-label">5:45–6:30</div>
+                <div class="slot-main">
+                  <div class="slot-title">Practice 6–7</div>
+                  <div class="slot-meta">A couple of line-integral problems so it doesn’t evaporate.</div>
+                </div>
+              </div>
+
+              <!-- Evening block -->
+              <div class="slot">
+                <div class="slot-label">7:30–8:40</div>
+                <div class="slot-main">
+                  <div class="slot-title">Part 8 – Parametric Surfaces</div>
+                  <div class="slot-meta">29 min video, pause to draw at least one surface from parameters.</div>
+                </div>
+              </div>
+
+              <div class="slot break">
+                <div class="slot-label">8:40–8:50</div>
+                <div class="slot-main">
+                  <div class="slot-title">Short Break</div>
+                  <div class="slot-meta">Quick reset.</div>
+                </div>
+              </div>
+
+              <div class="slot">
+                <div class="slot-label">8:50–10:20</div>
+                <div class="slot-main">
+                  <div class="slot-title">Part 9 – Surface Integrals &amp; Area</div>
+                  <div class="slot-meta">50 min video stretched with pauses and careful note-taking.</div>
+                </div>
+              </div>
+
+              <div class="slot">
+                <div class="slot-label">10:20–10:50</div>
+                <div class="slot-main">
+                  <div class="slot-title">Part 10 – Surface Integrals (Vector Fields)</div>
+                  <div class="slot-meta">Finish the last video + quick recap of all main formulas.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="footer-note">
+            <span id="completedStats">Completed: 0 of 10 videos (0h 0m 0s).</span>
+            <span>Use the checklist on the left while following this pacing.</span>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    (function () {
+      const moduleEls = Array.from(document.querySelectorAll(".module"));
+      const totalSeconds = moduleEls.reduce(
+        (sum, el) => sum + Number(el.dataset.seconds || 0),
+        0
+      );
+
+      const progressFill = document.getElementById("progressFill");
+      const progressPercentLabel = document.getElementById(
+        "progressPercentLabel"
+      );
+      const timeLeftLabel = document.getElementById("timeLeftLabel");
+      const completedStats = document.getElementById("completedStats");
+      const markAllBtn = document.getElementById("markAllBtn");
+      const resetBtn = document.getElementById("resetBtn");
+
+      function formatTime(seconds) {
+        const hrs = Math.floor(seconds / 3600);
+        const mins = Math.floor((seconds % 3600) / 60);
+        const secs = seconds % 60;
+        const parts = [];
+        if (hrs > 0) parts.push(`${hrs}h`);
+        if (mins > 0 || hrs > 0) parts.push(`${mins}m`);
+        parts.push(`${secs}s`);
+        return parts.join(" ");
+      }
+
+      function updateProgress() {
+        let completedSeconds = 0;
+        let completedCount = 0;
+
+        moduleEls.forEach((moduleEl) => {
+          const checkbox = moduleEl.querySelector('input[type="checkbox"]');
+          const seconds = Number(moduleEl.dataset.seconds || 0);
+
+          if (checkbox.checked) {
+            completedSeconds += seconds;
+            completedCount += 1;
+            moduleEl.classList.add("completed");
+          } else {
+            moduleEl.classList.remove("completed");
+          }
+        });
+
+        const remainingSeconds = Math.max(totalSeconds - completedSeconds, 0);
+        const percent =
+          totalSeconds > 0
+            ? Math.round((completedSeconds / totalSeconds) * 100)
+            : 0;
+
+        progressFill.style.transform = `scaleX(${percent / 100})`;
+        progressPercentLabel.textContent = `${percent}% complete`;
+        timeLeftLabel.textContent = `${formatTime(remainingSeconds)} left`;
+        completedStats.textContent = `Completed: ${completedCount} of ${
+          moduleEls.length
+        } videos (${formatTime(completedSeconds)}).`;
+      }
+
+      // Attach listeners
+      moduleEls.forEach((moduleEl) => {
+        const checkbox = moduleEl.querySelector('input[type="checkbox"]');
+
+        // Click anywhere on row toggles checkbox
+        moduleEl.addEventListener("click", (e) => {
+          if (e.target.tagName.toLowerCase() === "input") return;
+          checkbox.checked = !checkbox.checked;
+          updateProgress();
+        });
+
+        checkbox.addEventListener("change", updateProgress);
+      });
+
+      markAllBtn.addEventListener("click", () => {
+        moduleEls.forEach((moduleEl) => {
+          const checkbox = moduleEl.querySelector('input[type="checkbox"]');
+          checkbox.checked = true;
+        });
+        updateProgress();
+      });
+
+      resetBtn.addEventListener("click", () => {
+        moduleEls.forEach((moduleEl) => {
+          const checkbox = moduleEl.querySelector('input[type="checkbox"]');
+          checkbox.checked = false;
+        });
+        updateProgress();
+      });
+
+      // Initial render
+      timeLeftLabel.textContent = `${formatTime(totalSeconds)} left`;
+      updateProgress();
+    })();
+  </script>
+</body>
+</html>
