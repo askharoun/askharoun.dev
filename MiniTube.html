@@ -19,8 +19,7 @@
   <!-- Open Graph -->
   <meta property="og:title" content="MiniTube – Persistent YouTube Mini Player" />
   <meta property="og:description" content="Keep your YouTube videos playing in a floating mini player while you browse. MiniTube is a Chrome extension built for focused studying and long videos." />
-  <!-- TODO: change this to your MiniTube image -->
-  <meta property="og:image" content="https://askharoun.dev/images/minitube-logo.png" />
+  <meta property="og:image" content="https://askharoun.dev/images/MiniTube-Logo-no-bg.png" />
   <meta property="og:url" content="https://askharoun.dev/minitube" />
   <meta property="og:type" content="website" />
 
@@ -114,7 +113,7 @@
       width: 32px;
       height: 32px;
       border-radius: 8px;
-      object-fit: cover;
+      object-fit: contain;
     }
 
     .minitube-store-text-main {
@@ -239,23 +238,7 @@
       overflow: hidden;
     }
 
-    .minitube-preview-progress {
-      position: absolute;
-      bottom: 8px;
-      left: 10px;
-      right: 10px;
-      height: 4px;
-      border-radius: 999px;
-      background: rgba(255,255,255,0.2);
-      overflow: hidden;
-    }
-
-    .minitube-preview-progress-fill {
-      width: 55%;
-      height: 100%;
-      background: var(--primary);
-      border-radius: inherit;
-    }
+    /* Removed progress bar fill since you didn't want the blue bar */
 
     .minitube-preview-floating {
       position: absolute;
@@ -374,7 +357,6 @@
         <div class="minitube-store-block">
           <div class="minitube-store-label">Available on the Chrome Web Store</div>
 
-          <!-- TODO: replace href + img src with your real values -->
           <a
             class="minitube-store-link"
             href="https://chromewebstore.google.com/detail/YOUR_MINITUBE_ID_HERE"
@@ -383,7 +365,7 @@
           >
             <img
               class="minitube-store-logo"
-              src="images/minitube-logo.png"
+              src="images/MiniTube-Logo-no-bg.png"
               alt="MiniTube logo"
             >
             <div>
@@ -456,9 +438,6 @@
           </div>
 
           <div class="minitube-preview-main">
-            </div>
-            <div class="minitube-preview-progress">
-            </div>
             <div class="minitube-preview-floating">
               <span class="minitube-preview-floating-label">MiniTube</span>
               <span>Floating mini player</span>
@@ -475,9 +454,8 @@
         <div class="minitube-screenshot-box">
           <h3>Real screenshot</h3>
           <p>Here’s a real screenshot from my Mac while using MiniTube:</p>
-          <!-- TODO: replace src with your actual screenshot path -->
           <img
-            src="images/minitube-mac-screenshot.png"
+            src="images/image-(4).jpg"
             alt="Screenshot of MiniTube running on macOS"
             class="minitube-screenshot-img"
           >
