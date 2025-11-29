@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Microsoft Clarity (unchanged) -->
+  <script type="text/javascript">
+    (function(c,l,a,r,i,t,y){
+        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+    })(window, document, "clarity", "script", "rmcsekaion");
+  </script>
+
+  <!-- Primary SEO title -->
+  <title>MiniTube Chrome Extension | askharoun.dev</title>
+
+  <!-- Meta description -->
+  <meta name="description" content="MiniTube is a Chrome extension that keeps your YouTube video playing in a floating mini player while you browse. Built for lectures, tutorials, and multitasking.">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="MiniTube – Persistent YouTube Mini Player" />
+  <meta property="og:description" content="Keep your YouTube videos playing in a floating mini player while you browse. MiniTube is a Chrome extension built for focused studying and long videos." />
+  <!-- TODO: change this to your MiniTube image -->
+  <meta property="og:image" content="https://askharoun.dev/images/minitube-logo.png" />
+  <meta property="og:url" content="https://askharoun.dev/minitube" />
+  <meta property="og:type" content="website" />
+
+  <!-- Canonical -->
+  <link rel="canonical" href="https://askharoun.dev/minitube">
+
+  <!-- Favicon -->
+  <link rel="icon" href="https://askharoun.dev/favicon.ico">
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Site branding -->
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="images/favicon.png" type="image/x-icon">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+  <noscript>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+  </noscript>
+
+  <!-- Page-specific styles -->
+  <style>
+    main.minitube-main {
+      padding-top: 100px;
+      min-height: 100vh;
+    }
+
+    .minitube-hero {
+      padding: var(--space-xxl) var(--space-lg) var(--space-xl);
+      text-align: center;
+    }
+
+    .minitube-hero-inner {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .minitube-title {
+      font-size: 2.5rem;
+      font-family: var(--font-heading);
+      color: var(--text-primary);
+      margin-bottom: var(--space-sm);
+    }
+
+    .minitube-tagline {
+      font-size: 1.05rem;
+      color: var(--text-secondary);
+      max-width: 650px;
+      margin: 0 auto;
+    }
+
+    .minitube-tagline strong {
+      color: var(--primary);
+    }
+
+    .minitube-store-block {
+      margin-top: var(--space-lg);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .minitube-store-label {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+    }
+
+    .minitube-store-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.5rem 1.2rem;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      text-decoration: none;
+      transition: all var(--transition-normal);
+      box-shadow: 0 8px 20px var(--shadow);
+    }
+
+    .minitube-store-link:hover {
+      transform: translateY(-1px);
+      border-color: var(--primary);
+      box-shadow: 0 10px 26px var(--shadow);
+    }
+
+    .minitube-store-logo {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      object-fit: cover;
+    }
+
+    .minitube-store-text-main {
+      font-size: 0.9rem;
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+
+    .minitube-store-text-sub {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+    }
+
+    .minitube-layout {
+      max-width: 1100px;
+      margin: 0 auto var(--space-xxl);
+      padding: 0 var(--space-lg);
+      display: grid;
+      gap: var(--space-xl);
+      grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+    }
+
+    @media (max-width: 900px) {
+      .minitube-layout {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .minitube-card {
+      background: var(--surface);
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      box-shadow: 0 8px 25px var(--shadow);
+      padding: var(--space-xl);
+    }
+
+    .minitube-card h2 {
+      font-size: 1.4rem;
+      font-family: var(--font-heading);
+      color: var(--text-primary);
+      margin-bottom: 0.4rem;
+    }
+
+    .minitube-card p {
+      font-size: 0.95rem;
+      color: var(--text-secondary);
+      line-height: 1.7;
+      margin-bottom: 0.6rem;
+    }
+
+    .minitube-list {
+      font-size: 0.95rem;
+      color: var(--text-secondary);
+      padding-left: 1.1rem;
+      margin: 0.4rem 0 0;
+    }
+
+    .minitube-list li {
+      margin-bottom: 0.3rem;
+    }
+
+    .minitube-meta {
+      margin-top: var(--space-md);
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--space-sm);
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+    }
+
+    @media (max-width: 600px) {
+      .minitube-meta {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .minitube-meta-item strong {
+      display: block;
+      font-family: var(--font-heading);
+      font-size: 0.8rem;
+      color: var(--text-primary);
+      margin-bottom: 0.15rem;
+    }
+
+    .minitube-preview-box {
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: radial-gradient(circle at top left, rgba(255,255,255,0.06), transparent),
+                  var(--background);
+      padding: var(--space-md);
+      min-height: 200px;
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+    }
+
+    .minitube-preview-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+    }
+
+    .minitube-preview-dots {
+      display: flex;
+      gap: 4px;
+    }
+
+    .minitube-preview-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: var(--border);
+    }
+
+    .minitube-preview-main {
+      background: #000;
+      border-radius: 10px;
+      height: 140px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .minitube-preview-progress {
+      position: absolute;
+      bottom: 8px;
+      left: 10px;
+      right: 10px;
+      height: 4px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.2);
+      overflow: hidden;
+    }
+
+    .minitube-preview-progress-fill {
+      width: 55%;
+      height: 100%;
+      background: var(--primary);
+      border-radius: inherit;
+    }
+
+    .minitube-preview-floating {
+      position: absolute;
+      right: 12px;
+      bottom: 26px;
+      width: 120px;
+      height: 72px;
+      border-radius: 10px;
+      background: #111;
+      border: 1px solid rgba(255,255,255,0.25);
+      box-shadow: 0 12px 24px rgba(0,0,0,0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.72rem;
+      color: #fff;
+    }
+
+    .minitube-preview-floating-label {
+      position: absolute;
+      top: 6px;
+      left: 8px;
+      padding: 2px 6px;
+      border-radius: 999px;
+      background: rgba(0,0,0,0.7);
+      font-size: 0.6rem;
+    }
+
+    .minitube-preview-caption {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+    }
+
+    .minitube-screenshot-box {
+      margin-top: var(--space-md);
+      border-radius: 14px;
+      border: 1px dashed var(--border);
+      padding: var(--space-md);
+      background: var(--background);
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .minitube-screenshot-box h3 {
+      font-size: 0.9rem;
+      font-family: var(--font-heading);
+      color: var(--text-primary);
+      margin: 0;
+    }
+
+    .minitube-screenshot-box p {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      margin: 0;
+    }
+
+    .minitube-screenshot-img {
+      margin-top: 0.5rem;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      max-width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    @media (max-width: 768px) {
+      .minitube-hero {
+        padding: var(--space-xxl) var(--space-md) var(--space-xl);
+      }
+      .minitube-title {
+        font-size: 2.1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header (same as your site) -->
+  <header>
+    <div class="logo-container">
+      <a href="index.html" class="logo-text">ASKHAROUN.DEV</a>
+    </div>
+
+    <nav>
+      <ul>
+        <li><a href="index.html#about" class="nav-link">About</a></li>
+        <li><a href="index.html#projects" class="nav-link">Projects</a></li>
+        <li><a href="index.html#projects" class="nav-link">Certifications</a></li>
+        <li><a href="index.html#experience" class="nav-link">Experience</a></li>
+        <li><a href="index.html#contact" class="nav-link">Contact</a></li>
+      </ul>
+    </nav>
+
+    <div class="theme-toggle-container">
+      <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode"></button>
+    </div>
+
+    <div class="menu-toggle">
+      <div class="bar"></div>
+      <div class="bar"></div>
+      <div class="bar"></div>
+    </div>
+  </header>
+
+  <main class="minitube-main">
+    <!-- Hero -->
+    <section class="minitube-hero">
+      <div class="minitube-hero-inner">
+        <h1 class="minitube-title">MiniTube – Persistent YouTube Mini Player</h1>
+        <p class="minitube-tagline">
+          A Chrome extension that keeps your YouTube video in a floating mini player while you browse.  
+          Built for <strong>lectures</strong>, <strong>tutorials</strong>, and <strong>background videos</strong>.
+        </p>
+
+        <!-- Store link + logo -->
+        <div class="minitube-store-block">
+          <div class="minitube-store-label">Available on the Chrome Web Store</div>
+
+          <!-- TODO: replace href + img src with your real values -->
+          <a
+            class="minitube-store-link"
+            href="https://chromewebstore.google.com/detail/YOUR_MINITUBE_ID_HERE"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <img
+              class="minitube-store-logo"
+              src="images/minitube-logo.png"
+              alt="MiniTube logo"
+            >
+            <div>
+              <div class="minitube-store-text-main">Open MiniTube on Chrome Web Store</div>
+              <div class="minitube-store-text-sub">Click to install directly in Chrome</div>
+            </div>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Content layout -->
+    <section class="minitube-layout">
+      <!-- Left: your copy, easy to customize -->
+      <section class="minitube-card">
+        <h2>What MiniTube does</h2>
+        <p>
+          MiniTube fixes one annoying thing about YouTube: losing your video the second you click around.
+          With MiniTube on, your current video lives in a small floating player so you can scroll, read comments,
+          or open new pages without starting over.
+        </p>
+        <ul class="minitube-list">
+          <li>Floating mini player that stays on top of YouTube pages.</li>
+          <li>No restart when you navigate between videos or sections.</li>
+          <li>Simple size options instead of glitchy drag-resize behavior.</li>
+          <li>Designed for long-form content like lectures and tutorials.</li>
+        </ul>
+
+        <h2 style="margin-top: var(--space-lg);">Tech and my role</h2>
+        <p>
+          I built MiniTube as a solo project to practice real-world browser extension development and UX thinking.
+        </p>
+        <div class="minitube-meta">
+          <div class="minitube-meta-item">
+            <strong>Tech stack</strong>
+            <span>Manifest V3, JavaScript, HTML, CSS</span>
+          </div>
+          <div class="minitube-meta-item">
+            <strong>APIs</strong>
+            <span>chrome.runtime, chrome.tabs, content scripts</span>
+          </div>
+          <div class="minitube-meta-item">
+            <strong>Main use case</strong>
+            <span>Watching EE lectures, coding videos, and tutorials while multitasking</span>
+          </div>
+          <div class="minitube-meta-item">
+            <strong>What I learned</strong>
+            <span>Single-page app navigation, extension structure, floating UI design</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Right: visual preview card -->
+      <section class="minitube-card">
+        <h2>How it looks in action</h2>
+        <p>
+          This shows the idea behind MiniTube: your main video keeps playing, and a mini player pins itself
+          to the corner while you do your thing.
+        </p>
+
+        <!-- Stylized mock preview -->
+        <div class="minitube-preview-box">
+          <div class="minitube-preview-header">
+            <div class="minitube-preview-dots">
+              <span class="minitube-preview-dot"></span>
+              <span class="minitube-preview-dot"></span>
+              <span class="minitube-preview-dot"></span>
+            </div>
+            <span>youtube.com · MiniTube active</span>
+          </div>
+
+          <div class="minitube-preview-main">
+            <div class="minitube-preview-progress">
+              <div class="minitube-preview-progress-fill"></div>
+            </div>
+            <div class="minitube-preview-floating">
+              <span class="minitube-preview-floating-label">MiniTube</span>
+              <span>Floating mini player</span>
+            </div>
+          </div>
+
+          <p class="minitube-preview-caption">
+            When you scroll or navigate, MiniTube keeps your video pinned in a mini player so you can
+            keep watching without losing your timestamp.
+          </p>
+        </div>
+
+        <!-- Real screenshot placeholder -->
+        <div class="minitube-screenshot-box">
+          <h3>Real screenshot</h3>
+          <p>Here’s a real screenshot from my Mac while using MiniTube:</p>
+          <!-- TODO: replace src with your actual screenshot path -->
+          <img
+            src="images/minitube-mac-screenshot.png"
+            alt="Screenshot of MiniTube running on macOS"
+            class="minitube-screenshot-img"
+          >
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <!-- Footer (same as your site) -->
+  <footer>
+    <div class="footer-content">
+      <div class="footer-left">
+        <div class="footer-logo">askharoun.dev</div>
+        <div class="footer-subtitle">Electrical Engineering Student @ Penn State</div>
+      </div>
+
+      <div class="footer-center">
+        <a target="_blank" href="https://askharoun.github.io/askharoun.dev/images/Askharoun_Thomas_Current_Resume.pdf" class="resume-button">
+          <span class="button-text">View Resume</span>
+        </a>
+      </div>
+
+      <div class="footer-right">
+        <div class="footer-contact">
+          <div class="contact-item">
+            <span class="contact-label">Email:</span>
+            <span class="contact-value">askharoun2005@gmail.com</span>
+          </div>
+          <div class="contact-item">
+            <span class="contact-label">Phone:</span>
+            <span class="contact-value">(484) 510-6083</span>
+          </div>
+          <div class="contact-item">
+            <span class="contact-label">Location:</span>
+            <span class="contact-value">State College, PA</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p>This site was designed with the future in mind. All trademarks belong to their respective owners.</p>
+      <p style="margin-top: 0.5rem; font-size: 0.8rem;">
+        Project: MiniTube Chrome Extension – persistent YouTube mini player for focused studying.
+      </p>
+    </div>
+  </footer>
+
+  <!-- Theme + menu JS from your site -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const themeToggle = document.getElementById('themeToggle');
+      const body = document.body;
+
+      const currentTheme = localStorage.getItem('theme') || 'light';
+      if (currentTheme === 'dark') {
+        body.classList.add('dark-mode');
+      } else {
+        body.classList.remove('dark-mode');
+      }
+
+      if (themeToggle) {
+        themeToggle.addEventListener('click', function() {
+          body.classList.toggle('dark-mode');
+          const newTheme = body.classList.contains('dark-mode') ? 'dark' : 'light';
+          localStorage.setItem('theme', newTheme);
+        });
+      }
+
+      const menuToggle = document.querySelector('.menu-toggle');
+      const nav = document.querySelector('nav');
+
+      if (menuToggle && nav) {
+        menuToggle.addEventListener('click', function() {
+          menuToggle.classList.toggle('active');
+          nav.classList.toggle('active');
+        });
+
+        const navLinks = document.querySelectorAll('.nav-link');
+        navLinks.forEach(link => {
+          link.addEventListener('click', function() {
+            menuToggle.classList.remove('active');
+            nav.classList.remove('active');
+          });
+        });
+
+        document.addEventListener('click', function(event) {
+          if (!nav.contains(event.target) && !menuToggle.contains(event.target)) {
+            menuToggle.classList.remove('active');
+            nav.classList.remove('active');
+          }
+        });
+      }
+
+      const header = document.querySelector('header');
+      if (header) {
+        window.addEventListener('scroll', function() {
+          const currentScroll = window.pageYOffset;
+          if (currentScroll > 50) {
+            header.classList.add('scrolled');
+          } else {
+            header.classList.remove('scrolled');
+          }
+        });
+      }
+    });
+  </script>
+</body>
+</html>
