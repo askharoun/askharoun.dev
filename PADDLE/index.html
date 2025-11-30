@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>For Jack Mussoline - Triangle Fraternity Paddle</title>
+    <link rel="icon" type="image/png" href="Triangle_Fraternity_Crest.png">
+    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --red-primary: #ff3b30;
+            --red-dark: #d70015;
+            --red-light: #ff6b5f;
+            --bg-dark: #000000;
+            --bg-gray: #1d1d1f;
+            --text-primary: #f5f5f7;
+            --text-secondary: #a1a1a6;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            overflow-x: hidden;
+            line-height: 1.47059;
+            font-weight: 400;
+            letter-spacing: -0.022em;
+        }
+
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            padding: 12px 22px;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: saturate(180%) blur(20px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: background 0.3s;
+        }
+
+        .crest-logo {
+            height: 56px;
+            width: auto;
+            opacity: 0.9;
+            cursor: pointer;
+            transition: opacity 0.3s;
+        }
+
+        .crest-logo:hover {
+            opacity: 1;
+        }
+
+        .hero-section {
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding-top: 80px;
+        }
+
+        .hero-content {
+            text-align: center;
+            z-index: 200;
+            position: relative;
+        }
+
+        .hero-title {
+            font-size: 80px;
+            font-weight: 600;
+            letter-spacing: -0.015em;
+            line-height: 1.05;
+            margin-bottom: 6px;
+            color: var(--text-primary);
+        }
+
+        .hero-subtitle {
+            font-size: 32px;
+            font-weight: 600;
+            letter-spacing: 0.004em;
+            margin-bottom: 40px;
+            padding: 12px 30px;
+            border-radius: 12px;
+            background: linear-gradient(110deg, 
+                #ff0000 0%,
+                #ff3b30 10%,
+                #ff6b5f 20%,
+                #ffd700 30%,
+                #ffed4e 40%,
+                #ffd700 50%,
+                #ff6b5f 60%,
+                #ff3b30 70%,
+                #ff0000 80%,
+                #ff3b30 90%,
+                #ff6b5f 100%
+            );
+            background-size: 200% auto;
+            color: transparent;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: shimmer 2s linear infinite;
+            display: inline-block;
+            box-shadow: 0 0 30px rgba(255, 59, 48, 0.3);
+        }
+
+        @keyframes shimmer {
+            0% {
+                background-position: 0% center;
+            }
+            100% {
+                background-position: 200% center;
+            }
+        }
+
+        .paddle-container {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            width: 70vw;
+            height: 90vh;
+            max-width: 1000px;
+            max-height: 1400px;
+            transform: translate(-50%, -50%);
+            z-index: 0;
+            pointer-events: none;
+            transition: opacity 0.5s ease-out;
+        }
+
+        .paddle-container.fade-away {
+            opacity: 0;
+        }
+
+        .paddle-viewer-main {
+            width: 100%;
+            height: 100%;
+            background: transparent;
+            --poster-color: transparent;
+            pointer-events: none;
+        }
+
+        .section {
+            position: relative;
+            z-index: 100;
+            min-height: 100vh;
+            padding: 120px 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            font-size: 72px;
+            font-weight: 600;
+            letter-spacing: -0.015em;
+            line-height: 1.05;
+            margin-bottom: 20px;
+            color: var(--text-primary);
+        }
+
+        .section-subtitle {
+            font-size: 28px;
+            font-weight: 400;
+            letter-spacing: 0.004em;
+            color: var(--red-primary);
+            margin-bottom: 40px;
+        }
+
+        .section-text {
+            font-size: 21px;
+            line-height: 1.47059;
+            color: #d1d1d6;
+            max-width: 700px;
+            margin-bottom: 60px;
+        }
+
+        .gift-message-section {
+            background: var(--bg-gray);
+            border-radius: 20px;
+            padding: 60px;
+            margin: 80px 0;
+        }
+
+        .gift-message-title {
+            font-size: 48px;
+            font-weight: 600;
+            letter-spacing: -0.015em;
+            color: var(--red-primary);
+            margin-bottom: 30px;
+        }
+
+        .gift-message-content {
+            font-size: 21px;
+            line-height: 1.8;
+            color: var(--text-primary);
+            white-space: pre-line;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+            margin: 60px 0;
+        }
+
+        .feature-item {
+            padding: 30px;
+            background: var(--bg-gray);
+            border-radius: 16px;
+            border: 1px solid rgba(255, 59, 48, 0.1);
+            transition: transform 0.3s, border-color 0.3s;
+        }
+
+        .feature-item:hover {
+            transform: translateY(-5px);
+            border-color: rgba(255, 59, 48, 0.3);
+        }
+
+        .feature-item h3 {
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--red-primary);
+            margin-bottom: 12px;
+        }
+
+        .feature-item p {
+            font-size: 17px;
+            line-height: 1.47059;
+            color: var(--text-secondary);
+        }
+
+        .interactive-model-section {
+            position: relative;
+            z-index: 1001;
+            background: var(--bg-gray);
+            border-radius: 30px;
+            padding: 80px 40px;
+            margin: 100px 0;
+            text-align: center;
+        }
+
+        .interactive-model-title {
+            font-size: 56px;
+            font-weight: 600;
+            letter-spacing: -0.015em;
+            color: var(--text-primary);
+            margin-bottom: 60px;
+        }
+
+        .mini-paddle-container {
+            width: 100%;
+            max-width: 600px;
+            height: 600px;
+            margin: 0 auto;
+            background: var(--bg-dark);
+            border-radius: 20px;
+            padding: 20px;
+            border: 2px solid rgba(255, 59, 48, 0.2);
+        }
+
+        .mini-paddle-viewer {
+            width: 100%;
+            height: 100%;
+            background: transparent;
+            --poster-color: transparent;
+        }
+
+        .learn-note {
+            font-size: 17px;
+            color: var(--text-secondary);
+            margin-top: 30px;
+            font-style: italic;
+        }
+
+        .feature-image {
+            width: 100%;
+            max-width: 200px;
+            height: auto;
+            margin: 20px auto;
+            display: block;
+            border-radius: 12px;
+        }
+
+        footer {
+            position: relative;
+            z-index: 10;
+            padding: 40px 40px 20px;
+            text-align: center;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-secondary);
+            font-size: 14px;
+            background: var(--bg-dark);
+        }
+
+        .footer-link {
+            color: var(--red-primary);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-link:hover {
+            color: var(--red-light);
+        }
+
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .highlight-red {
+            color: var(--red-primary);
+        }
+
+        .scroll-to-top {
+            position: fixed;
+            bottom: 40px;
+            right: 40px;
+            width: 50px;
+            height: 50px;
+            background: var(--red-primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 2000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s, transform 0.3s;
+            box-shadow: 0 4px 20px rgba(255, 59, 48, 0.4);
+        }
+
+        .scroll-to-top.visible {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .scroll-to-top:hover {
+            transform: translateY(-3px);
+            background: var(--red-light);
+        }
+
+        .scroll-to-top svg {
+            width: 24px;
+            height: 24px;
+            fill: white;
+        }
+
+        @media (max-width: 1068px) {
+            .hero-title {
+                font-size: 56px;
+            }
+
+            .hero-subtitle {
+                font-size: 24px;
+            }
+
+            .section-title {
+                font-size: 56px;
+            }
+
+            .section-subtitle {
+                font-size: 24px;
+            }
+
+            .paddle-container {
+                width: 95vw;
+                height: 95vh;
+            }
+        }
+
+        @media (max-width: 734px) {
+            .hero-title {
+                font-size: 40px;
+            }
+
+            .hero-subtitle {
+                font-size: 20px;
+            }
+
+            .section {
+                padding: 80px 20px;
+            }
+
+            .section-title {
+                font-size: 40px;
+            }
+
+            .section-subtitle {
+                font-size: 20px;
+            }
+
+            .gift-message-section {
+                padding: 40px 20px;
+            }
+
+            .gift-message-title {
+                font-size: 36px;
+            }
+
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .interactive-model-title {
+                font-size: 40px;
+            }
+
+            .mini-paddle-container {
+                height: 400px;
+            }
+
+            .scroll-to-top {
+                bottom: 20px;
+                right: 20px;
+                width: 44px;
+                height: 44px;
+            }
+
+            .scroll-to-top svg {
+                width: 20px;
+                height: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <img src="Triangle_Fraternity_Crest.png" alt="Triangle Fraternity Crest" class="crest-logo" onclick="scrollToTop()">
+    </header>
+
+    <div class="hero-section">
+        <div class="hero-content">
+            <h1 class="hero-title">Made for <span class="highlight-red">Jack Mussoline</span></h1>
+            <p class="hero-subtitle">A gift from your little</p>
+        </div>
+        <div class="paddle-container" id="paddle-container">
+            <model-viewer
+                src="paddle.glb"
+                alt="Triangle Fraternity Paddle"
+                environment-image="neutral"
+                exposure="1.2"
+                shadow-intensity="1"
+                shadow-softness="0.5"
+                disable-zoom
+                disable-pan
+                interaction-policy="none"
+                id="paddle-viewer"
+                class="paddle-viewer-main">
+            </model-viewer>
+        </div>
+    </div>
+
+    <section class="section fade-in">
+        <h2 class="section-title">Decorated with <span class="highlight-red">care</span></h2>
+        <p class="section-subtitle">Every detail matters</p>
+        <p class="section-text">From painting the wood to placing each sticker, this paddle was personalized with thought and precision to honor our brotherhood and Triangle's legacy.</p>
+    </section>
+
+    <section class="section fade-in">
+        <div class="gift-message-section">
+            <h2 class="gift-message-title">A message for you</h2>
+            <div class="gift-message-content">
+<!-- EDIT THIS MESSAGE BELOW -->
+Hey Moose,
+
+This paddle is more than wood and paint. It's our brotherhood, the traditions we share, and the bond between big and little.
+
+I wanted to give you something meaningful. Something that shows what Triangle means to us.
+
+Thanks for being an incredible big and showing me what brotherhood really is.
+
+Your little
+
+<!-- EDIT THIS MESSAGE ABOVE -->
+            </div>
+        </div>
+    </section>
+
+    <section class="section fade-in">
+        <h2 class="section-title">What makes it <span class="highlight-red">ours</span></h2>
+        <div class="feature-grid">
+            <div class="feature-item">
+                <h3>Milk</h3>
+                <img src="milk.png" alt="Milk" class="feature-image">
+                <p>That night I couldn't drink, but we still had our moment. Brothers share everything, even milk.</p>
+            </div>
+            <div class="feature-item">
+                <h3>Engineers</h3>
+                <img src="engineers.png" alt="Engineers" class="feature-image">
+                <p>You're in Computer, I'm in Electrical. Different paths, same foundation. Problem solvers building the future.</p>
+            </div>
+            <div class="feature-item">
+                <h3>Brotherhood</h3>
+                <img src="brotherhood.png" alt="Brotherhood" class="feature-image">
+                <p>More than tradition, more than a paddle. This represents the bond between big and little, and everything Triangle stands for.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="interactive-model-section fade-in">
+        <h2 class="interactive-model-title">Check it out</h2>
+        <div class="mini-paddle-container">
+            <model-viewer
+                src="paddle.glb"
+                alt="Interactive Triangle Fraternity Paddle"
+                camera-controls
+                touch-action="pan-y"
+                environment-image="neutral"
+                exposure="1.2"
+                shadow-intensity="1"
+                shadow-softness="0.5"
+                interaction-policy="allow-when-focused"
+                id="mini-paddle-viewer"
+                class="mini-paddle-viewer">
+            </model-viewer>
+        </div>
+        <p class="learn-note">I learned how to make GLB files just to build this site for you.</p>
+    </section>
+
+    <footer>
+        <p>Made by <a href="https://askharoun.dev" target="_blank" class="footer-link">tom</a></p>
+    </footer>
+
+    <div class="scroll-to-top" id="scroll-to-top" onclick="scrollToTop()">
+        <svg viewBox="0 0 24 24">
+            <path d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"/>
+        </svg>
+    </div>
+
+    <script>
+        const viewer = document.getElementById('paddle-viewer');
+        const container = document.getElementById('paddle-container');
+        const fadeElements = document.querySelectorAll('.fade-in');
+        const scrollToTopBtn = document.getElementById('scroll-to-top');
+
+        // Scroll to top function
+        function scrollToTop() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
+
+        // Show/hide scroll to top button
+        function toggleScrollButton() {
+            const scrollY = window.scrollY;
+            const windowHeight = window.innerHeight;
+            const documentHeight = document.documentElement.scrollHeight;
+            
+            // Show button when near bottom (within 150% of viewport height from bottom)
+            if (scrollY > documentHeight - windowHeight * 2.5) {
+                scrollToTopBtn.classList.add('visible');
+            } else {
+                scrollToTopBtn.classList.remove('visible');
+            }
+        }
+
+        // Ensure page starts at top on load/refresh
+        window.addEventListener('beforeunload', () => {
+            window.scrollTo(0, 0);
+        });
+
+        // Start at top when page loads
+        if (history.scrollRestoration) {
+            history.scrollRestoration = 'manual';
+        }
+        window.scrollTo(0, 0);
+
+        // Smooth scroll-driven paddle animation - simple 360 rotation like Apple
+        function updatePaddle() {
+            const scrollY = window.scrollY;
+            const windowHeight = window.innerHeight;
+            const documentHeight = document.documentElement.scrollHeight;
+            const scrollableHeight = documentHeight - windowHeight;
+            
+            if (scrollableHeight <= 0) return;
+            
+            const scrollProgress = Math.min(Math.max(scrollY / scrollableHeight, 0), 1);
+            
+            // Simple 360-degree rotation as you scroll
+            const rotationY = scrollProgress * 360;
+            
+            // Apply rotation - start more zoomed out to fit full paddle in frame
+            viewer.setAttribute('camera-orbit', `${rotationY}deg 0deg 150%`);
+            
+            // Check if interactive model section is approaching
+            const interactiveSection = document.querySelector('.interactive-model-section');
+            if (interactiveSection) {
+                const sectionRect = interactiveSection.getBoundingClientRect();
+                const triggerPoint = windowHeight * 0.6; // Start fading when section is 60% from top
+                
+                if (sectionRect.top < triggerPoint) {
+                    // Calculate fade based on how far into the trigger zone we are
+                    const fadeProgress = Math.max(0, Math.min(1, (triggerPoint - sectionRect.top) / (windowHeight * 0.3)));
+                    container.style.opacity = 1 - fadeProgress;
+                } else {
+                    container.style.opacity = 1;
+                }
+            }
+            
+            // Parallax effect on hero content
+            const heroContent = document.querySelector('.hero-content');
+            if (heroContent && scrollY < windowHeight) {
+                const heroProgress = scrollY / windowHeight;
+                heroContent.style.opacity = Math.max(0, 1 - heroProgress * 1.5);
+                heroContent.style.transform = `translateY(${scrollY * 0.5}px)`;
+            }
+        }
+
+        function easeInOutCubic(t) {
+            return t < 0.5
+                ? 4 * t * t * t
+                : 1 - Math.pow(-2 * t + 2, 3) / 2;
+        }
+
+        // Intersection Observer for fade-in animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -100px 0px'
+        };
+
+        const fadeObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        fadeElements.forEach(element => {
+            fadeObserver.observe(element);
+        });
+
+        // Throttled scroll handler
+        let ticking = false;
+        function onScroll() {
+            if (!ticking) {
+                window.requestAnimationFrame(() => {
+                    updatePaddle();
+                    toggleScrollButton();
+                    ticking = false;
+                });
+                ticking = true;
+            }
+        }
+
+        window.addEventListener('scroll', onScroll, { passive: true });
+        window.addEventListener('resize', updatePaddle);
+
+        // Initialize
+        updatePaddle();
+
+        // Handle model-viewer load
+        viewer.addEventListener('load', () => {
+            viewer.setAttribute('camera-orbit', '0deg 0deg 150%');
+            viewer.setAttribute('field-of-view', '45deg');
+        });
+
+        // Initialize mini viewer - keep it centered until touched
+        const miniViewer = document.getElementById('mini-paddle-viewer');
+        miniViewer.addEventListener('load', () => {
+            miniViewer.setAttribute('camera-orbit', '0deg 0deg 150%');
+            miniViewer.setAttribute('field-of-view', '45deg');
+        });
+    </script>
+</body>
+</html>
