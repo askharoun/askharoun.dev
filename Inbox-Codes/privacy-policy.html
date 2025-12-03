@@ -11,22 +11,14 @@
 
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
   <title>Privacy Policy - Email Code Extractor | askharoun.dev</title>
-  <meta property="og:title"  content="Email Code Extractor Privacy Policy">
-  <link rel="icon" href="images/favicon.png" type="image/x-icon">
-
+  
   <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="images/favicon.png" type="image/x-icon">
+  
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
-  
-  <style>
-    .privacy-page { padding-top: 120px; min-height: 100vh; }
-    .policy-date { color: var(--text-secondary); margin-bottom: 2rem; display: block; font-family: var(--font-heading); }
-    /* Reusing your about-content class, but ensuring text flows well for legal text */
-    .about-content p { margin-bottom: 1.5rem; }
-  </style>
 </head>
 <body>
   
@@ -56,14 +48,15 @@
   </header>
 
   <main>
-    <section class="section privacy-page">
+    <section class="contact-page">
       <div class="container">
         
         <div class="section-header">
           <h2 class="section-title" data-text="Privacy Policy">Privacy Policy</h2>
           <div class="section-line"></div>
-          <br>
-          <span class="policy-date">Last Updated: December 2025</span>
+          <p style="color: var(--text-secondary); margin-top: 1rem; font-family: var(--font-heading);">
+            Last Updated: December 2025
+          </p>
         </div>
 
         <div class="about-content">
@@ -71,7 +64,7 @@
           <div class="about-section">
             <h3 class="about-section-title">Overview</h3>
             <p class="about-text">
-              This Privacy Policy applies to the <strong>Email Code Extractor</strong> browser extension (formerly "Email Code Extractor"). 
+              This Privacy Policy applies to the <strong>Email Code Extractor</strong> browser extension. 
               I respect your privacy and am committed to protecting it. This extension was architected with a "privacy-first" approach, 
               meaning your data stays on your device.
             </p>
@@ -85,7 +78,7 @@
             <p class="about-text">
               The extension operates entirely locally within your browser. It scans the visible text of your Gmail inbox 
               solely for the purpose of identifying numeric verification patterns (such as "Code: 123456"). This processing 
-              happens in your computer's Random Access Memory (RAM) and is discarded immediately.
+              happens in your computer's Random Access Memory (RAM) and is discarded immediately after use.
             </p>
             <ul class="about-list">
               <li>We do not have servers.</li>
@@ -96,7 +89,7 @@
 
           <div class="about-section">
             <h3 class="about-section-title">2. Permissions Usage</h3>
-            <p class="about-text">To function correctly, Email Code Extractor requires specific browser permissions:</p>
+            <p class="about-text">To function correctly, the extension requires specific browser permissions:</p>
             <ul class="about-list">
               <li><strong>Host Permission (mail.google.com):</strong> Required to inject the script that identifies codes and adds the "Copy" button UI to your inbox rows.</li>
               <li><strong>ClipboardWrite:</strong> Required to execute the copy command when (and only when) you click the extension icon.</li>
@@ -117,7 +110,7 @@
             </p>
             <ul class="about-list">
               <li><strong>Developer:</strong> Thomas Askharoun</li>
-              <li><strong>Email:</strong> askharoun2005@gmail.com</li>
+              <li><strong>Email:</strong> <a href="mailto:askharoun2005@gmail.com" style="color: var(--primary); text-decoration: none;">askharoun2005@gmail.com</a></li>
             </ul>
           </div>
 
@@ -135,7 +128,9 @@
       
       <div class="footer-center">
         <a target="_blank" href="https://askharoun.github.io/askharoun.dev/images/Askharoun_Thomas_Current_Resume.pdf" class="resume-button">
-          <span class="button-text">View Resume</span>
+          <div class="button-content">
+             <span class="button-text">View Resume</span>
+          </div>
         </a>
       </div>
       
