@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Privacy Policy - CodeLift | askharoun.dev</title>
+    <style>
+        /* THEME CONFIGURATION 
+           I've set this to a modern "Developer Dark Mode" to match the .dev aesthetic.
+           If your site is light mode, simply swap the --bg-color and --text-color values.
+        */
+        :root {
+            --bg-color: #0a0a0a;       /* Deep Black/Grey */
+            --card-bg: #171717;        /* Slightly lighter for cards */
+            --text-color: #e5e5e5;     /* Off-white for readability */
+            --text-muted: #a3a3a3;     /* Muted grey for footers/subtitles */
+            --accent-color: #3b82f6;   /* A nice tech blue (Change this to your brand color) */
+            --font-main: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            --font-mono: "SF Mono", "Fira Code", Consolas, "Courier New", monospace;
+            --max-width: 800px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: var(--font-main);
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* --- HEADER (Matches your site nav) --- */
+        header {
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #333;
+        }
+
+        .logo {
+            font-family: var(--font-mono);
+            font-weight: 700;
+            font-size: 1.2rem;
+            letter-spacing: -0.5px;
+            text-transform: uppercase;
+            color: var(--text-color);
+            text-decoration: none;
+        }
+
+        nav ul {
+            display: flex;
+            gap: 20px;
+            list-style: none;
+        }
+
+        nav a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.95rem;
+            transition: color 0.2s;
+        }
+
+        nav a:hover {
+            color: var(--accent-color);
+        }
+
+        /* --- MAIN CONTENT --- */
+        main {
+            flex: 1;
+            width: 100%;
+            max-width: var(--max-width);
+            margin: 60px auto;
+            padding: 0 20px;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-weight: 800;
+        }
+
+        .last-updated {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-bottom: 40px;
+            display: block;
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            margin-top: 40px;
+            margin-bottom: 15px;
+            color: var(--text-color);
+            border-bottom: 1px solid #333;
+            padding-bottom: 10px;
+        }
+
+        p {
+            margin-bottom: 20px;
+            color: #d4d4d4;
+        }
+
+        ul {
+            margin-bottom: 20px;
+            padding-left: 20px;
+            color: #d4d4d4;
+        }
+
+        li {
+            margin-bottom: 10px;
+        }
+
+        /* --- FOOTER (Matches your site footer) --- */
+        footer {
+            background-color: var(--card-bg);
+            padding: 60px 20px;
+            margin-top: auto;
+            border-top: 1px solid #333;
+            font-size: 0.9rem;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 40px;
+        }
+
+        .footer-col h3 {
+            font-family: var(--font-mono);
+            font-size: 1rem;
+            margin-bottom: 20px;
+            color: var(--text-color);
+        }
+
+        .footer-col p, .footer-col a {
+            color: var(--text-muted);
+            display: block;
+            margin-bottom: 10px;
+            text-decoration: none;
+        }
+
+        .footer-col a:hover {
+            color: var(--accent-color);
+        }
+
+        .copyright {
+            text-align: center;
+            margin-top: 60px;
+            color: #555;
+            font-size: 0.8rem;
+        }
+
+        /* Mobile Adjustments */
+        @media (max-width: 600px) {
+            header {
+                flex-direction: column;
+                gap: 20px;
+            }
+            nav ul {
+                gap: 15px;
+                font-size: 0.85rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <a href="https://askharoun.dev" class="logo">ASKHAROUN.DEV</a>
+        <nav>
+            <ul>
+                <li><a href="https://askharoun.dev/#about">About</a></li>
+                <li><a href="https://askharoun.dev/#projects">Projects</a></li>
+                <li><a href="https://askharoun.dev/#experience">Experience</a></li>
+                <li><a href="https://askharoun.dev/#contact">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <h1>Privacy Policy</h1>
+        <span class="last-updated">Last Updated: December 2025</span>
+
+        <p>
+            This Privacy Policy applies to the <strong>CodeLift</strong> browser extension (formerly "Email Code Extractor"). 
+            We respect your privacy and are committed to protecting it. This extension was built with a "privacy-first" architecture, 
+            meaning your data stays on your device.
+        </p>
+
+        <h2>1. Data Collection</h2>
+        <p>
+            <strong>CodeLift does not collect, store, or transmit any personal data.</strong>
+        </p>
+        <p>
+            The extension operates entirely locally within your browser. It scans the visible text of your Gmail inbox 
+            solely for the purpose of identifying numeric verification patterns (such as "Code: 123456"). This processing 
+            happens in your computer's Random Access Memory (RAM) and is discarded immediately after the tab is closed or refreshed.
+        </p>
+        <ul>
+            <li>We do not have servers.</li>
+            <li>We do not use analytics or tracking cookies.</li>
+            <li>We do not read your emails other than scanning the inbox subject/snippet lines for numeric codes.</li>
+        </ul>
+
+        <h2>2. Permissions Usage</h2>
+        <p>To function correctly, CodeLift requires specific browser permissions. Here is how we use them:</p>
+        <ul>
+            <li><strong>Host Permission (mail.google.com):</strong> Required to inject the script that identifies codes and adds the "Copy" button to your inbox rows.</li>
+            <li><strong>ClipboardWrite:</strong> Required to copy the detected code to your clipboard when (and only when) you click the extension icon.</li>
+        </ul>
+
+        <h2>3. Third-Party Services</h2>
+        <p>
+            This extension does not integrate with any third-party APIs, ad networks, or data brokers.
+        </p>
+
+        <h2>4. Contact Us</h2>
+        <p>
+            If you have any questions about this Privacy Policy or the practices of this extension, please contact:
+        </p>
+        <p>
+            <strong>Thomas Askharoun</strong><br>
+            Email: <a href="mailto:askharoun2005@gmail.com" style="color: var(--accent-color);">askharoun2005@gmail.com</a>
+        </p>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-col">
+                <h3>THOMAS ASKHAROUN</h3>
+                <p>Electrical Engineering Student @ Penn State</p>
+                <p>Location: State College, PA</p>
+            </div>
+            <div class="footer-col">
+                <h3>CONNECT</h3>
+                <a href="mailto:askharoun2005@gmail.com">askharoun2005@gmail.com</a>
+                <a href="https://linkedin.com/in/thomasaskharoun">LinkedIn</a>
+                <a href="https://instagram.com/tommy.much">Instagram</a>
+            </div>
+            <div class="footer-col">
+                <h3>RESOURCES</h3>
+                <a href="https://askharoun.dev">Main Website</a>
+                <a href="#">View Resume</a>
+            </div>
+        </div>
+        <div class="copyright">
+            &copy; 2025 Thomas Askharoun. This site was designed with the future in mind.
+        </div>
+    </footer>
+
+</body>
+</html>
