@@ -27,11 +27,59 @@
             font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
             background: var(--bg-dark);
             color: var(--text-primary);
-            overflow-x: hidden;
+            overflow-x: hidden; /* Prevent scrolling while loading if needed via JS */
             line-height: 1.47059;
             font-weight: 400;
             letter-spacing: -0.022em;
         }
+
+        /* --- FULL PAGE LOADER STYLES --- */
+        #page-loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: var(--bg-dark);
+            z-index: 9999; /* Top of everything */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.8s ease, visibility 0.8s;
+        }
+
+        #page-loader.hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        .loader-crest {
+            width: 100px;
+            height: auto;
+            animation: spin 2s cubic-bezier(0.4, 0, 0.2, 1) infinite; /* Smooth spin */
+            margin-bottom: 20px;
+        }
+
+        .loader-text {
+            color: var(--red-primary);
+            font-size: 14px;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+        /* --- END LOADER STYLES --- */
 
         header {
             position: fixed;
@@ -443,6 +491,11 @@
     </style>
 </head>
 <body>
+    <div id="page-loader">
+        <img src="Triangle_Fraternity_Crest.png" alt="Loading..." class="loader-crest">
+        <div class="loader-text">Loading Paddle...</div>
+    </div>
+
     <header>
         <img src="Triangle_Fraternity_Crest.png" alt="Triangle Fraternity Crest" class="crest-logo" onclick="scrollToTop()">
     </header>
@@ -479,7 +532,6 @@
         <div class="gift-message-section">
             <h2 class="gift-message-title">A message for you</h2>
             <div class="gift-message-content">
-<!-- EDIT THIS MESSAGE BELOW -->
 Hey Moose,
 
 This paddle is more than wood and paint. It's our brotherhood, the traditions we share, and the bond between big and little.
@@ -490,8 +542,7 @@ Thanks for being an incredible big and showing me what brotherhood really is.
 
 Your little
 
-<!-- EDIT THIS MESSAGE ABOVE -->
-            </div>
+</div>
         </div>
     </section>
 
@@ -551,6 +602,7 @@ Your little
         const container = document.getElementById('paddle-container');
         const fadeElements = document.querySelectorAll('.fade-in');
         const scrollToTopBtn = document.getElementById('scroll-to-top');
+        const pageLoader = document.getElementById('page-loader');
 
         // Scroll to top function
         function scrollToTop() {
@@ -669,11 +721,22 @@ Your little
         // Initialize
         updatePaddle();
 
-        // Handle model-viewer load
+        // --- MAIN LOADING LOGIC ---
+        // Triggered when the GLB is fully loaded and ready to render
         viewer.addEventListener('load', () => {
             viewer.setAttribute('camera-orbit', '0deg 0deg 150%');
             viewer.setAttribute('field-of-view', '45deg');
+            
+            // Reveal the page
+            pageLoader.classList.add('hidden');
         });
+        
+        // Safety Fallback: If model fails to load in 10 seconds, show the page anyway
+        setTimeout(() => {
+            if(!pageLoader.classList.contains('hidden')) {
+                pageLoader.classList.add('hidden');
+            }
+        }, 10000);
 
         // Initialize mini viewer - keep it centered until touched
         const miniViewer = document.getElementById('mini-paddle-viewer');
