@@ -33,52 +33,25 @@
   </noscript>
 
   <style>
-    /* --- CRITICAL FIX: Global Box Sizing --- */
-    /* This ensures padding doesn't expand the element width, keeping things centered */
+    /* --- Layout Fixes --- */
     * {
       box-sizing: border-box;
     }
 
-    /* Fallback variables in case style.css doesn't load them */
-    :root {
-      --space-sm: 0.5rem;
-      --space-md: 1rem;
-      --space-lg: 2rem;
-      --space-xl: 3rem;
-      --space-xxl: 5rem;
-      --text-primary: #111;
-      --text-secondary: #555;
-      --primary: #00ff88;
-      --primary-rgb: 0, 255, 136;
-      --surface: #ffffff;
-      --background: #f4f4f4;
-      --border: #ddd;
-      --shadow: rgba(0,0,0,0.1);
-      --font-heading: 'Orbitron', sans-serif;
-    }
-
-    /* Dark mode overrides (if needed) - assumes script handles class */
-    body.dark-mode {
-      --text-primary: #fff;
-      --text-secondary: #aaa;
-      --surface: #1a1a1a;
-      --background: #111;
-      --border: #333;
-    }
-
     body {
       width: 100%;
-      overflow-x: hidden; /* Prevents horizontal scroll shift */
+      overflow-x: hidden;
       margin: 0;
     }
 
+    /* Page-Specific Styles */
     main.extractor-main {
       padding-top: 100px;
       min-height: 100vh;
       width: 100%;
       display: flex;
       flex-direction: column;
-      align-items: center; /* Forces main content to center column */
+      align-items: center;
     }
 
     .extractor-hero {
@@ -87,7 +60,7 @@
       width: 100%;
       display: flex;
       flex-direction: column;
-      align-items: center; /* Centers hero content explicitly */
+      align-items: center;
     }
 
     .extractor-hero-inner {
@@ -138,7 +111,7 @@
       border: 1px solid var(--border);
       background: var(--surface);
       text-decoration: none;
-      transition: all 0.3s ease;
+      transition: all var(--transition-normal);
       box-shadow: 0 8px 20px var(--shadow);
     }
 
@@ -182,7 +155,7 @@
       border: 1px solid var(--border);
       box-shadow: 0 8px 25px var(--shadow);
       padding: var(--space-xl);
-      width: 100%; /* Ensures it fills grid cell */
+      width: 100%;
     }
 
     .extractor-card h2 {
@@ -261,7 +234,7 @@
       border: 2px solid var(--text-secondary);
       border-radius: 3px;
       opacity: 0.5;
-      flex-shrink: 0; /* Prevents squishing */
+      flex-shrink: 0;
     }
 
     .gmail-content {
@@ -269,7 +242,7 @@
       display: flex;
       flex-direction: column;
       gap: 4px;
-      min-width: 0; /* CRITICAL: Allows flex child to truncate text properly */
+      min-width: 0;
     }
 
     .gmail-sender {
@@ -294,18 +267,19 @@
       padding: 6px 12px;
       border-radius: 6px;
       cursor: default;
-      box-shadow: 0 0 15px rgba(var(--primary-rgb), 0.4);
+      /* Soft glow using primary color */
+      box-shadow: 0 0 10px var(--primary); 
       animation: pulse 2s infinite;
       display: flex;
       align-items: center;
       gap: 6px;
-      flex-shrink: 0; /* Button stays visible */
+      flex-shrink: 0;
     }
 
     @keyframes pulse {
-      0% { box-shadow: 0 0 0 0 rgba(0, 255, 136, 0.4); }
-      70% { box-shadow: 0 0 0 10px rgba(0, 255, 136, 0); }
-      100% { box-shadow: 0 0 0 0 rgba(0, 255, 136, 0); }
+      0% { box-shadow: 0 0 0 0 var(--primary); }
+      70% { box-shadow: 0 0 0 6px rgba(0,0,0,0); } /* Fades out */
+      100% { box-shadow: 0 0 0 0 rgba(0,0,0,0); }
     }
 
     .extractor-preview-caption {
@@ -347,18 +321,18 @@
       max-width: 100%;
       height: auto;
       display: block;
-      margin-left: auto; /* Centers image block */
+      margin-left: auto;
       margin-right: auto;
     }
 
-    /* --- MOBILE & TABLET FIXES --- */
+    /* --- Responsive Breakpoints --- */
     @media (max-width: 900px) {
       .extractor-layout {
         grid-template-columns: 1fr;
-        padding: 0 20px; /* Explicit padding for mobile */
+        padding: 0 20px;
       }
       .extractor-hero {
-        padding: 120px 20px 40px; /* Adjust top padding for header */
+        padding: 120px 20px 40px;
       }
     }
 
@@ -369,8 +343,6 @@
       .extractor-title {
         font-size: 1.8rem;
       }
-      
-      /* On very small screens, let the gmail row wrap so it doesn't push off screen */
       .gmail-mock-row {
         flex-wrap: wrap;
       }
