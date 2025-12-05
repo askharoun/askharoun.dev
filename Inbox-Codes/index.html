@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script type="text/javascript">
+    (function(c,l,a,r,i,t,y){
+        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+    })(window, document, "clarity", "script", "rmcsekaion");
+  </script>
+
+  <title>Email Code Extractor | askharoun.dev</title>
+
+  <meta name="description" content="Email Code Extractor is a Chrome extension that detects OTP/2FA codes in your Gmail inbox and lets you copy them without opening the email.">
+
+  <meta property="og:title" content="Email Code Extractor – One-Click OTP Copy" />
+  <meta property="og:description" content="Automatically detects OTP codes in Gmail rows and allows one-click copying. Privacy-first and local." />
+  <meta property="og:image" content="https://askharoun.dev/images/extractor-logo-no-bg.png" />
+  <meta property="og:url" content="https://askharoun.dev/email-extractor" />
+  <meta property="og:type" content="website" />
+
+  <link rel="canonical" href="https://askharoun.dev/email-extractor">
+
+  <link rel="icon" href="https://askharoun.dev/favicon.ico">
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="images/favicon.png" type="image/x-icon">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+  <noscript>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+  </noscript>
+
+  <style>
+    main.extractor-main {
+      padding-top: 100px;
+      min-height: 100vh;
+    }
+
+    .extractor-hero {
+      padding: var(--space-xxl) var(--space-lg) var(--space-xl);
+      text-align: center;
+    }
+
+    .extractor-hero-inner {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .extractor-title {
+      font-size: 2.5rem;
+      font-family: var(--font-heading);
+      color: var(--text-primary);
+      margin-bottom: var(--space-sm);
+    }
+
+    .extractor-tagline {
+      font-size: 1.05rem;
+      color: var(--text-secondary);
+      max-width: 650px;
+      margin: 0 auto;
+    }
+
+    .extractor-tagline strong {
+      color: var(--primary);
+    }
+
+    .extractor-store-block {
+      margin-top: var(--space-lg);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .extractor-store-label {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+    }
+
+    .extractor-store-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.5rem 1.2rem;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      text-decoration: none;
+      transition: all var(--transition-normal);
+      box-shadow: 0 8px 20px var(--shadow);
+    }
+
+    .extractor-store-link:hover {
+      transform: translateY(-1px);
+      border-color: var(--primary);
+      box-shadow: 0 10px 26px var(--shadow);
+    }
+
+    .extractor-store-logo {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      object-fit: contain;
+    }
+
+    .extractor-store-text-main {
+      font-size: 0.9rem;
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+
+    .extractor-store-text-sub {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+    }
+
+    .extractor-layout {
+      max-width: 1100px;
+      margin: 0 auto var(--space-xxl);
+      padding: 0 var(--space-lg);
+      display: grid;
+      gap: var(--space-xl);
+      grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+    }
+
+    @media (max-width: 900px) {
+      .extractor-layout {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .extractor-card {
+      background: var(--surface);
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      box-shadow: 0 8px 25px var(--shadow);
+      padding: var(--space-xl);
+    }
+
+    .extractor-card h2 {
+      font-size: 1.4rem;
+      font-family: var(--font-heading);
+      color: var(--text-primary);
+      margin-bottom: 0.4rem;
+    }
+
+    .extractor-card p {
+      font-size: 0.95rem;
+      color: var(--text-secondary);
+      line-height: 1.7;
+      margin-bottom: 0.6rem;
+    }
+
+    .extractor-list {
+      font-size: 0.95rem;
+      color: var(--text-secondary);
+      padding-left: 1.1rem;
+      margin: 0.4rem 0 0;
+    }
+
+    .extractor-list li {
+      margin-bottom: 0.3rem;
+    }
+
+    .extractor-meta {
+      margin-top: var(--space-md);
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--space-sm);
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+    }
+
+    @media (max-width: 600px) {
+      .extractor-meta {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .extractor-meta-item strong {
+      display: block;
+      font-family: var(--font-heading);
+      font-size: 0.8rem;
+      color: var(--text-primary);
+      margin-bottom: 0.15rem;
+    }
+
+    /* --- Visual Preview specific for Email Extractor --- */
+    .extractor-preview-box {
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: radial-gradient(circle at top left, rgba(255,255,255,0.06), transparent),
+                  var(--background);
+      padding: var(--space-md);
+      min-height: 200px;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      justify-content: center;
+    }
+
+    .gmail-mock-row {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+      position: relative;
+    }
+
+    .gmail-checkbox {
+      width: 16px;
+      height: 16px;
+      border: 2px solid var(--text-secondary);
+      border-radius: 3px;
+      opacity: 0.5;
+    }
+
+    .gmail-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .gmail-sender {
+      font-weight: 700;
+      font-size: 0.85rem;
+      color: var(--text-primary);
+    }
+
+    .gmail-subject {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* The glowing "Copy" button simulation */
+    .extractor-btn-mock {
+      background: var(--primary);
+      color: #000;
+      font-weight: 600;
+      font-size: 0.75rem;
+      padding: 6px 12px;
+      border-radius: 6px;
+      cursor: default;
+      box-shadow: 0 0 15px rgba(var(--primary-rgb), 0.4);
+      animation: pulse 2s infinite;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    @keyframes pulse {
+      0% { box-shadow: 0 0 0 0 rgba(0, 255, 136, 0.4); }
+      70% { box-shadow: 0 0 0 10px rgba(0, 255, 136, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(0, 255, 136, 0); }
+    }
+
+    .extractor-preview-caption {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      text-align: center;
+      margin-top: 0.5rem;
+    }
+
+    .extractor-screenshot-box {
+      margin-top: var(--space-md);
+      border-radius: 14px;
+      border: 1px dashed var(--border);
+      padding: var(--space-md);
+      background: var(--background);
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .extractor-screenshot-box h3 {
+      font-size: 0.9rem;
+      font-family: var(--font-heading);
+      color: var(--text-primary);
+      margin: 0;
+    }
+
+    .extractor-screenshot-box p {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      margin: 0;
+    }
+
+    .extractor-screenshot-img {
+      margin-top: 0.5rem;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      max-width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    @media (max-width: 768px) {
+      .extractor-hero {
+        padding: var(--space-xxl) var(--space-md) var(--space-xl);
+      }
+      .extractor-title {
+        font-size: 2.1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo-container">
+      <a href="index.html" class="logo-text">ASKHAROUN.DEV</a>
+    </div>
+
+    <nav>
+      <ul>
+        <li><a href="index.html#about" class="nav-link">About</a></li>
+        <li><a href="index.html#projects" class="nav-link">Projects</a></li>
+        <li><a href="index.html#projects" class="nav-link">Certifications</a></li>
+        <li><a href="index.html#experience" class="nav-link">Experience</a></li>
+        <li><a href="index.html#contact" class="nav-link">Contact</a></li>
+      </ul>
+    </nav>
+
+    <div class="theme-toggle-container">
+      <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode"></button>
+    </div>
+
+    <div class="menu-toggle">
+      <div class="bar"></div>
+      <div class="bar"></div>
+      <div class="bar"></div>
+    </div>
+  </header>
+
+  <main class="extractor-main">
+    <section class="extractor-hero">
+      <div class="extractor-hero-inner">
+        <h1 class="extractor-title">Email Code Extractor</h1>
+        <p class="extractor-tagline">
+          Automatically detect and copy <strong>OTP/2FA codes</strong> directly from your Gmail inbox list.
+          Stop opening emails just to get a six-digit code.
+        </p>
+
+        <div class="extractor-store-block">
+          <div class="extractor-store-label">Available on the Chrome Web Store</div>
+
+          <a
+            class="extractor-store-link"
+            href="#" 
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+             <img
+              class="extractor-store-logo"
+              src="icons/icon128.png"
+              alt="Email Extractor logo"
+            >
+            <div>
+              <div class="extractor-store-text-main">Get Email Code Extractor</div>
+              <div class="extractor-store-text-sub">Add to Chrome (Free)</div>
+            </div>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section class="extractor-layout">
+      <section class="extractor-card">
+        <h2>What it does</h2>
+        <p>
+          Logging into websites usually involves a "verify your email" step. This disrupts your flow by forcing you to open the email, find the code, copy it, and go back.
+        </p>
+        <p>
+            <strong>Email Code Extractor</strong> solves this by scanning your inbox rows for patterns like "Code: 123456" and giving you a button to copy it instantly.
+        </p>
+        <ul class="extractor-list">
+          <li>Detects numeric verification codes in subject lines/snippets.</li>
+          <li>Adds a "Copy Code" button directly to the Gmail inbox row.</li>
+          <li>Copies to clipboard instantly with one click.</li>
+          <li><strong>Privacy First:</strong> Runs entirely locally in RAM. No data is stored or sent.</li>
+        </ul>
+
+        <h2 style="margin-top: var(--space-lg);">Tech and Privacy</h2>
+        <p>
+          I built this to streamline the 2FA process while maintaining strict data privacy standards.
+        </p>
+        <div class="extractor-meta">
+          <div class="extractor-meta-item">
+            <strong>Tech stack</strong>
+            <span>Manifest V3, JavaScript, Regex</span>
+          </div>
+          <div class="extractor-meta-item">
+            <strong>Permissions</strong>
+            <span>clipboardWrite, mail.google.com</span>
+          </div>
+          <div class="extractor-meta-item">
+            <strong>Privacy</strong>
+            <span><a href="privacy-policy.html" style="color:var(--primary);">View Policy</a> (Local processing only)</span>
+          </div>
+          <div class="extractor-meta-item">
+            <strong>What I learned</strong>
+            <span>DOM Injection, Regex patterns, Clipboard API</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="extractor-card">
+        <h2>How it looks in action</h2>
+        <p>
+          Instead of clicking into an email, you'll see a button right in your inbox list. One click and the code is in your clipboard.
+        </p>
+
+        <div class="extractor-preview-box">
+            
+          <div class="gmail-mock-row" style="opacity: 0.6;">
+            <div class="gmail-checkbox"></div>
+            <div class="gmail-content">
+                <div class="gmail-sender">Newsletter Weekly</div>
+                <div class="gmail-subject">Top 10 coding tips for 2025...</div>
+            </div>
+          </div>
+
+          <div class="gmail-mock-row">
+            <div class="gmail-checkbox"></div>
+            <div class="gmail-content">
+                <div class="gmail-sender">GitHub Authentication</div>
+                <div class="gmail-subject">Your verification code is 849-201</div>
+            </div>
+            <div class="extractor-btn-mock">
+                <span>Copy: 849201</span>
+            </div>
+          </div>
+
+          <div class="gmail-mock-row" style="opacity: 0.6;">
+            <div class="gmail-checkbox"></div>
+            <div class="gmail-content">
+                <div class="gmail-sender">Professor Smith</div>
+                <div class="gmail-subject">Lab Report Due Date Update</div>
+            </div>
+          </div>
+
+          <p class="extractor-preview-caption">
+            The extension identifies the code in the snippet and injects a button.
+          </p>
+        </div>
+
+        <div class="extractor-screenshot-box">
+          <h3>Real screenshot</h3>
+          <p>Here’s the extension running on my actual Gmail inbox:</p>
+          <img
+            src="images/extractor-screenshot.jpg"
+            alt="Screenshot of Email Code Extractor in Gmail"
+            class="extractor-screenshot-img"
+          >
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <footer>
+    <div class="footer-content">
+      <div class="footer-left">
+        <div class="footer-logo">askharoun.dev</div>
+        <div class="footer-subtitle">Electrical Engineering Student @ Penn State</div>
+      </div>
+
+      <div class="footer-center">
+        <a target="_blank" href="https://askharoun.github.io/askharoun.dev/images/Askharoun_Thomas_Current_Resume.pdf" class="resume-button">
+          <span class="button-text">View Resume</span>
+        </a>
+      </div>
+
+      <div class="footer-right">
+        <div class="footer-contact">
+          <div class="contact-item">
+            <span class="contact-label">Email:</span>
+            <span class="contact-value">askharoun2005@gmail.com</span>
+          </div>
+          <div class="contact-item">
+            <span class="contact-label">Phone:</span>
+            <span class="contact-value">(484) 510-6083</span>
+          </div>
+          <div class="contact-item">
+            <span class="contact-label">Location:</span>
+            <span class="contact-value">State College, PA</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p>This site was designed with the future in mind. All trademarks belong to their respective owners.</p>
+      <p style="margin-top: 0.5rem; font-size: 0.8rem;">
+        Project: Email Code Extractor – <a href="privacy-policy.html" style="color: inherit; text-decoration: underline;">Privacy Policy</a>
+      </p>
+    </div>
+  </footer>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const themeToggle = document.getElementById('themeToggle');
+      const body = document.body;
+
+      const currentTheme = localStorage.getItem('theme') || 'light';
+      if (currentTheme === 'dark') {
+        body.classList.add('dark-mode');
+      } else {
+        body.classList.remove('dark-mode');
+      }
+
+      if (themeToggle) {
+        themeToggle.addEventListener('click', function() {
+          body.classList.toggle('dark-mode');
+          const newTheme = body.classList.contains('dark-mode') ? 'dark' : 'light';
+          localStorage.setItem('theme', newTheme);
+        });
+      }
+
+      const menuToggle = document.querySelector('.menu-toggle');
+      const nav = document.querySelector('nav');
+
+      if (menuToggle && nav) {
+        menuToggle.addEventListener('click', function() {
+          menuToggle.classList.toggle('active');
+          nav.classList.toggle('active');
+        });
+
+        const navLinks = document.querySelectorAll('.nav-link');
+        navLinks.forEach(link => {
+          link.addEventListener('click', function() {
+            menuToggle.classList.remove('active');
+            nav.classList.remove('active');
+          });
+        });
+
+        document.addEventListener('click', function(event) {
+          if (!nav.contains(event.target) && !menuToggle.contains(event.target)) {
+            menuToggle.classList.remove('active');
+            nav.classList.remove('active');
+          }
+        });
+      }
+
+      const header = document.querySelector('header');
+      if (header) {
+        window.addEventListener('scroll', function() {
+          const currentScroll = window.pageYOffset;
+          if (currentScroll > 50) {
+            header.classList.add('scrolled');
+          } else {
+            header.classList.remove('scrolled');
+          }
+        });
+      }
+    });
+  </script>
+</body>
+</html>
