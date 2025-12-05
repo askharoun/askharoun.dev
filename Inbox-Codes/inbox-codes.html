@@ -33,7 +33,7 @@
   </noscript>
 
   <style>
-    /* --- Layout Fixes --- */
+    /* --- Global Layout Fixes --- */
     * {
       box-sizing: border-box;
     }
@@ -259,27 +259,42 @@
       text-overflow: ellipsis;
     }
 
-    .extractor-btn-mock {
-      background: var(--primary);
-      color: #000;
-      font-weight: 600;
-      font-size: 0.75rem;
-      padding: 6px 12px;
-      border-radius: 6px;
-      cursor: default;
-      /* Soft glow using primary color */
-      box-shadow: 0 0 10px var(--primary); 
-      animation: pulse 2s infinite;
+    /* --- NEW COPY BUTTON STYLE (ICON) --- */
+    .extractor-copy-btn {
+      background: transparent;
+      border: 2px solid transparent;
+      color: var(--text-secondary);
+      cursor: default; /* Keep default unless it's the live app */
+      padding: 8px;
+      border-radius: 8px;
       display: flex;
       align-items: center;
-      gap: 6px;
+      justify-content: center;
       flex-shrink: 0;
+      transition: all 0.2s ease;
     }
 
-    @keyframes pulse {
-      0% { box-shadow: 0 0 0 0 var(--primary); }
-      70% { box-shadow: 0 0 0 6px rgba(0,0,0,0); } /* Fades out */
-      100% { box-shadow: 0 0 0 0 rgba(0,0,0,0); }
+    /* Hover effect to simulate interactivity */
+    .extractor-copy-btn:hover {
+      background: rgba(0,0,0,0.05);
+      color: var(--primary);
+    }
+    
+    /* Dark mode hover support */
+    body.dark-mode .extractor-copy-btn:hover {
+      background: rgba(255,255,255,0.1);
+    }
+
+    /* Pulse animation for the button to draw attention */
+    .extractor-copy-btn.pulse {
+      animation: iconPulse 2s infinite;
+      color: var(--primary); /* Highlight color */
+    }
+
+    @keyframes iconPulse {
+      0% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.1); opacity: 0.8; }
+      100% { transform: scale(1); opacity: 1; }
     }
 
     .extractor-preview-caption {
@@ -346,8 +361,8 @@
       .gmail-mock-row {
         flex-wrap: wrap;
       }
-      .extractor-btn-mock {
-        margin-top: 4px;
+      .extractor-copy-btn {
+        margin-left: auto; /* Pushes icon to right on mobile wrap */
       }
     }
   </style>
@@ -473,9 +488,13 @@
                 <div class="gmail-sender">GitHub Authentication</div>
                 <div class="gmail-subject">Your verification code is 849-201</div>
             </div>
-            <div class="extractor-btn-mock">
-                <span>Copy: 849201</span>
-            </div>
+            
+            <button class="extractor-copy-btn pulse" aria-label="Copy code">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                </svg>
+            </button>
           </div>
 
           <div class="gmail-mock-row" style="opacity: 0.6;">
@@ -487,7 +506,7 @@
           </div>
 
           <p class="extractor-preview-caption">
-            The extension identifies the code in the snippet and injects a button.
+            The extension identifies the code in the snippet and injects a copy button.
           </p>
         </div>
 
