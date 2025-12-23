@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PixelPaste</title>
+  <link rel="stylesheet" href="popup.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <main>
+    <div class="header-compact">
+      <h2 class="title">PIXELPASTE</h2>
+    </div>
+
+    <div class="panel">
+      <div id="dropzone" class="dropzone" tabindex="0">
+        <div class="drop-content">
+          <strong>PASTE OR DROP</strong>
+        </div>
+      </div>
+
+      <div class="canvas-wrap" id="canvasWrap">
+        <span class="preview-label">PREVIEW</span>
+        <canvas id="canvas"></canvas>
+      </div>
+
+      <div class="controls-grid">
+        
+        <button id="btnPick" class="btn-icon" title="Upload Image">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+          <input id="fileInput" type="file" accept="image/*" hidden />
+        </button>
+
+        <div class="floating-input-group">
+          <input id="nameInput" type="text" placeholder=" " autocomplete="off" />
+          <label for="nameInput">Filename</label>
+        </div>
+
+      </div>
+
+      <div class="controls-grid mt-sm">
+        
+        <div class="toggle-group">
+          <button class="toggle-btn active" data-val="image/png">PNG</button>
+          <button class="toggle-btn" data-val="image/jpeg">JPG</button>
+        </div>
+
+        <button id="btnFloat" class="btn-icon pip-btn" title="Pop out (Picture-in-Picture)" disabled>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+        </button>
+
+      </div>
+
+      <div class="action-group">
+        <button id="btnSave" class="btn primary" disabled>SAVE</button>
+        <button id="btnClear" class="btn secondary">CLEAR</button>
+      </div>
+
+      <div class="info-grid">
+        <div class="info-item">
+          <span class="cyber-label">DIMENSIONS</span>
+          <span class="cyber-value" id="metaSize">----</span>
+        </div>
+        <div class="info-item">
+          <span class="cyber-label">FORMAT</span>
+          <span class="cyber-value" id="metaType">----</span>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="branding-footer">
+    <div class="footer-content">
+      <span>Powered with</span>
+      <img src="images/favicon.png" alt="icon" class="footer-icon">
+      <span>by</span>
+      <a href="https://askharoun.dev/png.html" target="_blank">askharoun.dev</a>
+    </div>
+  </footer>
+
+  <script src="popup.js"></script>
+</body>
+</html>

@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script type="text/javascript">
+    (function(c,l,a,r,i,t,y){
+        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+    })(window, document, "clarity", "script", "rmcsekaion");
+  </script>
+
+  <title>PixelPaste Chrome Extension | askharoun.dev</title>
+
+  <meta name="description" content="PixelPaste is a Chrome extension that lets you instantly paste, rename, and save clipboard images as PNG or JPG. Includes floating Picture-in-Picture mode.">
+
+  <meta property="og:title" content="PixelPaste – Instant Clipboard to File & PiP" />
+  <meta property="og:description" content="Stop saving 'untitled.png'. Paste, rename, and save images instantly with PixelPaste. 100% Local processing." />
+  <meta property="og:image" content="https://askharoun.dev/images/icon-128.png" />
+  <meta property="og:url" content="https://askharoun.dev/pixelpaste" />
+  <meta property="og:type" content="website" />
+
+  <link rel="canonical" href="https://askharoun.dev/pixelpaste">
+
+  <link rel="icon" href="https://askharoun.dev/favicon.ico">
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="images/favicon.png" type="image/x-icon">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+  <noscript>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+  </noscript>
+
+  <style>
+    main.minitube-main {
+      padding-top: 100px;
+      min-height: 100vh;
+    }
+
+    .minitube-hero {
+      padding: var(--space-xxl) var(--space-lg) var(--space-xl);
+      text-align: center;
+    }
+
+    .minitube-hero-inner {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .minitube-title {
+      font-size: 2.5rem;
+      font-family: var(--font-heading);
+      color: var(--text-primary);
+      margin-bottom: var(--space-sm);
+    }
+
+    .minitube-tagline {
+      font-size: 1.05rem;
+      color: var(--text-secondary);
+      max-width: 650px;
+      margin: 0 auto;
+    }
+
+    .minitube-tagline strong {
+      color: var(--primary);
+    }
+
+    .minitube-store-block {
+      margin-top: var(--space-lg);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .minitube-store-label {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+    }
+
+    .minitube-store-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.5rem 1.2rem;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      text-decoration: none;
+      transition: all var(--transition-normal);
+      box-shadow: 0 8px 20px var(--shadow);
+    }
+
+    .minitube-store-link:hover {
+      transform: translateY(-1px);
+      border-color: var(--primary);
+      box-shadow: 0 10px 26px var(--shadow);
+    }
+
+    .minitube-store-logo {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      object-fit: contain;
+    }
+
+    .minitube-store-text-main {
+      font-size: 0.9rem;
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+
+    .minitube-store-text-sub {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+    }
+
+    .minitube-layout {
+      max-width: 1100px;
+      margin: 0 auto var(--space-xxl);
+      padding: 0 var(--space-lg);
+      display: grid;
+      gap: var(--space-xl);
+      grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+    }
+
+    @media (max-width: 900px) {
+      .minitube-layout {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .minitube-card {
+      background: var(--surface);
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      box-shadow: 0 8px 25px var(--shadow);
+      padding: var(--space-xl);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .minitube-card h2 {
+      font-size: 1.4rem;
+      font-family: var(--font-heading);
+      color: var(--text-primary);
+      margin-bottom: 0.4rem;
+    }
+
+    .minitube-card p {
+      font-size: 0.95rem;
+      color: var(--text-secondary);
+      line-height: 1.7;
+      margin-bottom: 0.6rem;
+    }
+
+    .minitube-list {
+      font-size: 0.95rem;
+      color: var(--text-secondary);
+      padding-left: 1.1rem;
+      margin: 0.4rem 0 0;
+    }
+
+    .minitube-list li {
+      margin-bottom: 0.3rem;
+    }
+
+    .minitube-meta {
+      margin-top: var(--space-md);
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--space-sm);
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+    }
+
+    @media (max-width: 600px) {
+      .minitube-meta {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .minitube-meta-item strong {
+      display: block;
+      font-family: var(--font-heading);
+      font-size: 0.8rem;
+      color: var(--text-primary);
+      margin-bottom: 0.15rem;
+    }
+
+    /* Style for the real screenshot */
+    .minitube-screenshot-img {
+      margin-top: 1rem;
+      margin-bottom: 1rem;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      max-width: 100%;
+      height: auto;
+      display: block;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    }
+
+    .privacy-link-container {
+        margin-top: auto; 
+        padding-top: var(--space-sm);
+    }
+    .privacy-link {
+        color: var(--text-secondary);
+        font-size: 0.9rem;
+        text-decoration: underline;
+        transition: color var(--transition-normal);
+    }
+    .privacy-link:hover {
+        color: var(--primary);
+    }
+
+    @media (max-width: 768px) {
+      .minitube-hero {
+        padding: var(--space-xxl) var(--space-md) var(--space-xl);
+      }
+      .minitube-title {
+        font-size: 2.1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo-container">
+      <a href="index.html" class="logo-text">ASKHAROUN.DEV</a>
+    </div>
+
+    <nav>
+      <ul>
+        <li><a href="index.html#about" class="nav-link">About</a></li>
+        <li><a href="index.html#projects" class="nav-link">Projects</a></li>
+        <li><a href="certifications.html" class="nav-link">Certifications</a></li>
+        <li><a href="index.html#experience" class="nav-link">Experience</a></li>
+        <li><a href="index.html#contact" class="nav-link">Contact</a></li>
+      </ul>
+    </nav>
+
+    <div class="theme-toggle-container">
+      <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode"></button>
+    </div>
+
+    <div class="menu-toggle">
+      <div class="bar"></div>
+      <div class="bar"></div>
+      <div class="bar"></div>
+    </div>
+  </header>
+
+  <main class="minitube-main">
+    <section class="minitube-hero">
+      <div class="minitube-hero-inner">
+        <h1 class="minitube-title">PixelPaste – Instant Clipboard to File</h1>
+        <p class="minitube-tagline">
+          A Chrome extension to instantly paste clipboard images, rename them, and save as PNG or JPG.
+          <strong>100% Local processing</strong> with floating PiP mode.
+        </p>
+
+        <div class="minitube-store-block">
+          <div class="minitube-store-label">Available on the Chrome Web Store</div>
+
+          <a
+            class="minitube-store-link"
+            href="https://chromewebstore.google.com/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <img
+              class="minitube-store-logo"
+              src="images/icon-128.png"
+              alt="PixelPaste logo"
+            >
+            <div>
+              <div class="minitube-store-text-main">Open PixelPaste on Chrome Web Store</div>
+              <div class="minitube-store-text-sub">Click to install directly in Chrome</div>
+            </div>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section class="minitube-layout">
+      <section class="minitube-card">
+        <h2>Workflow Evolved</h2>
+        <p>
+          I built PixelPaste because I was tired of opening Photoshop just to save a screenshot as a specific file. It streamlines the process of capturing and organizing visual assets.
+        </p>
+        <ul class="minitube-list">
+          <li><strong>Instant Capture:</strong> Just hit Ctrl+V. The image appears instantly.</li>
+          <li><strong>Smart Renaming:</strong> Type a filename and hit Enter to save.</li>
+          <li><strong>Dual Formats:</strong> Toggle between PNG (lossless) and JPG (smaller size).</li>
+          <li><strong>100% Privacy:</strong> Runs entirely offline in your browser.</li>
+        </ul>
+
+        <h2 style="margin-top: var(--space-lg);">Tech stack and permissions</h2>
+        <p>
+          Built with modern web technologies focused on performance and privacy.
+        </p>
+        <div class="minitube-meta">
+          <div class="minitube-meta-item">
+            <strong>Tech stack</strong>
+            <span>Manifest V3, JavaScript, Canvas API</span>
+          </div>
+          <div class="minitube-meta-item">
+            <strong>Permissions</strong>
+            <span>activeTab, scripting (for PiP function)</span>
+          </div>
+          <div class="minitube-meta-item">
+            <strong>Privacy Focus</strong>
+            <span>No analytics, no external server calls</span>
+          </div>
+          <div class="minitube-meta-item">
+            <strong>Role</strong>
+            <span>Full Stack Developer & Designer</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="minitube-card">
+        <h2>Picture-in-Picture Mode</h2>
+        <p>
+          Need to reference a diagram while coding or writing? PixelPaste includes a unique "Float" feature that injects your image into the current webpage as a draggable overlay.
+        </p>
+        <p>
+            The floating window stays on top of your work until you close it, acting like a seamless "second monitor" experience inside a single browser window.
+        </p>
+
+        <img 
+          src="images/pip-screenshot.png" 
+          alt="Real screenshot of Picture in Picture mode" 
+          class="minitube-screenshot-img"
+        >
+
+        <div class="privacy-link-container">
+            <a href="privacy-policy.html" class="privacy-link">View Privacy Policy</a>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <footer>
+    <div class="footer-content">
+      <div class="footer-left">
+        <div class="footer-logo">askharoun.dev</div>
+        <div class="footer-subtitle">Electrical Engineering Student @ Penn State</div>
+      </div>
+
+      <div class="footer-center">
+        <a target="_blank" href="https://askharoun.github.io/askharoun.dev/images/Askharoun_Thomas_Current_Resume.pdf" class="resume-button">
+          <span class="button-text">View Resume</span>
+        </a>
+      </div>
+
+      <div class="footer-right">
+        <div class="footer-contact">
+          <div class="contact-item">
+            <span class="contact-label">Email:</span>
+            <span class="contact-value">askharoun2005@gmail.com</span>
+          </div>
+          <div class="contact-item">
+            <span class="contact-label">Phone:</span>
+            <span class="contact-value">(484) 510-6083</span>
+          </div>
+          <div class="contact-item">
+            <span class="contact-label">Location:</span>
+            <span class="contact-value">State College, PA</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p>This site was designed with the future in mind. All trademarks belong to their respective owners.</p>
+      <p style="margin-top: 0.5rem; font-size: 0.8rem;">
+        Project: PixelPaste Chrome Extension – The ultimate clipboard manager.
+      </p>
+    </div>
+  </footer>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const themeToggle = document.getElementById('themeToggle');
+      const body = document.body;
+
+      const currentTheme = localStorage.getItem('theme') || 'light';
+      if (currentTheme === 'dark') {
+        body.classList.add('dark-mode');
+      } else {
+        body.classList.remove('dark-mode');
+      }
+
+      if (themeToggle) {
+        themeToggle.addEventListener('click', function() {
+          body.classList.toggle('dark-mode');
+          const newTheme = body.classList.contains('dark-mode') ? 'dark' : 'light';
+          localStorage.setItem('theme', newTheme);
+        });
+      }
+
+      const menuToggle = document.querySelector('.menu-toggle');
+      const nav = document.querySelector('nav');
+
+      if (menuToggle && nav) {
+        menuToggle.addEventListener('click', function() {
+          menuToggle.classList.toggle('active');
+          nav.classList.toggle('active');
+        });
+
+        const navLinks = document.querySelectorAll('.nav-link');
+        navLinks.forEach(link => {
+          link.addEventListener('click', function() {
+            menuToggle.classList.remove('active');
+            nav.classList.remove('active');
+          });
+        });
+
+        document.addEventListener('click', function(event) {
+          if (!nav.contains(event.target) && !menuToggle.contains(event.target)) {
+            menuToggle.classList.remove('active');
+            nav.classList.remove('active');
+          }
+        });
+      }
+
+      const header = document.querySelector('header');
+      if (header) {
+        window.addEventListener('scroll', function() {
+          const currentScroll = window.pageYOffset;
+          if (currentScroll > 50) {
+            header.classList.add('scrolled');
+          } else {
+            header.classList.remove('scrolled');
+          }
+        });
+      }
+    });
+  </script>
+</body>
+</html>
