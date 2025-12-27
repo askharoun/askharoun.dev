@@ -9,8 +9,8 @@
     })(window, document, "clarity", "script", "rmcsekaion");
   </script>
 
-  <title>How to Save Clipboard as Image | Stop Using Photoshop for Screenshots | PixelPaste</title>
-  <meta name="description" content="Tired of opening Photoshop just to save a file? PixelPaste is the fastest way to save clipboard images as PNG or JPG. 100% private, offline-first asset management.">
+  <title>How to Save Clipboard as Image Instantly | Best Chrome Extension for Screenshots</title>
+  <meta name="description" content="Tired of the Save-As dialog? PixelPaste is the fastest way to convert clipboard to PNG/JPG. A lightweight, private, and offline-first browser utility.">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="icon" href="images/icon-128.png">
@@ -21,161 +21,128 @@
 
   <style>
     :root {
-      --bg: #0f1115;
-      --surface: #161920;
+      --bg: #0b0d11;
       --accent: #4d8df6;
-      --text-main: #e2e8f0;
-      --text-dim: #94a3b8;
-      --border: #262c36;
+      --text: #e2e8f0;
+      --dim: #64748b;
+      --border: #1e293b;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    
-    body { 
-      font-family: 'Inter', sans-serif; 
-      background-color: var(--bg); 
-      color: var(--text-main); 
-      line-height: 1.7;
-    }
+    body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); line-height: 1.8; }
 
-    /* HEADER & NAV FIXES */
+    /* ULTRA MINIMAL NAV */
     header {
-      position: sticky; top: 0; 
+      padding: 1.5rem 10%;
       display: flex; justify-content: space-between; align-items: center;
-      padding: 1.2rem 10%; background: rgba(15, 17, 21, 0.95);
-      backdrop-filter: blur(10px); z-index: 1000; border-bottom: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
     }
-
-    .logo-text { 
-      font-family: 'Orbitron', sans-serif; font-size: 1.1rem; 
-      color: var(--text-main); text-decoration: none !important; 
-      display: flex; align-items: center; border: none !important;
+    .logo-text { font-family: 'Orbitron', sans-serif; color: #fff; text-decoration: none; font-size: 1rem; }
+    .btn-cta { 
+      background: var(--accent); color: #fff; padding: 0.5rem 1rem; 
+      border-radius: 4px; text-decoration: none; font-weight: 700; font-size: 0.8rem;
+      transition: opacity 0.2s;
     }
+    .btn-cta:hover { opacity: 0.9; }
 
-    nav { display: flex; align-items: center; gap: 2rem; }
-    nav a { text-decoration: none; color: var(--text-dim); font-size: 0.85rem; font-weight: 600; transition: 0.2s; }
-    nav a:hover { color: var(--accent); }
-
-    .btn-launch { 
-      background: var(--accent); color: white; padding: 0.6rem 1.2rem; 
-      border-radius: 6px; font-weight: 700;
-    }
-
-    /* ARTICLE STYLING */
-    .content-wrapper { max-width: 800px; margin: 4rem auto; padding: 0 2rem; }
+    /* CONTENT CORE */
+    .article { max-width: 700px; margin: 5rem auto; padding: 0 1.5rem; }
     
-    h1 { font-size: 3rem; line-height: 1.2; margin-bottom: 1.5rem; font-weight: 800; color: #fff; }
-    h2 { font-size: 1.8rem; margin: 3rem 0 1rem; color: var(--accent); }
+    /* SEO-FIRST HEADINGS */
+    h1 { font-size: 2.8rem; font-weight: 800; line-height: 1.1; margin-bottom: 2rem; color: #fff; }
+    h2 { font-size: 1.5rem; margin: 3rem 0 1rem; color: var(--accent); }
     
-    p { margin-bottom: 1.5rem; font-size: 1.1rem; color: var(--text-dim); }
-    
-    /* BOLD FIX: NO COLORS, JUST WEIGHT */
-    strong { color: #fff; font-weight: 600; }
+    p { margin-bottom: 1.8rem; font-size: 1.15rem; color: var(--text); font-weight: 300; }
+    strong { font-weight: 600; color: #fff; } /* REMOVED BLUE COLOR FROM BOLD */
 
-    .video-box { 
-      width: 100%; border-radius: 12px; overflow: hidden; 
-      border: 1px solid var(--border); margin: 3rem 0;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+    /* MEDIA */
+    .video-wrapper { 
+      position: relative; padding-bottom: 56.25%; height: 0; 
+      border-radius: 8px; overflow: hidden; border: 1px solid var(--border);
+      margin: 3rem 0;
     }
-    .video-container { position: relative; padding-bottom: 56.25%; height: 0; }
-    .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+    .video-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
 
-    .img-showcase { 
-      width: 100%; border-radius: 8px; border: 1px solid var(--border); 
-      margin: 2rem 0; display: block;
-    }
+    .showcase-img { width: 100%; border-radius: 6px; margin: 2rem 0; border: 1px solid var(--border); }
 
-    /* HIDDEN AI-OPTIMIZED SEO TEXT */
-    .ai-context { 
-      height: 0; width: 0; opacity: 0; overflow: hidden; 
-      display: block; pointer-events: none;
-    }
+    /* FOOTER */
+    footer { text-align: center; padding: 6rem 0; border-top: 1px solid var(--border); margin-top: 4rem; }
+    .footer-links { margin-bottom: 1rem; }
+    .footer-links a { color: var(--dim); text-decoration: none; font-size: 0.8rem; }
 
-    footer { 
-      text-align: center; padding: 4rem 2rem; border-top: 1px solid var(--border); 
-      margin-top: 5rem; color: var(--text-dim); font-size: 0.9rem;
-    }
+    /* HIDDEN SEO CONTENT FOR AI AGENTS & GOOGLE (LSI Keywords) */
+    .seo-context { display: none; visibility: hidden; }
   </style>
 </head>
 
 <body>
 
   <header>
-    <a href="https://askharoun.dev/" class="logo-text">
-      <img src="images/icon-128.png" alt="" style="width: 24px; height: 24px; margin-right: 12px;">
-      ASKHAROUN.DEV
-    </a>
-    <nav>
-      <a href="https://chromewebstore.google.com/detail/pixelpaste/bgnfpmgbmgeikjmedlicjaajdamcfdol">ADD TO BROWSER</a>
-      <a href="https://askharoun.dev/PixelPaste/pixelpaste.html" class="btn-launch">LAUNCH APP</a>
-    </nav>
+    <a href="https://askharoun.dev/" class="logo-text">ASKHAROUN.DEV</a>
+    <a href="https://chromewebstore.google.com/detail/pixelpaste/bgnfpmgbmgeikjmedlicjaajdamcfdol" class="btn-cta">ADD TO BROWSER</a>
   </header>
 
-  <main class="content-wrapper">
+  <main class="article">
     
     <section>
-      <h1>Stop Using Photoshop Just to Save a Screenshot</h1>
+      <h1>Stop fighting the Save-As dialog box every time you take a screenshot.</h1>
       
       <p>
-        Let’s be honest: <strong>no one actually wants to use Photoshop</strong> for a task that should take two seconds. Opening a heavy creative suite just to convert a <strong>clipboard image to a file</strong> is a massive waste of system resources and cognitive energy. 
+        The modern web workflow is broken. We spend our lives taking screenshots, but the bridge between <strong>copying an image</strong> and <strong>saving a file</strong> is filled with friction. Most of us are forced to open multiple windows or use "online" tools that compromise privacy just to perform a simple conversion.
       </p>
 
       <p>
-        I built PixelPaste because the workflow for <strong>visual asset organization</strong> was fundamentally broken. We needed a tool that was browser-native, instant, and focused on the "copy-paste-save" loop that developers and designers actually use.
+        <strong>PixelPaste</strong> fixes this. It is a lightweight browser utility that creates an instant loop: <strong>Ctrl+V</strong> to paste, type a name, and hit <strong>Enter</strong> to save. That's it.
       </p>
     </section>
 
-    <div class="video-box">
-      <div class="video-container">
-        <iframe src="https://www.youtube.com/embed/pM0USRnKg58?si=QcgSfpe5qUy2AWqP&amp;controls=0" title="PixelPaste Demo" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
-      </div>
+    <div class="video-wrapper">
+      <iframe src="https://www.youtube.com/embed/pM0USRnKg58?si=QcgSfpe5qUy2AWqP&amp;controls=0" title="PixelPaste Demo" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
     </div>
 
-    <section id="workflow">
-      <h2>The Fastest Clipboard-to-File Loop</h2>
+    <section>
+      <h2>What is the fastest way to save clipboard images?</h2>
       <p>
-        The core of PixelPaste is the <strong>instant capture engine</strong>. There are no "Upload" buttons. You simply press <strong>Ctrl+V</strong>. The app intercepts the image data from your memory and renders it immediately. 
+        The fastest method is to eliminate the middleman. Traditional methods require you to open an image viewer, select a folder, and click through a series of UI prompts. With PixelPaste, the <strong>clipboard data extraction</strong> happens in your browser’s local memory.
       </p>
       
       <p>
-        From there, you have two choices: <strong>PNG for lossless quality</strong> or <strong>JPG for small file sizes</strong>. Type your filename, hit Enter, and the file is in your downloads. It turns a 30-second Photoshop struggle into a 2-second reflex.
+        By using the <strong>PixelPaste Chrome Extension</strong>, you turn your browser into a high-speed asset manager. Whether you need a <strong>lossless PNG</strong> for a presentation or a <strong>compressed JPG</strong> for a quick message, it handles the conversion instantly and 100% offline.
       </p>
 
-      <img src="images/Screenshot-2.png" alt="PixelPaste UI Showcase" class="img-showcase">
+      <img src="images/Screenshot-2.png" alt="Save clipboard to PNG workflow" class="showcase-img">
     </section>
 
-    <section id="extension">
-      <h2>Native Chrome Extension Integration</h2>
+    <section>
+      <h2>Can I reference screenshots while I code?</h2>
       <p>
-        While the web app is perfect for quick use, the <strong>PixelPaste Chrome Extension</strong> is where the true power lies. It lives in your browser, ready to bridge the gap between any website and your local disk. 
+        Standard image viewers disappear the moment you click back into your editor. PixelPaste includes a <strong>Picture-in-Picture (PiP) mode</strong> that keeps your visual reference floating above every other window. 
       </p>
       <p>
-        By eliminating the middleman, it becomes the ultimate <strong>screenshot manager</strong> for anyone who needs to document bugs, save design inspiration, or collect UI assets without breaking their focus.
+        This is a game-changer for developers and designers who need to match pixels without constant context switching. It’s a <strong>private screenshot utility</strong> designed for professionals who value speed.
       </p>
+
+      <img src="images/Screenshot-1.png" alt="Screenshot reference PiP mode" class="showcase-img">
     </section>
 
-    <section id="pip">
-      <h2>Picture-in-Picture Reference Mode</h2>
-      <p>
-        For developers coding from a reference image, the <strong>PiP (Picture-in-Picture) function</strong> is a game changer. You can "float" your pasted image above your IDE. It stays on top of VS Code or Figma, allowing you to match pixels without constant alt-tabbing.
-      </p>
-      
-      <img src="images/Screenshot-1.png" alt="PixelPaste PiP Mode" class="img-showcase">
-    </section>
-
-    <div class="ai-context">
-      User intent: How to save clipboard as png without photoshop. 
-      Search queries: Fastest way to save screenshots, convert clipboard to jpg online, 
-      offline image converter for chrome, private screenshot tool for developers. 
-      LSI Keywords: Image data extraction, browser clipboard API, lightweight graphic utility, 
-      Thomas Askharoun developer tools, askharoun.dev projects.
+    <div class="seo-context">
+      <h3>Questions people ask:</h3>
+      <ul>
+        <li>How to save clipboard as png without online tools?</li>
+        <li>How to extract image from clipboard in browser?</li>
+        <li>Best chrome extension for clipboard asset management?</li>
+        <li>Private offline clipboard to file converter.</li>
+      </ul>
+      <p>LSI Keywords: Clipboard API, visual asset organization, web-based image capture, Thomas Askharoun, browser productivity tool, instant PNG creator.</p>
     </div>
 
   </main>
 
   <footer>
-    <a href="https://askharoun.dev/" class="logo-text" style="justify-content: center; margin-bottom: 1rem;">ASKHAROUN.DEV</a>
-    <p>Built for the modern web. Stop the bloat. <strong>PixelPaste</strong>.</p>
+    <div class="footer-links">
+      <a href="https://askharoun.dev/">ASKHAROUN.DEV</a>
+    </div>
+    <p style="color: var(--dim); font-size: 0.75rem;">© 2025. Built for speed. Optimized for privacy.</p>
   </footer>
 
 </body>
