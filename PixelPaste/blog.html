@@ -9,34 +9,21 @@
     })(window, document, "clarity", "script", "rmcsekaion");
   </script>
 
-  <title>PixelPaste | Instant Clipboard to Image Converter</title>
-  <meta name="description" content="The fastest way to save clipboard images as PNG or JPG. PixelPaste is a private, offline tool for visual asset organization.">
+  <title>PixelPaste: The Ultimate Guide to Instant Clipboard Asset Management</title>
+  <meta name="description" content="Discover how PixelPaste streamlines your workflow. Learn to save clipboard images as PNG/JPG instantly without Photoshop. The best private, offline screenshot tool.">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="icon" href="images/icon-128.png">
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@300;400;700&family=Playfair+Display:ital,wght@0,700;1,700&display=swap" rel="stylesheet">
 
   <style>
     /* ========================================
-       GLOBAL STYLES & VARIABLES
+       INTEGRATED CSS & THEMING
        ======================================== */
     :root {
-      --primary-light: #2d6cdf;
-      --primary-dark-light: #1a4ba6;
-      --secondary-light: #00c2ff;
-      --background-light: #f8f9fc;
-      --surface-light: #ffffff;
-      --text-primary-light: #1a1c25;
-      --text-secondary-light: #4a4d60;
-      --border-light: #e0e3f0;
-      --shadow-light: rgba(0, 24, 69, 0.08);
-      --success-light: #00c853;
-      --error-light: #ff3d71;
-
-      /* Dark Mode (Default for this futuristic look) */
       --primary: #4d8df6;
       --primary-dark-color: #2c5bb8;
       --secondary: #00e5ff;
@@ -45,220 +32,170 @@
       --text-primary: #ffffff;
       --text-secondary: #a0a3b8;
       --border: #2a3042;
-      --shadow: rgba(0, 0, 0, 0.2);
-      --success: #00e676;
-      --error: #ff5c8d;
-
-      --space-sm: 0.5rem;
-      --space-md: 1rem;
-      --space-lg: 1.5rem;
-      --space-xl: 2rem;
-      --space-xxl: 4rem;
+      --shadow: rgba(0, 0, 0, 0.4);
       --font-heading: "Orbitron", sans-serif;
-      --font-body: "Roboto", sans-serif;
-      --transition-normal: 0.2s ease;
+      --font-article: "Roboto", sans-serif;
+      --font-title: "Playfair Display", serif;
     }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html { font-size: 16px; scroll-behavior: smooth; }
     body { 
-        font-family: var(--font-body); 
-        background-color: var(--background); 
-        color: var(--text-primary); 
-        line-height: 1.6; 
-        overflow-x: hidden; 
-        opacity: 0;
-        animation: pageLoadFadeIn 0.6s ease-out forwards;
+        font-family: var(--font-article); background-color: var(--background); 
+        color: var(--text-primary); line-height: 1.8; overflow-x: hidden; 
     }
 
-    @keyframes pageLoadFadeIn { to { opacity: 1; } }
+    /* Remove Underline from Logo */
+    .logo-text { 
+        font-family: var(--font-heading); font-size: 1.2rem; font-weight: 700; 
+        color: var(--text-primary); text-decoration: none !important; 
+        border: none !important; display: flex; align-items: center;
+    }
 
-    .container { width: 100%; max-width: 1200px; margin: 0 auto; padding: 0 var(--space-lg); }
-
-    /* ========================================
-       HEADER & NAVIGATION
-       ======================================== */
+    /* Navigation */
     header {
       position: fixed; top: 0; left: 0; width: 100%;
       display: flex; justify-content: space-between; align-items: center;
-      padding: var(--space-md) var(--space-lg);
-      background-color: rgba(26, 31, 44, 0.85);
-      backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
-      z-index: 100; border-bottom: 1px solid var(--border);
+      padding: 1rem 5%; background-color: rgba(26, 31, 44, 0.9);
+      backdrop-filter: blur(12px); z-index: 100; border-bottom: 1px solid var(--border);
     }
-
-    .logo-container { display: flex; align-items: center; text-decoration: none; }
-    .logo-text { font-family: var(--font-heading); font-size: 1.2rem; font-weight: 700; color: var(--text-primary); }
-
-    nav ul { display: flex; list-style: none; align-items: center; }
-    nav li { margin-left: var(--space-lg); }
+    nav ul { display: flex; list-style: none; align-items: center; gap: 20px; }
     .nav-link { 
-        font-family: var(--font-heading); font-size: 0.85rem; 
-        color: var(--text-secondary); text-decoration: none; 
-        transition: color var(--transition-normal); 
+        font-family: var(--font-heading); font-size: 0.75rem; 
+        color: var(--text-secondary); text-decoration: none; transition: 0.3s; 
     }
     .nav-link:hover { color: var(--primary); }
 
-    /* ========================================
-       HERO & VIDEO
-       ======================================== */
-    .hero {
-      position: relative; height: 90vh;
-      display: flex; flex-direction: column; justify-content: center; align-items: center;
-      text-align: center; padding: var(--space-xxl) var(--space-md);
-    }
+    /* Article Styling */
+    .article-container { max-width: 850px; margin: 120px auto 60px; padding: 0 20px; }
+    .article-header { text-align: center; margin-bottom: 50px; }
+    .article-category { color: var(--secondary); font-family: var(--font-heading); font-size: 0.8rem; letter-spacing: 3px; margin-bottom: 10px; display: block; }
+    .article-title { font-family: var(--font-title); font-size: 3.5rem; line-height: 1.1; margin-bottom: 20px; color: var(--text-primary); }
+    .article-meta { color: var(--text-secondary); font-size: 0.9rem; font-style: italic; }
 
-    .glitch {
-      position: relative; font-size: 4.5rem; font-weight: 700;
-      letter-spacing: 5px; color: var(--text-primary); font-family: var(--font-heading);
-      animation: riseFromBelow 1s ease-out forwards;
-    }
+    .article-body h2 { font-family: var(--font-heading); color: var(--primary); margin: 40px 0 20px; font-size: 1.8rem; }
+    .article-body p { margin-bottom: 25px; font-size: 1.15rem; color: #d1d5db; }
+    .article-body strong { color: var(--secondary); }
 
-    @keyframes riseFromBelow {
-      0% { opacity: 0; transform: translateY(50px); }
-      100% { opacity: 1; transform: translateY(0); }
+    /* Visual Elements */
+    .video-wrapper { 
+        margin: 40px 0; border-radius: 15px; overflow: hidden; 
+        border: 1px solid var(--border); box-shadow: 0 20px 50px var(--shadow);
     }
-
-    .video-container { 
-        position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; 
-        border-radius: 12px; border: 2px solid var(--primary);
-        box-shadow: 0 0 30px rgba(77, 141, 246, 0.2); margin: 40px auto; max-width: 900px;
-    }
+    .video-container { position: relative; padding-bottom: 56.25%; height: 0; }
     .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
 
-    /* ========================================
-       SECTION & CARDS
-       ======================================== */
-    .section { padding: var(--space-xxl) var(--space-lg); }
-    .section-header { text-align: center; margin-bottom: var(--space-xl); }
-    .section-title { font-family: var(--font-heading); font-size: 2.2rem; color: var(--primary); }
+    .image-caption { 
+        text-align: center; font-size: 0.85rem; color: var(--text-secondary); 
+        margin-top: -15px; margin-bottom: 30px; display: block;
+    }
+
+    .feature-card {
+        background: var(--surface); border: 1px solid var(--border);
+        padding: 30px; border-radius: 12px; margin: 30px 0;
+    }
+
+    /* Buttons */
+    .cta-group { display: flex; gap: 15px; margin-top: 30px; flex-wrap: wrap; }
+    .btn-main { 
+        background: var(--primary); color: white; padding: 12px 25px; 
+        border-radius: 6px; text-decoration: none; font-family: var(--font-heading); 
+        font-weight: 600; font-size: 0.8rem; transition: 0.3s;
+    }
+    .btn-main:hover { transform: translateY(-2px); background: var(--primary-dark-color); }
     
-    .about-content { 
-        max-width: 1000px; margin: 0 auto; padding: var(--space-xl); 
-        background-color: var(--surface); border-radius: 15px;
-        border: 1px solid var(--border); box-shadow: 0 10px 30px var(--shadow);
+    .btn-outline { 
+        border: 2px solid var(--primary); color: var(--primary); padding: 10px 23px; 
+        border-radius: 6px; text-decoration: none; font-family: var(--font-heading); 
+        font-weight: 600; font-size: 0.8rem; transition: 0.3s;
     }
+    .btn-outline:hover { background: var(--primary); color: white; }
 
-    .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-xl); align-items: center; }
-    @media (max-width: 768px) { .about-grid { grid-template-columns: 1fr; } }
-
-    .feature-img { width: 100%; border-radius: 12px; border: 1px solid var(--border); transition: transform 0.3s ease; }
-    .feature-img:hover { transform: scale(1.03); }
-
-    .cta-button-enhanced {
-      display: inline-flex; align-items: center; gap: 10px;
-      padding: 1rem 2rem; background: var(--primary); color: white;
-      text-decoration: none; border-radius: 8px; font-family: var(--font-heading);
-      font-weight: 600; transition: all 0.3s ease; border: 2px solid var(--primary);
-    }
-    .cta-button-enhanced:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(0,0,0,0.3); background: var(--primary-dark-color); }
-
-    .faq-section { background: rgba(255,255,255,0.02); border-radius: 20px; padding: var(--space-xl); margin-top: 40px; }
-    .faq-item { margin-bottom: 25px; }
-    .faq-item h3 { color: var(--secondary); margin-bottom: 10px; font-family: var(--font-heading); font-size: 1rem; }
-
-    footer { 
-        padding: var(--space-xxl) 0; border-top: 1px solid var(--border); 
-        background: var(--surface); text-align: center; 
-    }
+    footer { text-align: center; padding: 60px 0; border-top: 1px solid var(--border); margin-top: 100px; }
   </style>
 </head>
 
 <body>
   <header>
-    <div class="logo-container">
-      <img src="images/icon-128.png" alt="Logo" style="width: 30px; height: 30px; margin-right: 12px;">
-      <a href="index.html" class="logo-text">ASKHAROUN.DEV</a>
-    </div>
+    <a href="https://askharoun.dev/" class="logo-text">
+      <img src="images/icon-128.png" alt="Logo" style="width: 25px; height: 25px; margin-right: 10px;">
+      ASKHAROUN.DEV
+    </a>
     <nav>
       <ul>
-        <li><a href="#demo" class="nav-link">DEMO</a></li>
+        <li><a href="#workflow" class="nav-link">WORKFLOW</a></li>
         <li><a href="#extension" class="nav-link">EXTENSION</a></li>
-        <li><a href="#features" class="nav-link">FEATURES</a></li>
-        <li><a href="https://askharoun.dev/PixelPaste/pixelpaste.html" class="cta-button-enhanced" style="padding: 0.5rem 1rem; font-size: 0.8rem;">LAUNCH APP</a></li>
+        <li><a href="https://chromewebstore.google.com/detail/pixelpaste/bgnfpmgbmgeikjmedlicjaajdamcfdol" class="nav-link" style="color: var(--secondary);">ADD TO BROWSER</a></li>
+        <li><a href="https://askharoun.dev/PixelPaste/pixelpaste.html" class="btn-main">LAUNCH THE APP</a></li>
       </ul>
     </nav>
   </header>
 
-  <main>
-    <section class="hero">
-      <h1 class="glitch">PIXELPASTE</h1>
-      <p style="color: var(--secondary); font-family: var(--font-heading); letter-spacing: 2px; margin-bottom: 20px;">INSTANT CLIPBOARD TO IMAGE CONVERTER</p>
-      <p style="max-width: 700px; color: var(--text-secondary); margin-bottom: 30px;">
-        Tired of Photoshop? Save clipboard screenshots instantly as <strong>PNG</strong> or <strong>JPG</strong>. 
-        A 100% private, offline-first workflow tool for developers and designers.
+  <article class="article-container">
+    <header class="article-header">
+      <span class="article-category">WORKFLOW OPTIMIZATION</span>
+      <h1 class="article-title">PixelPaste: Why You Should Stop Opening Photoshop to Save Screenshots</h1>
+      <div class="article-meta">Published by Thomas Askharoun • Dec 2024</div>
+    </header>
+
+    <div class="article-body">
+      <p>
+        In the modern digital workflow, speed is everything. For developers, designers, and content creators, the simple act of saving a <strong>clipboard image to a file</strong> is a task repeated dozens of times a day. Yet, many of us still rely on bloated software like Photoshop or GIMP just to perform a basic conversion.
       </p>
-      <a href="#demo" class="cta-button-enhanced">See It In Action</a>
-    </section>
 
-    <section id="demo" class="section">
-      <div class="section-header">
-        <h2 class="section-title">THE WORKFLOW</h2>
-      </div>
-      <div class="container">
+      <div class="video-wrapper">
         <div class="video-container">
-          <iframe src="https://www.youtube.com/embed/pM0USRnKg58?si=QcgSfpe5qUy2AWqP&amp;controls=0" title="PixelPaste Demo" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+          <iframe src="https://www.youtube.com/embed/pM0USRnKg58?si=QcgSfpe5qUy2AWqP&amp;controls=0" title="PixelPaste Overview" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
         </div>
       </div>
-    </section>
+      <span class="image-caption">Watch: How PixelPaste streamlines visual asset organization in seconds.</span>
 
-    <section id="extension" class="section">
-      <div class="container">
-        <div class="about-content">
-          <div class="about-grid">
-            <div>
-              <h2 class="section-title" style="text-align: left; margin-bottom: 20px;">CHROME EXTENSION</h2>
-              <p class="about-text" style="color: var(--text-secondary); margin-bottom: 20px;">
-                The <strong>PixelPaste Chrome Extension</strong> turns your browser into a high-speed asset manager. 
-                Extract images from your clipboard, rename them on the fly, and download instantly.
-              </p>
-              <ul style="list-style: none; color: var(--primary); font-weight: bold;">
-                <li>✓ No Account Required</li>
-                <li>✓ 100% Offline Processing</li>
-                <li>✓ Smart Auto-Naming</li>
-              </ul>
-            </div>
-            <img src="images/Screenshot-2.png" alt="Chrome Extension Interface" class="feature-img">
-          </div>
-        </div>
+      <h2 id="workflow">The "Instant Capture" Paradigm</h2>
+      <p>
+        PixelPaste was built out of frustration. It eliminates the friction between "capturing an idea" and "saving an asset." By utilizing the <strong>browser-native clipboard API</strong>, PixelPaste allows you to hit <strong>Ctrl+V</strong> and immediately see your image rendered in a high-performance environment. No loading screens, no "File > Export As," just pure efficiency.
+      </p>
+
+      <div class="feature-card">
+        <img src="images/Screenshot-2.png" alt="PixelPaste Chrome Extension Workflow" class="feature-img" style="margin-bottom: 20px; border: none;">
+        <h3 style="font-family: var(--font-heading); margin-bottom: 10px;">Smart Renaming & Dual Formats</h3>
+        <p>Whether you need a <strong>lossless PNG</strong> for a UI mockup or a <strong>compressed JPG</strong> for a quick Slack message, PixelPaste toggles between formats instantly. The smart renaming feature allows you to type a filename and hit Enter to download—keeping your "Downloads" folder organized without ever touching your mouse.</p>
       </div>
-    </section>
 
-    <section id="features" class="section">
-      <div class="container">
-        <div class="about-grid">
-          <img src="images/Screenshot-1.png" alt="PiP Mode" class="feature-img">
-          <div>
-            <h2 class="section-title" style="text-align: left; margin-bottom: 20px;">PICTURE-IN-PICTURE</h2>
-            <p style="color: var(--text-secondary);">
-              Keep your reference screenshots floating above your work. PixelPaste's <strong>PiP Mode</strong> is 
-              essential for developers coding UI from a design mockup. Paste once, float anywhere.
-            </p>
-          </div>
-        </div>
+      <h2 id="extension">A Browser-Native Extension</h2>
+      <p>
+        While the web app is powerful, the <strong>PixelPaste Chrome Extension</strong> integrates this power directly into your browsing experience. It functions as an <strong>instant clipboard manager</strong>, allowing you to bridge the gap between web content and your local storage.
+      </p>
+      
+      <div class="cta-group">
+        <a href="https://chromewebstore.google.com/detail/pixelpaste/bgnfpmgbmgeikjmedlicjaajdamcfdol" class="btn-outline">ADD TO CHROME</a>
+        <a href="https://askharoun.dev/PixelPaste/pixelpaste.html" class="btn-main">LAUNCH WEB APP</a>
       </div>
-    </section>
 
-    <section class="section">
-        <div class="container">
-            <div class="faq-section">
-                <h2 class="section-title" style="font-size: 1.5rem; margin-bottom: 30px;">SEO & UTILITY FAQ</h2>
-                <div class="faq-item">
-                    <h3>How do I save a clipboard image as PNG?</h3>
-                    <p style="color: var(--text-secondary);">Simply open PixelPaste, press Ctrl+V, type a name, and hit Enter. It's the fastest <strong>clipboard to file converter</strong> available.</p>
-                </div>
-                <div class="faq-item">
-                    <h3>Is my data secure?</h3>
-                    <p style="color: var(--text-secondary);">PixelPaste is a <strong>100% private offline tool</strong>. Your images are never uploaded to a server; they stay in your browser memory.</p>
-                </div>
-            </div>
+      <h2 id="pip">Picture-in-Picture for Visual Reference</h2>
+      <p>
+        One of the most overlooked features of the modern browser is the <strong>Picture-in-Picture (PiP)</strong> mode for images. PixelPaste leverages this to help developers. Imagine you are coding a CSS layout from a screenshot. Instead of alt-tabbing, you can use PixelPaste to "float" your screenshot in the corner of your screen while you code in VS Code.
+      </p>
+
+      <img src="images/Screenshot-1.png" alt="Using PiP Mode for coding reference" class="feature-img" style="margin: 20px 0;">
+      <span class="image-caption">Example: PiP mode allows you to reference visual assets while keeping your workspace clear.</span>
+
+      <h2>100% Private, 100% Offline</h2>
+      <p>
+        Security is a major concern when using "online" tools. Most clipboard sites upload your images to their servers. <strong>PixelPaste is different.</strong> It runs entirely on your local machine. Your screenshots never touch a server, making it safe for internal company data and sensitive visual assets.
+      </p>
+
+      <section style="background: rgba(0, 229, 255, 0.05); padding: 40px; border-radius: 12px; margin-top: 60px; text-align: center;">
+        <h2 style="margin-top: 0;">Ready to optimize your workflow?</h2>
+        <p>Join the developers and designers using PixelPaste to save hours of unnecessary software bloat.</p>
+        <div class="cta-group" style="justify-content: center;">
+            <a href="https://askharoun.dev/PixelPaste/pixelpaste.html" class="btn-main">OPEN PIXELPASTE NOW</a>
         </div>
-    </section>
-  </main>
+      </section>
+    </div>
+  </article>
 
   <footer>
-    <p class="logo-text">ASKHAROUN.DEV</p>
-    <p style="color: var(--text-secondary); font-size: 0.8rem; margin-top: 10px;">Built for speed. Optimized for workflow.</p>
+    <a href="https://askharoun.dev/" class="logo-text" style="justify-content: center; margin-bottom: 15px;">ASKHAROUN.DEV</a>
+    <p style="color: var(--text-secondary); font-size: 0.85rem;">Designed for professionals. Optimized for speed. 100% Secure.</p>
   </footer>
 
 </body>
