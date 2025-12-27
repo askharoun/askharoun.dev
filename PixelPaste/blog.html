@@ -9,152 +9,257 @@
     })(window, document, "clarity", "script", "rmcsekaion");
   </script>
 
-  <title>PixelPaste | Save Clipboard as PNG/JPG | Instant Screenshot to File Converter</title>
-  <meta name="description" content="The fastest way to save clipboard images as files. PixelPaste is a free web-based screenshot tool and Chrome extension. Instant Ctrl+V capture, smart renaming, and 100% private offline conversion. Better than Photoshop for quick asset saving.">
-  <meta name="keywords" content="PixelPaste, save clipboard as PNG, save clipboard as JPG, copy paste image to file, online screenshot saver, instant clipboard converter, extract image from clipboard, web-based image capture, browser screenshot organizer, fast screenshot renamer, how to save screenshot without photoshop, private image uploader, clipboard to file extension, Chrome extension for saving images, screenshot workflow tool, Thomas Askharoun, askharoun.dev">
-  
-  <meta property="og:title" content="PixelPaste: The #1 Clipboard to Image Utility">
-  <meta property="og:description" content="Stop opening Photoshop. Convert your clipboard to PNG or JPG instantly with PixelPaste.">
-  <meta property="og:image" content="images/icon-128.png">
-
-  <link rel="icon" href="images/icon-128.png">
+  <title>PixelPaste | Instant Clipboard to Image Converter</title>
+  <meta name="description" content="The fastest way to save clipboard images as PNG or JPG. PixelPaste is a private, offline tool for visual asset organization.">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="images/icon-128.png">
   
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+
   <style>
-    .video-container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 12px; margin: 40px 0; border: 2px solid #00ffcc; }
+    /* ========================================
+       GLOBAL STYLES & VARIABLES
+       ======================================== */
+    :root {
+      --primary-light: #2d6cdf;
+      --primary-dark-light: #1a4ba6;
+      --secondary-light: #00c2ff;
+      --background-light: #f8f9fc;
+      --surface-light: #ffffff;
+      --text-primary-light: #1a1c25;
+      --text-secondary-light: #4a4d60;
+      --border-light: #e0e3f0;
+      --shadow-light: rgba(0, 24, 69, 0.08);
+      --success-light: #00c853;
+      --error-light: #ff3d71;
+
+      /* Dark Mode (Default for this futuristic look) */
+      --primary: #4d8df6;
+      --primary-dark-color: #2c5bb8;
+      --secondary: #00e5ff;
+      --background: #12151d;
+      --surface: #1a1f2c;
+      --text-primary: #ffffff;
+      --text-secondary: #a0a3b8;
+      --border: #2a3042;
+      --shadow: rgba(0, 0, 0, 0.2);
+      --success: #00e676;
+      --error: #ff5c8d;
+
+      --space-sm: 0.5rem;
+      --space-md: 1rem;
+      --space-lg: 1.5rem;
+      --space-xl: 2rem;
+      --space-xxl: 4rem;
+      --font-heading: "Orbitron", sans-serif;
+      --font-body: "Roboto", sans-serif;
+      --transition-normal: 0.2s ease;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { font-size: 16px; scroll-behavior: smooth; }
+    body { 
+        font-family: var(--font-body); 
+        background-color: var(--background); 
+        color: var(--text-primary); 
+        line-height: 1.6; 
+        overflow-x: hidden; 
+        opacity: 0;
+        animation: pageLoadFadeIn 0.6s ease-out forwards;
+    }
+
+    @keyframes pageLoadFadeIn { to { opacity: 1; } }
+
+    .container { width: 100%; max-width: 1200px; margin: 0 auto; padding: 0 var(--space-lg); }
+
+    /* ========================================
+       HEADER & NAVIGATION
+       ======================================== */
+    header {
+      position: fixed; top: 0; left: 0; width: 100%;
+      display: flex; justify-content: space-between; align-items: center;
+      padding: var(--space-md) var(--space-lg);
+      background-color: rgba(26, 31, 44, 0.85);
+      backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+      z-index: 100; border-bottom: 1px solid var(--border);
+    }
+
+    .logo-container { display: flex; align-items: center; text-decoration: none; }
+    .logo-text { font-family: var(--font-heading); font-size: 1.2rem; font-weight: 700; color: var(--text-primary); }
+
+    nav ul { display: flex; list-style: none; align-items: center; }
+    nav li { margin-left: var(--space-lg); }
+    .nav-link { 
+        font-family: var(--font-heading); font-size: 0.85rem; 
+        color: var(--text-secondary); text-decoration: none; 
+        transition: color var(--transition-normal); 
+    }
+    .nav-link:hover { color: var(--primary); }
+
+    /* ========================================
+       HERO & VIDEO
+       ======================================== */
+    .hero {
+      position: relative; height: 90vh;
+      display: flex; flex-direction: column; justify-content: center; align-items: center;
+      text-align: center; padding: var(--space-xxl) var(--space-md);
+    }
+
+    .glitch {
+      position: relative; font-size: 4.5rem; font-weight: 700;
+      letter-spacing: 5px; color: var(--text-primary); font-family: var(--font-heading);
+      animation: riseFromBelow 1s ease-out forwards;
+    }
+
+    @keyframes riseFromBelow {
+      0% { opacity: 0; transform: translateY(50px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+
+    .video-container { 
+        position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; 
+        border-radius: 12px; border: 2px solid var(--primary);
+        box-shadow: 0 0 30px rgba(77, 141, 246, 0.2); margin: 40px auto; max-width: 900px;
+    }
     .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
-    .feature-img { width: 100%; border-radius: 10px; border: 1px solid rgba(255,255,255,0.1); margin-top: 15px; }
-    .keyword-cluster { font-size: 0.8rem; color: rgba(255,255,255,0.2); text-align: justify; margin-top: 50px; line-height: 1.5; }
-    .faq-section { margin-top: 60px; padding: 20px; background: rgba(255,255,255,0.03); border-radius: 10px; }
-    .faq-item { margin-bottom: 20px; }
-    .faq-item h3 { color: #00ffcc; font-size: 1.1rem; margin-bottom: 5px; }
+
+    /* ========================================
+       SECTION & CARDS
+       ======================================== */
+    .section { padding: var(--space-xxl) var(--space-lg); }
+    .section-header { text-align: center; margin-bottom: var(--space-xl); }
+    .section-title { font-family: var(--font-heading); font-size: 2.2rem; color: var(--primary); }
+    
+    .about-content { 
+        max-width: 1000px; margin: 0 auto; padding: var(--space-xl); 
+        background-color: var(--surface); border-radius: 15px;
+        border: 1px solid var(--border); box-shadow: 0 10px 30px var(--shadow);
+    }
+
+    .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-xl); align-items: center; }
+    @media (max-width: 768px) { .about-grid { grid-template-columns: 1fr; } }
+
+    .feature-img { width: 100%; border-radius: 12px; border: 1px solid var(--border); transition: transform 0.3s ease; }
+    .feature-img:hover { transform: scale(1.03); }
+
+    .cta-button-enhanced {
+      display: inline-flex; align-items: center; gap: 10px;
+      padding: 1rem 2rem; background: var(--primary); color: white;
+      text-decoration: none; border-radius: 8px; font-family: var(--font-heading);
+      font-weight: 600; transition: all 0.3s ease; border: 2px solid var(--primary);
+    }
+    .cta-button-enhanced:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(0,0,0,0.3); background: var(--primary-dark-color); }
+
+    .faq-section { background: rgba(255,255,255,0.02); border-radius: 20px; padding: var(--space-xl); margin-top: 40px; }
+    .faq-item { margin-bottom: 25px; }
+    .faq-item h3 { color: var(--secondary); margin-bottom: 10px; font-family: var(--font-heading); font-size: 1rem; }
+
+    footer { 
+        padding: var(--space-xxl) 0; border-top: 1px solid var(--border); 
+        background: var(--surface); text-align: center; 
+    }
   </style>
 </head>
+
 <body>
-  
   <header>
     <div class="logo-container">
-      <img src="images/icon-128.png" alt="PixelPaste App Logo" style="width: 30px; height: 30px; margin-right: 10px;">
+      <img src="images/icon-128.png" alt="Logo" style="width: 30px; height: 30px; margin-right: 12px;">
       <a href="index.html" class="logo-text">ASKHAROUN.DEV</a>
     </div>
     <nav>
       <ul>
-        <li><a href="#how-to-save-clipboard" class="nav-link">How it Works</a></li>
-        <li><a href="#extension" class="nav-link">Extension</a></li>
-        <li><a href="#features" class="nav-link">Features</a></li>
-        <li><a href="https://askharoun.dev/PixelPaste/pixelpaste.html" class="nav-link" style="border: 1px solid #00ffcc; padding: 5px 15px; border-radius: 5px;">Launch App</a></li>
+        <li><a href="#demo" class="nav-link">DEMO</a></li>
+        <li><a href="#extension" class="nav-link">EXTENSION</a></li>
+        <li><a href="#features" class="nav-link">FEATURES</a></li>
+        <li><a href="https://askharoun.dev/PixelPaste/pixelpaste.html" class="cta-button-enhanced" style="padding: 0.5rem 1rem; font-size: 0.8rem;">LAUNCH APP</a></li>
       </ul>
     </nav>
   </header>
 
   <main>
     <section class="hero">
-      <div class="hero-content">
-        <h1 class="hero-name glitch" data-text="PIXELPASTE">PIXELPASTE</h1>
-        <h2 style="color: #00ffcc; font-size: 1.5rem; margin-bottom: 20px;">The Instant Clipboard to PNG / JPG Converter</h2>
-        <div class="typewriter">
-          <span id="typewriter-text">How to save clipboard as image? Use PixelPaste.</span><span class="cursor">|</span>
-        </div>
-        <p style="margin-top: 20px; color: var(--text-secondary); max-width: 800px; margin-left: auto; margin-right: auto;">
-          PixelPaste is a specialized <strong>web-based screenshot tool</strong> designed to eliminate the need for heavy photo editors. If you need to <strong>save clipboard images as files</strong> quickly, this is the most efficient <strong>instant image capture</strong> utility available.
-        </p>
-      </div>
+      <h1 class="glitch">PIXELPASTE</h1>
+      <p style="color: var(--secondary); font-family: var(--font-heading); letter-spacing: 2px; margin-bottom: 20px;">INSTANT CLIPBOARD TO IMAGE CONVERTER</p>
+      <p style="max-width: 700px; color: var(--text-secondary); margin-bottom: 30px;">
+        Tired of Photoshop? Save clipboard screenshots instantly as <strong>PNG</strong> or <strong>JPG</strong>. 
+        A 100% private, offline-first workflow tool for developers and designers.
+      </p>
+      <a href="#demo" class="cta-button-enhanced">See It In Action</a>
     </section>
 
-    <section id="how-to-save-clipboard" class="section">
-        <div class="section-header">
-            <h2 class="section-title" data-text="Fastest Workflow">Fastest Workflow</h2>
-            <div class="section-line"></div>
+    <section id="demo" class="section">
+      <div class="section-header">
+        <h2 class="section-title">THE WORKFLOW</h2>
+      </div>
+      <div class="container">
+        <div class="video-container">
+          <iframe src="https://www.youtube.com/embed/pM0USRnKg58?si=QcgSfpe5qUy2AWqP&amp;controls=0" title="PixelPaste Demo" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
         </div>
-        <div class="container" style="max-width: 900px;">
-            <div class="video-container">
-                <iframe src="https://www.youtube.com/embed/pM0USRnKg58?si=QcgSfpe5qUy2AWqP&amp;controls=0" title="How to use PixelPaste to save clipboard images" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
-            </div>
-            <p style="text-align: center;"><strong>The Problem:</strong> Opening Photoshop takes 30 seconds. <strong>The Solution:</strong> PixelPaste takes 1 second.</p>
-        </div>
+      </div>
     </section>
 
     <section id="extension" class="section">
-      <div class="section-header">
-        <h2 class="section-title" data-text="Browser Extension">Browser Extension</h2>
-        <div class="section-line"></div>
-      </div>
-      <div class="about-content">
-        <div class="about-grid">
-          <div class="about-section">
-            <h3 class="about-section-title">The Ultimate Chrome Screenshot Manager</h3>
-            <p class="about-text">
-              Our <strong>Chrome Extension for saving images</strong> allows you to capture any visual asset from the web and organize it instantly. This <strong>browser-based screenshot organizer</strong> is perfect for developers who need to <strong>extract images from clipboard</strong> data without server uploads.
-            </p>
-            <img src="images/Screenshot-2.png" alt="PixelPaste Chrome Extension Interface showing instant save feature" class="feature-img">
+      <div class="container">
+        <div class="about-content">
+          <div class="about-grid">
+            <div>
+              <h2 class="section-title" style="text-align: left; margin-bottom: 20px;">CHROME EXTENSION</h2>
+              <p class="about-text" style="color: var(--text-secondary); margin-bottom: 20px;">
+                The <strong>PixelPaste Chrome Extension</strong> turns your browser into a high-speed asset manager. 
+                Extract images from your clipboard, rename them on the fly, and download instantly.
+              </p>
+              <ul style="list-style: none; color: var(--primary); font-weight: bold;">
+                <li>✓ No Account Required</li>
+                <li>✓ 100% Offline Processing</li>
+                <li>✓ Smart Auto-Naming</li>
+              </ul>
+            </div>
+            <img src="images/Screenshot-2.png" alt="Chrome Extension Interface" class="feature-img">
           </div>
         </div>
       </div>
     </section>
 
     <section id="features" class="section">
-        <div class="section-header">
-          <h2 class="section-title" data-text="Advanced Utility">Advanced Utility</h2>
-          <div class="section-line"></div>
-        </div>
-        <div class="about-content">
-          <div class="about-grid">
-            <div class="about-section">
-              <h3 class="about-section-title">Floating Picture-in-Picture (PiP)</h3>
-              <p class="about-text">
-                PixelPaste includes a <strong>PiP screenshot viewer</strong>. Paste your image and click PiP to keep a <strong>floating reference image</strong> on top of your coding environment or design software.
-              </p>
-              <img src="images/Screenshot-1.png" alt="PixelPaste Picture in Picture floating reference mode" class="feature-img">
-            </div>
-            <div class="about-section">
-                <h3 class="about-section-title">Smart Renaming & Dual Formats</h3>
-                <ul class="about-list">
-                    <li><strong>Save as PNG:</strong> Best for <strong>lossless clipboard to image</strong> conversion.</li>
-                    <li><strong>Save as JPG:</strong> Optimized for <strong>fast screenshot sharing</strong> and low file size.</li>
-                    <li><strong>Instant Rename:</strong> Type and hit Enter to <strong>rename screenshots on the fly</strong>.</li>
-                </ul>
-            </div>
+      <div class="container">
+        <div class="about-grid">
+          <img src="images/Screenshot-1.png" alt="PiP Mode" class="feature-img">
+          <div>
+            <h2 class="section-title" style="text-align: left; margin-bottom: 20px;">PICTURE-IN-PICTURE</h2>
+            <p style="color: var(--text-secondary);">
+              Keep your reference screenshots floating above your work. PixelPaste's <strong>PiP Mode</strong> is 
+              essential for developers coding UI from a design mockup. Paste once, float anywhere.
+            </p>
           </div>
         </div>
+      </div>
     </section>
 
-    <section class="section faq-section">
-        <h2 style="color: #00ffcc;">Frequently Asked Questions (FAQ)</h2>
-        <div class="faq-item">
-            <h3>How do I save a clipboard image as a PNG?</h3>
-            <p>Go to PixelPaste, press Ctrl+V to paste your image, ensure the PNG toggle is selected, type your filename, and press Enter. It is the fastest <strong>clipboard to PNG converter</strong> online.</p>
-        </div>
-        <div class="faq-item">
-            <h3>Is PixelPaste a private screenshot tool?</h3>
-            <p>Yes. PixelPaste is an <strong>offline image converter</strong>. Unlike other <strong>online clipboard savers</strong>, we never upload your data. It is 100% private and runs in your browser memory.</p>
-        </div>
-        <div class="faq-item">
-            <h3>Can I rename a file before downloading from my clipboard?</h3>
-            <p>Absolutely. PixelPaste features a <strong>smart screenshot renamer</strong> that allows you to name the file immediately after pasting, streamlining your <strong>visual asset organization</strong>.</p>
+    <section class="section">
+        <div class="container">
+            <div class="faq-section">
+                <h2 class="section-title" style="font-size: 1.5rem; margin-bottom: 30px;">SEO & UTILITY FAQ</h2>
+                <div class="faq-item">
+                    <h3>How do I save a clipboard image as PNG?</h3>
+                    <p style="color: var(--text-secondary);">Simply open PixelPaste, press Ctrl+V, type a name, and hit Enter. It's the fastest <strong>clipboard to file converter</strong> available.</p>
+                </div>
+                <div class="faq-item">
+                    <h3>Is my data secure?</h3>
+                    <p style="color: var(--text-secondary);">PixelPaste is a <strong>100% private offline tool</strong>. Your images are never uploaded to a server; they stay in your browser memory.</p>
+                </div>
+            </div>
         </div>
     </section>
-
-    <div class="container keyword-cluster">
-        <p>
-            Keywords: Save clipboard image to disk, browser screenshot utility, free clipboard to file tool, instant PNG creator, how to save screenshot as JPG, fast asset manager for developers, web-based clipboard viewer, offline screenshot capture, Chrome extension for designers, save image from memory, clipboard to file converter online free, no-install screenshot saver, PixelPaste Thomas Askharoun.
-        </p>
-    </div>
   </main>
 
   <footer>
-    <div class="footer-content">
-      <div class="footer-left">
-        <div class="footer-logo">PixelPaste | askharoun.dev</div>
-        <p>The #1 tool to <strong>save clipboard images as files</strong> instantly.</p>
-      </div>
-      <div class="footer-right">
-        <p>Contact: askharoun2005@gmail.com</p>
-      </div>
-    </div>
+    <p class="logo-text">ASKHAROUN.DEV</p>
+    <p style="color: var(--text-secondary); font-size: 0.8rem; margin-top: 10px;">Built for speed. Optimized for workflow.</p>
   </footer>
 
-  <script src="script.js"></script>
 </body>
 </html>
