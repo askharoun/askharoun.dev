@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <meta name="theme-color" content="#1a1f2c">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <title>TaskOrbit | Askharoun.dev</title>
+  <title>TaskOrbit</title>
   
   <link rel="manifest" id="my-manifest">
   <script>
@@ -17,504 +17,379 @@
       "background_color": "#12151d",
       "theme_color": "#2d6cdf",
       "icons": [
-        { "src": "https://askharoun.dev/favicon.ico", "sizes": "192x192", "type": "image/png" },
-        { "src": "https://askharoun.dev/favicon.ico", "sizes": "512x512", "type": "image/png" }
+        { "src": "https://askharoun.dev/favicon.ico", "sizes": "192x192", "type": "image/png" }
       ]
     };
     const blob = new Blob([JSON.stringify(manifest)], {type: 'application/json'});
     document.querySelector('#my-manifest').setAttribute('href', URL.createObjectURL(blob));
   </script>
 
-  <link rel="icon" href="https://askharoun.dev/favicon.ico">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
   
   <style>
     /* ========================================
-       PREMIUM VARIABLES
+       VARS & RESET
        ======================================== */
     :root {
-      /* Colors */
       --primary: #2d6cdf;
       --secondary: #00c2ff;
-      --background: #f8f9fc;
+      --bg: #f8f9fc;
       --surface: #ffffff;
-      --text-main: #1a1c25;
-      --text-sub: #4a4d60;
+      --text: #1a1c25;
+      --text-mute: #4a4d60;
       --border: #e0e3f0;
-      --shadow: 0 10px 40px -10px rgba(0, 24, 69, 0.1);
-      --success: #00c853;
-      --error: #ff3d71;
-
-      /* Glass */
-      --glass-bg: rgba(255, 255, 255, 0.85);
-      --glass-blur: 20px;
+      --glass: rgba(255, 255, 255, 0.85);
       --glass-border: 1px solid rgba(255, 255, 255, 0.5);
-
-      /* Physics Animation Curves */
-      --ease-out-expo: cubic-bezier(0.19, 1, 0.22, 1);     /* The "Apple" slide */
-      --ease-elastic: cubic-bezier(0.68, -0.6, 0.32, 1.6); /* Bouncy pop */
+      --ease: cubic-bezier(0.19, 1, 0.22, 1);
     }
 
     .dark-mode {
       --primary: #4d8df6;
       --secondary: #00e5ff;
-      --background: #0f1219;
+      --bg: #0f1219;
       --surface: #1a1f2c;
-      --text-main: #ffffff;
-      --text-sub: #a0a3b8;
+      --text: #ffffff;
+      --text-mute: #a0a3b8;
       --border: #2a3042;
-      --shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.5);
-      
-      --glass-bg: rgba(26, 31, 44, 0.85);
+      --glass: rgba(26, 31, 44, 0.85);
       --glass-border: 1px solid rgba(255, 255, 255, 0.05);
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    
     body {
       font-family: 'Roboto', sans-serif;
-      background-color: var(--background);
-      color: var(--text-main);
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      overflow-x: hidden;
-      transition: background-color 0.5s var(--ease-out-expo), color 0.5s var(--ease-out-expo);
+      background: var(--bg); color: var(--text);
+      height: 100vh; display: flex; flex-direction: column;
+      overflow: hidden;
+      transition: background 0.5s var(--ease);
     }
 
     /* ========================================
-       REFINED NAVIGATION
+       SPLASH SCREEN
+       ======================================== */
+    #splash {
+      position: fixed; inset: 0;
+      background: var(--bg);
+      z-index: 9999;
+      display: flex; align-items: center; justify-content: center;
+      transition: opacity 0.6s ease, visibility 0.6s;
+    }
+    .splash-logo {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--text);
+      animation: logoSpin 1.5s var(--ease) infinite alternate;
+    }
+    @keyframes logoSpin {
+      0% { transform: scale(1) rotate(0deg); opacity: 0.5; }
+      100% { transform: scale(1.2) rotate(5deg); opacity: 1; text-shadow: 0 0 20px var(--primary); }
+    }
+    
+    .app-wrapper {
+      opacity: 0; transform: scale(0.9);
+      transition: opacity 0.8s ease, transform 0.8s var(--ease);
+      flex: 1; display: flex; flex-direction: column;
+      height: 100%;
+    }
+    .app-loaded .app-wrapper { opacity: 1; transform: scale(1); }
+    .app-loaded #splash { opacity: 0; visibility: hidden; pointer-events: none; }
+
+    /* ========================================
+       HEADER (Just Logo)
        ======================================== */
     header {
-      position: fixed; top: 0; left: 0; right: 0;
-      height: 70px;
-      display: flex; justify-content: space-between; align-items: center;
-      padding: 0 2rem;
-      background: var(--glass-bg);
-      backdrop-filter: blur(var(--glass-blur));
-      -webkit-backdrop-filter: blur(var(--glass-blur));
+      height: 60px;
+      display: flex; justify-content: center; align-items: center;
+      background: var(--glass);
+      backdrop-filter: blur(20px);
       border-bottom: var(--glass-border);
-      z-index: 1000;
-      transition: all 0.3s ease;
+      position: relative; z-index: 100;
     }
-
-    .logo-text {
-      font-family: 'Orbitron', sans-serif;
-      font-weight: 700; font-size: 1.2rem;
-      color: var(--text-main);
-      text-decoration: none;
-      letter-spacing: 1px;
+    .logo {
+      font-family: 'Orbitron', sans-serif; font-weight: 700; font-size: 1.1rem;
+      color: var(--text); letter-spacing: 2px;
     }
-
-    .nav-controls {
-      display: flex; align-items: center; gap: 1.5rem;
-    }
-
-    /* Desktop Nav */
-    .desktop-nav { display: flex; list-style: none; gap: 2rem; }
-    .nav-link {
-      font-family: 'Orbitron', sans-serif; font-size: 0.9rem; font-weight: 500;
-      color: var(--text-sub); text-decoration: none; position: relative;
-      transition: color 0.3s ease;
-    }
-    .nav-link::after {
-      content: ''; position: absolute; bottom: -4px; left: 0; width: 0; height: 2px;
-      background: var(--primary); transition: width 0.3s var(--ease-out-expo);
-    }
-    .nav-link:hover { color: var(--primary); }
-    .nav-link:hover::after { width: 100%; }
-
-    /* Theme Toggle - Centered Perfectly */
-    .theme-toggle {
-      width: 52px; height: 28px;
-      background: var(--border);
-      border-radius: 30px; border: none;
-      position: relative; cursor: pointer;
-      flex-shrink: 0; /* Prevents squishing */
-    }
-    .toggle-thumb {
-      position: absolute; top: 2px; left: 2px;
-      width: 24px; height: 24px;
-      background: var(--surface); border-radius: 50%;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-      transition: transform 0.5s var(--ease-elastic);
-    }
-    .dark-mode .theme-toggle { background: var(--primary); }
-    .dark-mode .toggle-thumb { transform: translateX(24px); }
-
-    /* Mobile Hamburger - Animated */
-    .menu-toggle {
-      display: none; flex-direction: column; gap: 6px;
-      cursor: pointer; z-index: 1002; width: 30px;
-    }
-    .bar {
-      width: 100%; height: 2px; background: var(--text-main);
-      border-radius: 2px;
-      transition: all 0.4s var(--ease-out-expo);
-      transform-origin: center;
-    }
-    /* Hamburger to X Animation */
-    .menu-active .bar:nth-child(1) { transform: translateY(8px) rotate(45deg); }
-    .menu-active .bar:nth-child(2) { opacity: 0; transform: translateX(-20px); }
-    .menu-active .bar:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
-
-    /* Mobile Nav Overlay - Circular Reveal */
-    .mobile-nav-overlay {
-      position: fixed; inset: 0;
-      background: var(--surface);
-      z-index: 1001;
-      display: flex; flex-direction: column; justify-content: center; align-items: center;
-      /* The "Chopped" fix: Circular reveal from top right */
-      clip-path: circle(0% at calc(100% - 2rem) 35px);
-      transition: clip-path 0.6s var(--ease-out-expo);
-    }
-    .mobile-nav-overlay.active {
-      clip-path: circle(150% at calc(100% - 2rem) 35px);
-    }
-
-    .mobile-nav-list { list-style: none; text-align: center; display: flex; flex-direction: column; gap: 2rem; }
-    .mobile-link {
-      font-family: 'Orbitron', sans-serif; font-size: 1.5rem; color: var(--text-main);
-      text-decoration: none; opacity: 0; transform: translateY(20px);
-      transition: opacity 0.4s ease, transform 0.4s var(--ease-out-expo);
-    }
-    /* Staggered animation for links */
-    .mobile-nav-overlay.active .mobile-link { opacity: 1; transform: translateY(0); }
-    .mobile-nav-overlay.active li:nth-child(1) .mobile-link { transition-delay: 0.1s; }
-    .mobile-nav-overlay.active li:nth-child(2) .mobile-link { transition-delay: 0.2s; }
-    .mobile-nav-overlay.active li:nth-child(3) .mobile-link { transition-delay: 0.3s; }
-    .mobile-nav-overlay.active li:nth-child(4) .mobile-link { transition-delay: 0.4s; }
 
     /* ========================================
        MAIN APP
        ======================================== */
     main {
-      flex: 1; display: flex; justify-content: center; padding-top: 100px; padding-bottom: 40px;
+      flex: 1; display: flex; justify-content: center; align-items: flex-start;
+      padding-top: 40px; overflow-y: auto;
       position: relative;
     }
-    
-    /* Background Ambience */
-    .bg-glow {
-      position: fixed; top: 50%; left: 50%; width: 100vw; height: 100vh;
-      background: radial-gradient(circle, rgba(45,108,223,0.05) 0%, transparent 70%);
-      transform: translate(-50%, -50%); z-index: -1; pointer-events: none;
+
+    /* Floating Theme Toggle */
+    .theme-toggle {
+      position: absolute; top: 15px; right: 15px;
+      width: 40px; height: 40px; border-radius: 50%;
+      background: var(--surface); border: 1px solid var(--border);
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+      color: var(--text); z-index: 101;
+      transition: transform 0.3s var(--ease);
     }
+    .theme-toggle:active { transform: scale(0.9); }
 
     .app-card {
-      width: 90%; max-width: 600px;
-      background: var(--glass-bg);
+      width: 90%; max-width: 500px;
+      background: var(--glass);
       backdrop-filter: blur(30px);
       border: var(--glass-border);
-      border-radius: 24px;
-      padding: 2.5rem;
-      box-shadow: var(--shadow);
-      /* Initial Entrance */
-      animation: card-float 0.8s var(--ease-out-expo) backwards;
+      border-radius: 20px;
+      padding: 1.5rem;
+      box-shadow: 0 10px 40px -10px rgba(0,0,0,0.1);
+      margin-bottom: 2rem;
     }
 
-    @keyframes card-float {
-      from { opacity: 0; transform: translateY(40px) scale(0.95); }
-      to { opacity: 1; transform: translateY(0) scale(1); }
-    }
-
-    .app-header h1 {
-      font-family: 'Orbitron', sans-serif; font-size: 2rem; margin-bottom: 0.5rem;
-      background: linear-gradient(135deg, var(--primary), var(--secondary));
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-    }
-    .stats {
-      font-size: 0.9rem; color: var(--text-sub); margin-bottom: 2rem; font-weight: 500;
-      display: flex; gap: 10px; align-items: center;
-    }
-    .progress-container { flex: 1; height: 4px; background: rgba(0,0,0,0.1); border-radius: 2px; overflow: hidden; }
-    .progress-bar { height: 100%; background: var(--primary); width: 0%; transition: width 0.8s var(--ease-out-expo); }
-
-    /* Input Area */
-    .input-wrapper {
-      position: relative; margin-bottom: 2rem; display: flex; align-items: center;
-    }
+    /* Input */
+    .input-box { position: relative; margin-bottom: 1.5rem; }
     .task-input {
-      width: 100%; padding: 16px 20px; padding-right: 60px;
-      background: rgba(var(--surface), 0.5);
-      border: 2px solid var(--border); border-radius: 16px;
-      font-size: 1rem; color: var(--text-main); font-family: 'Roboto', sans-serif;
-      transition: all 0.3s ease;
+      width: 100%; padding: 16px; padding-right: 50px;
+      background: rgba(var(--surface), 0.6);
+      border: 2px solid var(--border); border-radius: 12px;
+      color: var(--text); font-family: 'Roboto', sans-serif; font-size: 1rem;
+      transition: 0.3s;
     }
     .task-input:focus {
       outline: none; border-color: var(--primary);
       box-shadow: 0 0 0 4px rgba(45, 108, 223, 0.1);
-      transform: scale(1.01);
     }
     .add-btn {
-      position: absolute; right: 8px;
-      width: 44px; height: 44px;
-      background: var(--primary); border: none; border-radius: 12px;
-      color: white; cursor: pointer; display: flex; align-items: center; justify-content: center;
-      transition: transform 0.2s var(--ease-elastic), background 0.2s;
+      position: absolute; right: 8px; top: 8px;
+      width: 36px; height: 36px;
+      background: var(--primary); border: none; border-radius: 8px;
+      color: white; display: flex; align-items: center; justify-content: center;
+      cursor: pointer; transition: 0.2s;
     }
-    .add-btn:hover { transform: scale(1.1); background: var(--secondary); }
     .add-btn:active { transform: scale(0.9); }
 
-    /* Task List - Smooth Animations */
-    .task-list { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+    /* Stats */
+    .stats {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 1rem; font-size: 0.8rem; color: var(--text-mute);
+      font-family: 'Orbitron', sans-serif; font-weight: 600;
+    }
+    .progress-track { width: 100px; height: 4px; background: var(--border); border-radius: 2px; overflow: hidden; }
+    .progress-bar { height: 100%; background: var(--success); width: 0%; transition: width 0.5s ease; }
+
+    /* List */
+    .task-list { list-style: none; display: flex; flex-direction: column; gap: 10px; }
     
     .task-item {
-      display: flex; align-items: center; padding: 16px;
-      background: var(--surface); border: 1px solid var(--border); border-radius: 14px;
-      cursor: pointer; position: relative; overflow: hidden;
-      /* Physics-based entrance */
-      animation: item-pop 0.5s var(--ease-elastic) forwards;
-      transition: transform 0.2s, box-shadow 0.2s, background 0.3s;
+      display: flex; align-items: center; padding: 12px;
+      background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
+      animation: slideIn 0.4s var(--ease) forwards;
+      transition: transform 0.2s, background 0.2s;
     }
-    @keyframes item-pop {
-      from { opacity: 0; transform: scale(0.8) translateY(20px); }
-      to { opacity: 1; transform: scale(1) translateY(0); }
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
     }
-
-    .task-item:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
-
+    
     .checkbox {
-      width: 22px; height: 22px; border: 2px solid var(--text-sub); border-radius: 50%;
-      margin-right: 15px; position: relative; transition: all 0.3s var(--ease-elastic);
+      width: 20px; height: 20px; border: 2px solid var(--text-mute); border-radius: 6px;
+      margin-right: 12px; position: relative; transition: 0.2s;
+      flex-shrink: 0;
     }
-    .checkbox::after {
-      content: ''; position: absolute; inset: 0; background: var(--primary); border-radius: 50%;
-      transform: scale(0); transition: transform 0.3s var(--ease-elastic);
+    .task-item.completed .checkbox { border-color: var(--success); background: var(--success); }
+    .task-item.completed .checkbox::after {
+      content: '✓'; position: absolute; top: 50%; left: 50%; 
+      transform: translate(-50%, -50%); color: white; font-size: 12px;
     }
+    
+    .task-text { flex: 1; font-size: 0.95rem; transition: color 0.2s; }
+    .task-item.completed .task-text { text-decoration: line-through; color: var(--text-mute); opacity: 0.6; }
 
-    .task-text { flex: 1; font-size: 1rem; transition: color 0.3s; }
-
-    /* Completed State */
-    .task-item.completed .checkbox { border-color: var(--primary); }
-    .task-item.completed .checkbox::after { transform: scale(0.6); }
-    .task-item.completed .task-text { text-decoration: line-through; color: var(--text-sub); opacity: 0.7; }
-    .task-item.completed { background: rgba(0,0,0,0.02); }
-
-    /* Delete Button */
     .delete-btn {
-      padding: 8px; color: var(--error); background: transparent; border: none;
-      opacity: 0; transform: translateX(10px); transition: all 0.3s var(--ease-out-expo);
-      cursor: pointer;
+      background: none; border: none; color: var(--error); cursor: pointer;
+      padding: 5px; opacity: 0; transform: translateX(5px); transition: 0.2s;
     }
     .task-item:hover .delete-btn { opacity: 1; transform: translateX(0); }
     
-    /* Warp Exit Animation */
     .task-item.removing {
-      animation: warp-out 0.4s var(--ease-out-expo) forwards;
-      pointer-events: none;
+      animation: zoomOut 0.3s var(--ease) forwards; pointer-events: none;
     }
-    @keyframes warp-out {
-      to { transform: translateX(50px); opacity: 0; height: 0; margin: 0; padding: 0; border: none; }
-    }
+    @keyframes zoomOut { to { opacity: 0; transform: scale(0.9); height: 0; margin: 0; padding: 0; border: 0; } }
 
     /* ========================================
-       FOOTER - MINIMAL & CLEAN
+       FOOTER (Micro)
        ======================================== */
     footer {
-      text-align: center;
-      padding: 2.5rem 1rem;
-      border-top: 1px solid var(--border);
       background: var(--surface);
-      margin-top: auto;
+      border-top: 1px solid var(--border);
+      text-align: center;
     }
-    .footer-logo {
+    .footer-link {
+      display: block;
+      padding: 15px;
+      text-decoration: none;
       font-family: 'Orbitron', sans-serif;
-      font-size: 1.5rem;
-      font-weight: 700;
-      color: var(--text-main);
-      letter-spacing: 1.5px;
-      opacity: 0.9;
+      font-size: 0.8rem;
+      color: var(--text-mute);
+      letter-spacing: 1px;
+      transition: color 0.2s, background 0.2s;
     }
-
-    /* ========================================
-       RESPONSIVE
-       ======================================== */
-    @media (max-width: 768px) {
-      .desktop-nav { display: none; }
-      .menu-toggle { display: flex; }
-      .app-card { padding: 1.5rem; width: 95%; }
-      header { padding: 0 1.5rem; }
-      /* Fix alignment on mobile */
-      .nav-controls { gap: 1rem; }
-      .delete-btn { opacity: 1; transform: translateX(0); } /* Always show delete on mobile */
+    .footer-link:hover {
+      background: rgba(45, 108, 223, 0.05);
+      color: var(--primary);
     }
   </style>
 </head>
-<body>
+<body class="dark-mode">
 
-  <header>
-    <a href="index.html" class="logo-text">ASKHAROUN.DEV</a>
-    
-    <div class="nav-controls">
-      <ul class="desktop-nav">
-        <li><a href="#" class="nav-link">Home</a></li>
-        <li><a href="#" class="nav-link">About</a></li>
-        <li><a href="#" class="nav-link">Projects</a></li>
-      </ul>
+  <div id="splash">
+    <div class="splash-logo">ASKHAROUN.DEV</div>
+  </div>
 
-      <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode">
-        <div class="toggle-thumb"></div>
+  <div class="app-wrapper">
+    <header>
+      <div class="logo">ASKHAROUN.DEV</div>
+      <button id="themeToggle" class="theme-toggle" aria-label="Toggle Theme">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
       </button>
+    </header>
 
-      <div class="menu-toggle" id="menuBtn">
-        <div class="bar"></div>
-        <div class="bar"></div>
-        <div class="bar"></div>
-      </div>
-    </div>
-  </header>
-
-  <nav class="mobile-nav-overlay" id="mobileMenu">
-    <ul class="mobile-nav-list">
-      <li><a href="#" class="mobile-link">Home</a></li>
-      <li><a href="#" class="mobile-link">About</a></li>
-      <li><a href="#" class="mobile-link">Projects</a></li>
-      <li><a href="#" class="mobile-link">Contact</a></li>
-    </ul>
-  </nav>
-
-  <div class="bg-glow"></div>
-
-  <main>
-    <div class="app-card">
-      <div class="app-header">
-        <h1>TaskOrbit</h1>
+    <main>
+      <div class="app-card">
         <div class="stats">
-          <span id="pendingText">0 Active</span>
-          <div class="progress-container"><div class="progress-bar" id="progressBar"></div></div>
+          <span>TASKS</span>
+          <div class="progress-track"><div class="progress-bar" id="progressBar"></div></div>
         </div>
+
+        <div class="input-box">
+          <input type="text" id="taskInput" class="task-input" placeholder="Add a task..." autocomplete="off">
+          <button id="addBtn" class="add-btn">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+          </button>
+        </div>
+
+        <ul id="taskList" class="task-list"></ul>
       </div>
+    </main>
 
-      <div class="input-wrapper">
-        <input type="text" id="taskInput" class="task-input" placeholder="New objective..." autocomplete="off">
-        <button id="addBtn" class="add-btn">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-        </button>
-      </div>
-
-      <ul id="taskList" class="task-list">
-        </ul>
-    </div>
-  </main>
-
-  <footer>
-    <div class="footer-logo">askharoun.dev</div>
-  </footer>
+    <footer>
+      <a href="https://www.askharoun.dev" class="footer-link">askharoun.dev</a>
+    </footer>
+  </div>
 
   <script>
     class TaskApp {
       constructor() {
         this.tasks = JSON.parse(localStorage.getItem('tasks')) || [];
-        this.dom = {
-          input: document.getElementById('taskInput'),
-          list: document.getElementById('taskList'),
-          addBtn: document.getElementById('addBtn'),
-          progress: document.getElementById('progressBar'),
-          pending: document.getElementById('pendingText')
-        };
+        this.list = document.getElementById('taskList');
+        this.input = document.getElementById('taskInput');
+        this.progress = document.getElementById('progressBar');
+        
         this.init();
       }
 
       init() {
-        this.render();
-        this.dom.addBtn.addEventListener('click', () => this.add());
-        this.dom.input.addEventListener('keydown', (e) => e.key === 'Enter' && this.add());
-        this.dom.list.addEventListener('click', (e) => this.handleListClick(e));
-      }
-
-      add() {
-        const text = this.dom.input.value.trim();
-        if (!text) return;
-        this.tasks.unshift({ id: Date.now(), text, completed: false });
-        this.save();
-        this.dom.input.value = '';
-        this.render();
-      }
-
-      handleListClick(e) {
-        const item = e.target.closest('.task-item');
-        if (!item) return;
-        const id = parseInt(item.dataset.id);
-
-        if (e.target.closest('.delete-btn')) {
-          item.classList.add('removing');
-          setTimeout(() => {
-            this.tasks = this.tasks.filter(t => t.id !== id);
-            this.save();
-            this.render();
-          }, 400); // Wait for animation
-        } else {
-          const task = this.tasks.find(t => t.id === id);
-          task.completed = !task.completed;
-          this.save();
-          this.render();
-        }
-      }
-
-      save() {
-        localStorage.setItem('tasks', JSON.stringify(this.tasks));
+        // Initial Render (Only runs once on load)
+        this.tasks.forEach(task => this.createTaskElement(task));
         this.updateStats();
+
+        // Events
+        document.getElementById('addBtn').addEventListener('click', () => this.add());
+        this.input.addEventListener('keydown', (e) => e.key === 'Enter' && this.add());
+        
+        // List Delegation (Check/Delete)
+        this.list.addEventListener('click', (e) => {
+          const item = e.target.closest('.task-item');
+          if (!item) return;
+          const id = parseInt(item.dataset.id);
+
+          if (e.target.closest('.delete-btn')) {
+            this.remove(id, item);
+          } else {
+            this.toggle(id, item);
+          }
+        });
+      }
+
+      // Add Task (Appends only the new item)
+      add() {
+        const text = this.input.value.trim();
+        if (!text) return;
+
+        const task = { id: Date.now(), text, completed: false };
+        this.tasks.unshift(task); // Add to data array
+        this.save();
+        
+        this.createTaskElement(task, true); // True = Prepend to top
+        this.input.value = '';
+      }
+
+      // Create DOM Element
+      createTaskElement(task, prepend = false) {
+        const li = document.createElement('li');
+        li.className = `task-item ${task.completed ? 'completed' : ''}`;
+        li.dataset.id = task.id;
+        li.innerHTML = `
+          <div class="checkbox"></div>
+          <span class="task-text">${task.text.replace(/</g, "&lt;")}</span>
+          <button class="delete-btn">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>
+          </button>
+        `;
+        
+        if (prepend) {
+          this.list.prepend(li);
+        } else {
+          this.list.appendChild(li);
+        }
+        this.updateStats();
+      }
+
+      // Toggle (Updates class only)
+      toggle(id, el) {
+        const task = this.tasks.find(t => t.id === id);
+        task.completed = !task.completed;
+        el.classList.toggle('completed');
+        this.save();
+        this.updateStats();
+      }
+
+      // Remove (Animates out then removes from DOM)
+      remove(id, el) {
+        el.classList.add('removing');
+        el.addEventListener('animationend', () => {
+          el.remove();
+          this.tasks = this.tasks.filter(t => t.id !== id);
+          this.save();
+          this.updateStats();
+        });
       }
 
       updateStats() {
         const total = this.tasks.length;
         const complete = this.tasks.filter(t => t.completed).length;
         const pct = total === 0 ? 0 : (complete / total) * 100;
-        this.dom.progress.style.width = `${pct}%`;
-        this.dom.pending.innerText = `${total - complete} Active`;
+        this.progress.style.width = `${pct}%`;
       }
 
-      render() {
-        this.dom.list.innerHTML = '';
-        this.tasks.sort((a,b) => a.completed - b.completed).forEach(task => {
-          const li = document.createElement('li');
-          li.className = `task-item ${task.completed ? 'completed' : ''}`;
-          li.dataset.id = task.id;
-          li.innerHTML = `
-            <div class="checkbox"></div>
-            <span class="task-text">${task.text.replace(/</g, "&lt;")}</span>
-            <button class="delete-btn">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>
-            </button>
-          `;
-          this.dom.list.appendChild(li);
-        });
-        this.updateStats();
+      save() {
+        localStorage.setItem('tasks', JSON.stringify(this.tasks));
       }
     }
 
-    // UI Init
-    document.addEventListener('DOMContentLoaded', () => {
+    // Init & Animation
+    window.addEventListener('load', () => {
+      // 1. Start App Logic
       new TaskApp();
 
-      // Theme
-      const toggle = document.getElementById('themeToggle');
-      const savedTheme = localStorage.getItem('theme');
-      if (savedTheme === 'dark') document.body.classList.add('dark-mode');
-      
-      toggle.addEventListener('click', () => {
+      // 2. Theme Logic
+      const themeBtn = document.getElementById('themeToggle');
+      themeBtn.addEventListener('click', () => {
         document.body.classList.toggle('dark-mode');
-        localStorage.setItem('theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
       });
 
-      // Mobile Menu - The Fix
-      const menuBtn = document.getElementById('menuBtn');
-      const mobileNav = document.getElementById('mobileMenu');
-      const links = document.querySelectorAll('.mobile-link');
-
-      menuBtn.addEventListener('click', () => {
-        menuBtn.classList.toggle('menu-active');
-        mobileNav.classList.toggle('active');
-      });
-
-      links.forEach(link => {
-        link.addEventListener('click', () => {
-          menuBtn.classList.remove('menu-active');
-          mobileNav.classList.remove('active');
-        });
-      });
+      // 3. Splash Screen Sequence
+      setTimeout(() => {
+        document.body.classList.add('app-loaded');
+      }, 1500); // 1.5s splash duration
     });
   </script>
 </body>
