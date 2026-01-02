@@ -144,19 +144,23 @@ function getReadingForSection(section, title, day) {
     const sRead = getChapterFromAbsolute(section, start);
     const eRead = getChapterFromAbsolute(section, end);
 
-    let display = "", query = "";
+    let display = "";
     if (sRead.bookEn === eRead.bookEn) {
         display = (sRead.chapter === eRead.chapter) 
             ? `${currentLang === 'ar' ? sRead.bookAr : sRead.bookEn} ${sRead.chapter}`
             : `${currentLang === 'ar' ? sRead.bookAr : sRead.bookEn} ${sRead.chapter}-${eRead.chapter}`;
-        query = `${sRead.bookEn} ${sRead.chapter}-${eRead.chapter}`;
     } else {
         const b1 = currentLang === 'ar' ? sRead.bookAr : sRead.bookEn;
         const b2 = currentLang === 'ar' ? eRead.bookAr : eRead.bookEn;
         display = `${b1} ${sRead.chapter} — ${b2} ${eRead.chapter}`;
-        query = `${sRead.bookEn} ${sRead.chapter} ${eRead.bookEn} ${eRead.chapter}`;
     }
-    return { section: title, display: display, query: query };
+
+    return { 
+        section: title, 
+        display: display, 
+        bookLink: sRead.bookEn,
+        chapterLink: sRead.chapter 
+    };
 }
 
 function renderPage(date) {
@@ -168,7 +172,6 @@ function renderPage(date) {
     document.querySelector('[data-i18n="next"]').innerText = t.next;
     document.querySelector('[data-i18n="today"]').innerText = t.today;
 
-    // SHORT DATE FORMAT
     const opts = { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' };
     const loc = currentLang === 'ar' ? 'ar-EG' : 'en-US';
     
@@ -196,7 +199,14 @@ function renderPage(date) {
         readings.forEach(r => {
             const card = document.createElement('a');
             card.className = 'reading-card';
-            card.href = `https://www.google.com/search?q=${encodeURIComponent(r.query + " Coptic Reader")}`;
+            
+            // LINK GENERATION:
+            // 1. Remove all spaces ("1 Samuel" -> "1Samuel")
+            const bookSlug = r.bookLink.replace(/\s+/g, '');
+            
+            // 2. Build URL: .../NKJV/1Samuel/1
+            card.href = `https://www.copticchurch.net/bible/english/NKJV/${bookSlug}/${r.chapterLink}`;
+            
             card.target = "_blank";
             card.innerHTML = `<span class="reading-section">${r.section}</span><span class="reading-ref">${r.display}</span>`;
             list.appendChild(card);
