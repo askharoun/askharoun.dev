@@ -11,7 +11,7 @@
 body {
     background-color: var(--bg-cream);
     color: var(--text-brown);
-    font-size: 19px; /* Large font for seniors */
+    font-size: 19px;
     font-family: -apple-system, BlinkMacSystemFont, serif;
     margin: 0;
     padding: 0;
@@ -20,116 +20,73 @@ body {
 
 /* Splash Screen */
 #splash-screen {
-    position: fixed;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    background-color: var(--bg-cream);
-    z-index: 9999;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background-color: var(--bg-cream); z-index: 9999;
+    display: flex; justify-content: center; align-items: center;
     transition: opacity 0.5s ease-out, visibility 0.5s;
 }
-#splash-screen.hidden {
-    opacity: 0;
-    visibility: hidden;
-}
-.splash-logo {
-    width: 180px;
-    height: auto;
-    animation: pulse 2s infinite;
-}
-@keyframes pulse {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.05); }
-    100% { transform: scale(1); }
-}
+#splash-screen.hidden { opacity: 0; visibility: hidden; }
+.splash-logo { width: 180px; height: auto; animation: pulse 2s infinite; }
+@keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
 
-.container {
-    padding: 1rem 1.2rem;
-    max-width: 650px;
-    margin: 0 auto;
-}
+.container { padding: 1rem 1.2rem; max-width: 650px; margin: 0 auto; }
 
-/* Buttons & Inputs */
 .floating-lang-btn {
-    position: absolute;
-    top: 1rem; left: 1rem;
-    background: var(--bg-cream);
-    border: 2px solid var(--card-tan);
-    color: var(--text-brown);
-    padding: 8px 16px;
-    border-radius: 25px;
-    font-weight: bold;
-    font-size: 1rem;
-    z-index: 20;
+    position: absolute; top: 1rem; left: 1rem;
+    background: var(--bg-cream); border: 2px solid var(--card-tan);
+    color: var(--text-brown); padding: 8px 16px; border-radius: 25px;
+    font-weight: bold; font-size: 1rem; z-index: 20;
 }
 
 .logo-container { text-align: center; margin: 1.5rem 0; }
 .main-logo { width: 130px; height: auto; filter: drop-shadow(0 4px 4px rgba(0,0,0,0.1)); }
 
-.notify-banner-btn {
-    width: 100%;
-    padding: 1rem;
-    background-color: var(--accent-blue);
-    color: white;
-    border: none;
-    border-radius: 12px;
-    font-size: 1.1rem;
-    font-weight: bold;
-    margin-bottom: 1.5rem;
-    text-align: center;
-    box-shadow: var(--shadow);
-}
-
 .greeting-banner {
-    background: white;
-    border: 2px solid var(--card-tan);
-    color: var(--text-brown);
-    padding: 1rem;
-    text-align: center;
-    border-radius: 12px;
-    font-size: 1.1rem;
-    font-weight: bold;
-    margin-bottom: 1.5rem;
+    background: white; border: 2px solid var(--card-tan); color: var(--text-brown);
+    padding: 1rem; text-align: center; border-radius: 12px;
+    font-size: 1.1rem; font-weight: bold; margin-bottom: 1.5rem;
 }
 
-/* Date Display */
 .date-section {
-    text-align: center;
-    margin-bottom: 2rem;
-    background: white;
-    padding: 1.5rem;
-    border-radius: 15px;
-    border: 2px solid var(--card-tan);
+    text-align: center; margin-bottom: 2rem; background: white;
+    padding: 1.5rem; border-radius: 15px; border: 2px solid var(--card-tan);
 }
 .section-label { font-size: 1rem; color: var(--muted); text-transform: uppercase; margin: 0 0 0.5rem 0; }
-.date-display-wrapper { position: relative; display: inline-block; }
+
+/* FIX: Date Display Wrapper */
+.date-display-wrapper { 
+    position: relative; 
+    display: inline-block;
+    max-width: 100%;
+}
+
 .hidden-date-input {
     position: absolute; top: 0; left: 0; width: 100%; height: 100%;
     opacity: 0; cursor: pointer; z-index: 10;
 }
+
+/* FIX: Force Single Line Date */
 h1 {
-    font-size: 2.2rem; margin: 0; font-weight: 800;
-    color: var(--accent-red); line-height: 1.2;
+    /* Responsive font size: 2.2rem normally, but shrinks to fit small screens */
+    font-size: clamp(1.4rem, 6vw, 2.2rem); 
+    margin: 0; 
+    font-weight: 800; 
+    color: var(--accent-red); 
+    line-height: 1.2;
+    white-space: nowrap; /* Forces text to stay on one line */
 }
+
 .tap-hint {
     margin-top: 0.8rem; background: var(--card-tan); color: var(--text-brown);
     padding: 8px 20px; border-radius: 30px; font-size: 0.95rem;
     display: inline-flex; align-items: center; gap: 8px; font-weight: bold;
 }
 
-/* Readings */
 .readings-container { display: flex; flex-direction: column; gap: 18px; }
 .reading-card {
-    background: white;
-    padding: 1.5rem;
-    border-radius: 15px;
-    border: 3px solid var(--text-brown);
-    border-left: 8px solid var(--accent-red);
-    box-shadow: var(--shadow);
-    text-decoration: none;
-    color: inherit;
+    background: white; padding: 1.5rem; border-radius: 15px;
+    border: 3px solid var(--text-brown); border-left: 8px solid var(--accent-red);
+    box-shadow: var(--shadow); text-decoration: none; color: inherit;
     display: flex; flex-direction: column;
 }
 .reading-card:active { background-color: #f0ece1; transform: scale(0.98); }
@@ -139,7 +96,6 @@ h1 {
 }
 .reading-ref { font-size: 1.6rem; font-weight: 700; color: var(--text-brown); }
 
-/* Nav */
 .bottom-nav {
     position: fixed; bottom: 0; left: 0; width: 100%;
     background: var(--bg-cream); border-top: 3px solid var(--card-tan);
@@ -153,8 +109,7 @@ h1 {
 }
 .main-action {
     background-color: var(--accent-red); color: white;
-    border-radius: 30px; flex: 2; margin: 0 10px;
-    box-shadow: var(--shadow);
+    border-radius: 30px; flex: 2; margin: 0 10px; box-shadow: var(--shadow);
 }
 
 body.rtl { direction: rtl; }
