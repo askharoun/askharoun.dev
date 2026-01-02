@@ -1,12 +1,10 @@
-const CACHE_NAME = 'coptic-bible-v3';
+const CACHE_NAME = 'coptic-bible-final-v1';
 const ASSETS = [
   '/',
   '/index.html',
   '/style.css',
   '/app.js',
   '/manifest.json'
-  // Note: We cannot cache the external Wikimedia image easily without CORS issues in some browsers, 
-  // so the user requires internet to see the logo the first time, then the browser disk cache takes over.
 ];
 
 self.addEventListener('install', (e) => {
