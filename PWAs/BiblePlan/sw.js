@@ -1,4 +1,4 @@
-const CACHE_NAME = 'coptic-bible-v110';
+const CACHE_NAME = 'coptic-bible-v112'; // Version 112
 const ASSETS = [
   '/',
   '/index.html',
