@@ -50,29 +50,22 @@ const BIBLE_DATA = {
     ]
 };
 
-// ==========================================
-// 2. HARD-CODED DICTIONARY
-// ==========================================
 const DICTIONARY = {
     en: {
-        date_label: "Reading For:",
-        tap_text: "Tap to change date",
+        date_label: "Readings For:", tap_text: "Tap to change date",
         prev: "Prev Day", next: "Next Day", today: "TODAY",
         sec_hist: "History & Law", sec_proph: "Prophets",
         sec_wis: "Wisdom", sec_nt: "New Testament",
-        finished: "Plan complete for today!",
-        catchup: "Rest / Catch-up Day",
-        greeting: "Hello! Below are your readings for today.",
+        finished: "Plan complete for today!", catchup: "Rest / Catch-up Day",
+        greeting: "Hello! Below are your readings for today."
     },
     ar: {
-        date_label: "قراءات اليوم:",
-        tap_text: "اضغط لتغيير التاريخ",
+        date_label: "قراءات اليوم:", tap_text: "اضغط لتغيير التاريخ",
         prev: "السابق", next: "التالي", today: "اليوم",
         sec_hist: "التاريخ والشريعة", sec_proph: "الأنبياء",
         sec_wis: "كتب الحكمة", sec_nt: "العهد الجديد",
-        finished: "تمت قراءة اليوم!",
-        catchup: "يوم راحة",
-        greeting: "أهلاً بك! إليك قراءاتك لليوم.",
+        finished: "تمت قراءة اليوم!", catchup: "يوم راحة",
+        greeting: "أهلاً بك! إليك قراءاتك لليوم."
     }
 };
 
@@ -80,10 +73,10 @@ let currentDate = new Date();
 let currentLang = 'en';
 
 // ==========================================
-// 3. INIT & EVENTS
+// 2. INIT & EVENTS
 // ==========================================
 document.addEventListener('DOMContentLoaded', () => {
-    // Splash Screen Timer
+    // Splash Screen
     setTimeout(() => {
         const splash = document.getElementById('splash-screen');
         if(splash) splash.classList.add('hidden');
@@ -91,70 +84,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
     renderPage(currentDate);
     setupDatePicker();
-    setupNotifications();
     showGreeting();
 });
 
 document.getElementById('lang-btn').addEventListener('click', (e) => {
-    // Toggle Language
     currentLang = currentLang === 'en' ? 'ar' : 'en';
-    
-    // Update Button Text
     e.target.innerText = currentLang === 'en' ? 'عربي' : 'English';
-    
-    // Toggle Direction
     document.body.classList.toggle('rtl', currentLang === 'ar');
-    
-    // Re-render Page
     renderPage(currentDate);
     showGreeting();
-    
-    // FORCE UPDATE NOTIFICATION BUTTON TEXT
-    const notifyBtn = document.getElementById('notify-enable-btn');
-    if(notifyBtn) {
-        notifyBtn.innerText = DICTIONARY[currentLang].notify_btn;
-    }
 });
-
-// ==========================================
-// 4. NOTIFICATION LOGIC (RE-MADE)
-// ==========================================
-function setupNotifications() {
-    const btn = document.getElementById('notify-enable-btn');
-    
-    // 1. Check if supported
-    if (!("Notification" in window)) {
-        if(btn) btn.style.display = 'none'; 
-        return;
-    }
-    
-    // 2. Check if already granted/denied
-    if (Notification.permission !== 'default') {
-        if(btn) btn.style.display = 'none';
-        return;
-    }
-    
-    // 3. Show button with correct language
-    btn.innerText = DICTIONARY[currentLang].notify_btn;
-    btn.style.display = 'block';
-
-    // 4. Handle Click
-    btn.addEventListener('click', () => {
-        Notification.requestPermission().then(perm => {
-            if (perm === 'granted') {
-                // Hide button immediately
-                btn.style.display = 'none';
-                
-                // Send "Test" Notification immediately
-                const t = DICTIONARY[currentLang];
-                new Notification(t.notify_title, { 
-                    body: t.notify_body,
-                    icon: 'icons/icon-192.png'
-                });
-            }
-        });
-    });
-}
 
 function showGreeting() {
     const banner = document.getElementById('greeting-banner');
@@ -162,7 +101,7 @@ function showGreeting() {
 }
 
 // ==========================================
-// 5. DATE & NAV LOGIC
+// 3. DATE & NAV LOGIC
 // ==========================================
 function setupDatePicker() {
     const picker = document.getElementById('date-picker');
@@ -179,7 +118,7 @@ document.getElementById('next-btn').addEventListener('click', () => { currentDat
 document.getElementById('today-btn').addEventListener('click', () => { currentDate = new Date(); renderPage(currentDate); });
 
 // ==========================================
-// 6. MATH ENGINE (Do not edit)
+// 4. MATH ENGINE
 // ==========================================
 function getTotalChapters(s) { return s.reduce((sum, b) => sum + b.c, 0); }
 
@@ -229,8 +168,10 @@ function renderPage(date) {
     document.querySelector('[data-i18n="next"]').innerText = t.next;
     document.querySelector('[data-i18n="today"]').innerText = t.today;
 
-    const opts = { weekday: 'long', month: 'long', day: 'numeric' };
+    // SHORT DATE FORMAT (Prevents Wrapping)
+    const opts = { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' };
     const loc = currentLang === 'ar' ? 'ar-EG' : 'en-US';
+    
     document.getElementById('date-display').innerText = date.toLocaleDateString(loc, opts);
     document.getElementById('date-picker').value = date.toISOString().split('T')[0];
 
