@@ -1,4 +1,4 @@
-const CACHE_NAME = 'coptic-bible-final-v1';
+const CACHE_NAME = 'coptic-bible-final-v2';
 const ASSETS = [
   '/',
   '/index.html',
