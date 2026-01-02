@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="theme-color" content="#F5F0E6">
+    <meta name="theme-color" content="#ffffff">
     <title>Coptic Bible Year</title>
     <link rel="manifest" href="manifest.json">
     <link rel="stylesheet" href="style.css">
@@ -11,21 +11,21 @@
 </head>
 <body>
 
-    <div class="top-bar">
-        <button id="lang-btn" class="icon-btn">عربي</button>
-        <button id="notify-btn" class="icon-btn">🔔</button>
-    </div>
+    <button id="lang-btn" class="floating-lang-btn">عربي</button>
 
     <main class="container">
         <div class="logo-container">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/71/Coptic_cross.svg/512px-Coptic_cross.svg.png" alt="Coptic Cross" class="coptic-cross">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/71/Coptic_cross.svg/512px-Coptic_cross.svg.png" 
+                 alt="Coptic Cross" class="coptic-cross">
         </div>
 
         <header class="date-header">
             <input type="date" id="date-picker" class="hidden-date-input">
-            <h1 id="date-display">Loading...</h1>
-            <p id="subtitle" class="subtitle">Daily Orthodox Bible Plan</p>
-            <p class="tap-hint" id="tap-hint">(Tap date to change)</p>
+            <div class="date-wrapper">
+                <h1 id="date-display">Loading...</h1>
+                <span class="edit-icon">✎</span>
+            </div>
+            <p id="subtitle" class="subtitle">Daily Reading Plan</p>
         </header>
 
         <div id="readings-list" class="readings-container"></div>
@@ -38,6 +38,8 @@
         <button id="today-btn" class="nav-btn main-action"><span data-i18n="today">Today</span></button>
         <button id="next-btn" class="nav-btn"><span data-i18n="next">Next</span> →</button>
     </nav>
+    
+    <button id="notify-btn" style="display:none;"></button>
 
     <script src="app.js"></script>
     <script>
