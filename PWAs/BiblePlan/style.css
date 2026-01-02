@@ -67,13 +67,12 @@ body {
 
 /* FIX: Force Single Line Date */
 h1 {
-    /* Responsive font size: 2.2rem normally, but shrinks to fit small screens */
     font-size: clamp(1.4rem, 6vw, 2.2rem); 
     margin: 0; 
     font-weight: 800; 
     color: var(--accent-red); 
     line-height: 1.2;
-    white-space: nowrap; /* Forces text to stay on one line */
+    white-space: nowrap;
 }
 
 .tap-hint {
