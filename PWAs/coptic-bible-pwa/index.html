@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#F5F0E6">
+    <title>Coptic Bible Year</title>
+    <link rel="manifest" href="manifest.json">
+    <link rel="stylesheet" href="style.css">
+    <link rel="apple-touch-icon" href="icons/icon-192.png">
+</head>
+<body>
+
+    <div class="top-bar">
+        <button id="lang-btn" class="icon-btn">عربي</button>
+        <button id="notify-btn" class="icon-btn">🔔</button>
+    </div>
+
+    <main class="container">
+        <div class="logo-container">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/71/Coptic_cross.svg/512px-Coptic_cross.svg.png" alt="Coptic Cross" class="coptic-cross">
+        </div>
+
+        <header class="date-header">
+            <input type="date" id="date-picker" class="hidden-date-input">
+            <h1 id="date-display">Loading...</h1>
+            <p id="subtitle" class="subtitle">Daily Orthodox Bible Plan</p>
+            <p class="tap-hint" id="tap-hint">(Tap date to change)</p>
+        </header>
+
+        <div id="readings-list" class="readings-container"></div>
+        
+        <div style="height: 100px;"></div>
+    </main>
+
+    <nav class="bottom-nav">
+        <button id="prev-btn" class="nav-btn">← <span data-i18n="prev">Prev</span></button>
+        <button id="today-btn" class="nav-btn main-action"><span data-i18n="today">Today</span></button>
+        <button id="next-btn" class="nav-btn"><span data-i18n="next">Next</span> →</button>
+    </nav>
+
+    <script src="app.js"></script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js');
+        }
+    </script>
+</body>
+</html>
