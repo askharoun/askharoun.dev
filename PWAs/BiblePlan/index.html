@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#f7f5e8">
+    <title>Coptic Bible Plan</title>
+    
+    <link rel="icon" type="image/png" href="icons/icon-192.png">
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="icons/icon-192.png">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div id="splash-screen">
+        <img src="icons/icon-512.png" alt="Loading..." class="splash-logo">
+    </div>
+
+    <button id="lang-btn" class="floating-lang-btn" aria-label="Switch Language">عربي</button>
+
+    <main class="container">
+        <div class="logo-container">
+            <img src="icons/icon-512.png" alt="Logo" class="main-logo">
+        </div>
+
+        <button id="notify-enable-btn" class="notify-banner-btn" style="display:none;">
+            🔔 Tap to enable reading reminders
+        </button>
+
+        <div id="greeting-banner" class="greeting-banner"></div>
+
+        <section class="date-section">
+            <h2 class="section-label" data-i18n="date_label">Readings For:</h2>
+            <div class="date-display-wrapper">
+                <input type="date" id="date-picker" class="hidden-date-input" aria-label="Change Date">
+                <h1 id="date-display">Loading...</h1>
+                <div class="tap-hint">
+                    <span aria-hidden="true">📅</span> 
+                    <span data-i18n="tap_text">Tap date to change calendar</span>
+                </div>
+            </div>
+        </section>
+
+        <section id="readings-list" class="readings-container" aria-live="polite"></section>
+        
+        <div style="height: 120px;"></div>
+    </main>
+
+    <nav class="bottom-nav">
+        <button id="prev-btn" class="nav-btn">← <span data-i18n="prev">Prev</span></button>
+        <button id="today-btn" class="nav-btn main-action"><span data-i18n="today">TODAY</span></button>
+        <button id="next-btn" class="nav-btn"><span data-i18n="next">Next</span> →</button>
+    </nav>
+
+    <script src="app.js"></script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js')
+                .then(() => console.log('SW Registered'));
+        }
+    </script>
+</body>
+</html>
