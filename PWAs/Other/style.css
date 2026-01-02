@@ -1,0 +1,120 @@
+:root {
+    --bg-color: #fdfbf7;
+    --text-color: #2c2c2c;
+    --accent-color: #8b2e2e; /* Coptic Iconography Red */
+    --card-bg: #ffffff;
+    --shadow: 0 4px 6px rgba(0,0,0,0.05);
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    font-family: 'Georgia', 'Times New Roman', serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    min-height: 100vh;
+}
+
+.container {
+    width: 100%;
+    max-width: 600px;
+    padding: 2rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+}
+
+header { text-align: center; margin-bottom: 2rem; }
+
+h1 {
+    font-size: 2rem;
+    margin: 0;
+    font-weight: normal;
+    letter-spacing: -0.5px;
+}
+
+.subtitle {
+    color: #666;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-top: 0.5rem;
+}
+
+/* Reading Card Styles */
+.reading-card {
+    background: var(--card-bg);
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+    border-radius: 8px;
+    box-shadow: var(--shadow);
+    border-left: 4px solid var(--accent-color);
+    text-decoration: none;
+    display: block;
+    color: inherit;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.reading-card:active { transform: scale(0.98); }
+
+.reading-section {
+    font-size: 0.75rem;
+    color: #888;
+    text-transform: uppercase;
+    margin-bottom: 0.25rem;
+    display: block;
+    font-weight: bold;
+}
+
+.reading-ref {
+    font-size: 1.25rem;
+    font-weight: bold;
+}
+
+/* Navigation */
+.navigation {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 2rem;
+    align-items: center;
+}
+
+button {
+    background: none;
+    border: 1px solid #ddd;
+    padding: 0.6rem 1.2rem;
+    border-radius: 4px;
+    cursor: pointer;
+    font-family: inherit;
+    color: #555;
+    font-size: 1rem;
+}
+
+#today-btn {
+    border-color: var(--accent-color);
+    color: var(--accent-color);
+    font-weight: bold;
+}
+
+/* Footer & Notifications */
+footer {
+    margin-top: auto;
+    text-align: center;
+    padding-top: 3rem;
+    padding-bottom: 1rem;
+}
+
+.secondary-btn {
+    border: none;
+    font-size: 0.85rem;
+    color: #999;
+    text-decoration: underline;
+    background: transparent;
+}
+
+.status-text {
+    font-size: 0.8rem;
+    color: var(--accent-color);
+    margin-top: 0.5rem;
+}
