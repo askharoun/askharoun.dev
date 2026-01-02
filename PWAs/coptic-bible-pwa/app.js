@@ -55,7 +55,8 @@ const DICTIONARY = {
         hint: "(Tap date to change)",
         sec_hist: "History & Law", sec_proph: "The Prophets",
         sec_wis: "Wisdom & Psalms", sec_nt: "New Testament",
-        finished: "Reading Plan Complete!"
+        finished: "Reading Plan Complete!",
+        catchup: "Rest / Catch-up Day"
     },
     ar: {
         subtitle: "خطة قراءة الكتاب المقدس اليومية",
@@ -63,27 +64,109 @@ const DICTIONARY = {
         hint: "(اضغط على التاريخ للتغيير)",
         sec_hist: "التاريخ والشريعة", sec_proph: "الأنبياء",
         sec_wis: "الحكمة والمزامير", sec_nt: "العهد الجديد",
-        finished: "تم الانتهاء من الخطة!"
+        finished: "تم الانتهاء من الخطة!",
+        catchup: "يوم راحة / استدراك"
     }
 };
 
 // State
 let currentDate = new Date();
-let currentLang = 'en'; // 'en' or 'ar'
-
-// Rates to finish in 365 days
-const RATES = { history: 1.195, prophets: 0.685, wisdom: 0.666, nt: 0.712 };
+let currentLang = 'en';
 
 // ==========================================
-// 2. INITIALIZATION & EVENTS
+// 2. LOGIC: Absolute Range Calculation
+// ==========================================
+
+// Pre-calculate total chapters per section to ensure exact finishing
+function getTotalChapters(section) {
+    return section.reduce((sum, book) => sum + book.c, 0);
+}
+
+// Maps an absolute chapter number (e.g., 51) to a Book/Chapter (e.g., Exodus 1)
+function getChapterFromAbsolute(section, absoluteIndex) {
+    let current = 0;
+    for (let book of section) {
+        if (current + book.c >= absoluteIndex) {
+            return {
+                bookEn: book.en,
+                bookAr: book.ar,
+                chapter: absoluteIndex - current
+            };
+        }
+        current += book.c;
+    }
+    // Fallback for end of year
+    let lastBook = section[section.length - 1];
+    return { bookEn: lastBook.en, bookAr: lastBook.ar, chapter: lastBook.c };
+}
+
+function getReadingForSection(section, sectionTitle, dayOfYear) {
+    const totalChapters = getTotalChapters(section);
+    const dailyRate = totalChapters / 365;
+
+    // Calculate Start and End for Today
+    // Day 1: start 1, end ~1.2
+    const startAbsolute = Math.floor((dayOfYear - 1) * dailyRate) + 1;
+    const endAbsolute = Math.floor(dayOfYear * dailyRate);
+
+    // If start > end, it means we don't finish a full chapter today (rare/rest day)
+    // or the math implies a very slow pace. For Bible reading, we force at least 1 
+    // if the gap is small, but usually this logic handles "skipping" days for shorter sections.
+    if (startAbsolute > endAbsolute) return null;
+
+    const startRead = getChapterFromAbsolute(section, startAbsolute);
+    const endRead = getChapterFromAbsolute(section, endAbsolute);
+
+    // Formatting the output string
+    let rangeString = "";
+    let searchString = "";
+
+    if (startRead.bookEn === endRead.bookEn) {
+        // Same Book (e.g., Genesis 1 to Genesis 2)
+        if (startRead.chapter === endRead.chapter) {
+            rangeString = `${startRead.chapter}`; // Just "1"
+            searchString = `${startRead.bookEn} ${startRead.chapter}`;
+        } else {
+            rangeString = `${startRead.chapter}-${endRead.chapter}`; // "1-2"
+            searchString = `${startRead.bookEn} ${startRead.chapter}-${endRead.chapter}`;
+        }
+    } else {
+        // Across Books (e.g., Genesis 50 - Exodus 1)
+        // Note: For simplicity in the UI, we show the range, 
+        // but the search link might default to the first book or we instruct user.
+        rangeString = `${startRead.chapter} — ${endRead.bookEn} ${endRead.chapter}`;
+        // Complex search query
+        searchString = `${startRead.bookEn} ${startRead.chapter} ${endRead.bookEn} ${endRead.chapter}`;
+    }
+
+    const bookName = currentLang === 'ar' ? startRead.bookAr : startRead.bookEn;
+    const endBookName = currentLang === 'ar' ? endRead.bookAr : endRead.bookEn;
+
+    let displayRef = "";
+    if (startRead.bookEn === endRead.bookEn) {
+        displayRef = `${bookName} ${rangeString}`;
+    } else {
+        displayRef = `${bookName} ${startRead.chapter} — ${endBookName} ${endRead.chapter}`;
+    }
+
+    return {
+        section: sectionTitle,
+        displayRef: displayRef,
+        searchQuery: searchString
+    };
+}
+
+// ==========================================
+// 3. INITIALIZATION & EVENTS
 // ==========================================
 document.addEventListener('DOMContentLoaded', () => {
+    // Set Date Input min/max to ensure user stays within valid range if needed
+    // or just let it float.
     renderPage(currentDate);
     setupDatePicker();
     setupNotifications();
 });
 
-// Language Toggle
 document.getElementById('lang-btn').addEventListener('click', (e) => {
     currentLang = currentLang === 'en' ? 'ar' : 'en';
     e.target.innerText = currentLang === 'en' ? 'عربي' : 'English';
@@ -91,19 +174,17 @@ document.getElementById('lang-btn').addEventListener('click', (e) => {
     renderPage(currentDate);
 });
 
-// Date Picker Logic
 function setupDatePicker() {
     const picker = document.getElementById('date-picker');
     picker.addEventListener('change', (e) => {
         if(e.target.value) {
-            // Fix timezone offset issue by appending time
+            // T00:00:00 ensures we don't get timezone shifts
             currentDate = new Date(e.target.value + 'T00:00:00');
             renderPage(currentDate);
         }
     });
 }
 
-// Navigation Events
 document.getElementById('prev-btn').addEventListener('click', () => {
     currentDate.setDate(currentDate.getDate() - 1);
     renderPage(currentDate);
@@ -118,78 +199,67 @@ document.getElementById('today-btn').addEventListener('click', () => {
 });
 
 // ==========================================
-// 3. CORE LOGIC
+// 4. RENDERING
 // ==========================================
 function renderPage(date) {
     const t = DICTIONARY[currentLang];
     
-    // Update Text
+    // Translations
     document.getElementById('subtitle').innerText = t.subtitle;
     document.getElementById('tap-hint').innerText = t.hint;
     document.querySelector('[data-i18n="prev"]').innerText = t.prev;
     document.querySelector('[data-i18n="next"]').innerText = t.next;
     document.querySelector('[data-i18n="today"]').innerText = t.today;
 
-    // Date Formatting
+    // Date Format
     const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
     const locale = currentLang === 'ar' ? 'ar-EG' : 'en-US';
     document.getElementById('date-display').innerText = date.toLocaleDateString(locale, options);
     
-    // Sync Date Picker Input (ISO format YYYY-MM-DD)
+    // Sync Picker
     const isoDate = date.getFullYear() + '-' + String(date.getMonth()+1).padStart(2,'0') + '-' + String(date.getDate()).padStart(2,'0');
     document.getElementById('date-picker').value = isoDate;
 
-    // Render Cards
+    // Generate Readings
     const list = document.getElementById('readings-list');
     list.innerHTML = '';
     
     const dayOfYear = getDayOfYear(date);
+
+    // Safety check for day 366 (leap years) or bounds
+    if (dayOfYear > 365) {
+        list.innerHTML = `<p style="text-align:center; color:#888;">${t.finished}</p>`;
+        return;
+    }
+
     const readings = [
-        getPassage(BIBLE_DATA.history, t.sec_hist, dayOfYear, RATES.history),
-        getPassage(BIBLE_DATA.prophets, t.sec_proph, dayOfYear, RATES.prophets),
-        getPassage(BIBLE_DATA.wisdom, t.sec_wis, dayOfYear, RATES.wisdom),
-        getPassage(BIBLE_DATA.nt, t.sec_nt, dayOfYear, RATES.nt)
+        getReadingForSection(BIBLE_DATA.history, t.sec_hist, dayOfYear),
+        getReadingForSection(BIBLE_DATA.prophets, t.sec_proph, dayOfYear),
+        getReadingForSection(BIBLE_DATA.wisdom, t.sec_wis, dayOfYear),
+        getReadingForSection(BIBLE_DATA.nt, t.sec_nt, dayOfYear)
     ].filter(Boolean);
 
     if (readings.length > 0) {
         readings.forEach(r => {
             const card = document.createElement('a');
             card.className = 'reading-card';
-            // Search Query logic
-            const queryName = currentLang === 'ar' ? r.bookAr : r.bookEn;
-            const searchTerm = `${queryName} ${r.chapter} Coptic Reader`;
+            
+            // Build Search Link
+            // Note: We append "Coptic Reader" to ensure Orthodox context
+            const searchTerm = `${r.searchQuery} Coptic Reader`;
             card.href = `https://www.google.com/search?q=${encodeURIComponent(searchTerm)}`;
             card.target = "_blank";
             
+            // Render
             card.innerHTML = `
                 <span class="reading-section">${r.section}</span>
-                <span class="reading-ref">${currentLang === 'ar' ? r.bookAr : r.bookEn} ${r.chapter.toLocaleString(locale)}</span>
+                <span class="reading-ref">${r.displayRef}</span>
             `;
             list.appendChild(card);
         });
     } else {
-        list.innerHTML = `<p style="text-align:center; color:#888; padding:2rem;">${t.finished}</p>`;
+        list.innerHTML = `<p style="text-align:center; color:#888; padding:2rem;">${t.catchup}</p>`;
     }
-}
-
-function getPassage(bookList, sectionName, dayNum, rate) {
-    let target = Math.ceil(dayNum * rate);
-    let cumulative = 0;
-
-    for (let book of bookList) {
-        if (cumulative + book.c >= target) {
-            let chapter = target - cumulative;
-            if (chapter > book.c) return null;
-            return {
-                section: sectionName,
-                bookEn: book.en,
-                bookAr: book.ar,
-                chapter: chapter
-            };
-        }
-        cumulative += book.c;
-    }
-    return null;
 }
 
 function getDayOfYear(date) {
@@ -200,7 +270,7 @@ function getDayOfYear(date) {
 }
 
 // ==========================================
-// 4. NOTIFICATIONS
+// 5. NOTIFICATIONS
 // ==========================================
 function setupNotifications() {
     const btn = document.getElementById('notify-btn');
@@ -209,7 +279,8 @@ function setupNotifications() {
     btn.addEventListener('click', () => {
         Notification.requestPermission().then(permission => {
             if (permission === "granted") {
-                new Notification("Coptic Bible Plan", { body: currentLang === 'en' ? "Reminders Enabled" : "تم تفعيل التذكيرات" });
+                const msg = currentLang === 'en' ? "Reminders Enabled" : "تم تفعيل التذكيرات";
+                new Notification("Coptic Bible Plan", { body: msg, icon: 'icons/icon-192.png' });
             }
         });
     });
