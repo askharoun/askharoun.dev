@@ -1,88 +1,125 @@
 // ==========================================
-// 1. DATA: Bible Structure (Bilingual)
+// 1. DATA: Complete 73-Book Canon (46 OT + 27 NT)
 // ==========================================
 const BIBLE_DATA = {
+    // TRACK 1: HISTORY (The Law + Historical Books + Maccabees/Tobit/Judith)
     history: [
-        { en: "Genesis", ar: "التكوين", c: 50 }, { en: "Exodus", ar: "الخروج", c: 40 },
-        { en: "Leviticus", ar: "اللاويين", c: 27 }, { en: "Numbers", ar: "العدد", c: 36 },
-        { en: "Deuteronomy", ar: "التثنية", c: 34 }, { en: "Joshua", ar: "يشوع", c: 24 },
-        { en: "Judges", ar: "القضاة", c: 21 }, { en: "Ruth", ar: "راعوث", c: 4 },
-        { en: "1 Samuel", ar: "صموئيل الأول", c: 31 }, { en: "2 Samuel", ar: "صموئيل الثاني", c: 24 },
-        { en: "1 Kings", ar: "ملوك الأول", c: 22 }, { en: "2 Kings", ar: "ملوك الثاني", c: 25 },
-        { en: "1 Chronicles", ar: "أخبار الأيام الأول", c: 29 }, { en: "2 Chronicles", ar: "أخبار الأيام الثاني", c: 36 },
-        { en: "Ezra", ar: "عزرا", c: 10 }, { en: "Nehemiah", ar: "نحميا", c: 13 },
-        { en: "Esther", ar: "أستير", c: 10 }
+        { en: "Genesis", ar: "التكوين", c: 50 }, 
+        { en: "Exodus", ar: "الخروج", c: 40 },
+        { en: "Leviticus", ar: "اللاويين", c: 27 }, 
+        { en: "Numbers", ar: "العدد", c: 36 },
+        { en: "Deuteronomy", ar: "التثنية", c: 34 }, 
+        { en: "Joshua", ar: "يشوع", c: 24 },
+        { en: "Judges", ar: "القضاة", c: 21 }, 
+        { en: "Ruth", ar: "راعوث", c: 4 },
+        { en: "1 Samuel", ar: "صموئيل الأول", c: 31 }, 
+        { en: "2 Samuel", ar: "صموئيل الثاني", c: 24 },
+        { en: "1 Kings", ar: "ملوك الأول", c: 22 }, 
+        { en: "2 Kings", ar: "ملوك الثاني", c: 25 },
+        { en: "1 Chronicles", ar: "أخبار الأيام الأول", c: 29 }, 
+        { en: "2 Chronicles", ar: "أخبار الأيام الثاني", c: 36 },
+        { en: "Ezra", ar: "عزرا", c: 10 }, 
+        { en: "Nehemiah", ar: "نحميا", c: 13 },
+        { en: "Tobit", ar: "طوبيا", c: 14 },       // Added
+        { en: "Judith", ar: "يهوديت", c: 16 },     // Added
+        { en: "Esther", ar: "أستير", c: 10 },
+        { en: "1 Maccabees", ar: "المكابيين الأول", c: 16 }, // Added
+        { en: "2 Maccabees", ar: "المكابيين الثاني", c: 15 } // Added
     ],
+    // TRACK 2: PROPHETS (Major/Minor + Baruch)
     prophets: [
-        { en: "Isaiah", ar: "إشعياء", c: 66 }, { en: "Jeremiah", ar: "إرميا", c: 52 },
-        { en: "Lamentations", ar: "مراثي إرميا", c: 5 }, { en: "Ezekiel", ar: "حزقيال", c: 48 },
-        { en: "Daniel", ar: "دانيال", c: 12 }, { en: "Hosea", ar: "هوشع", c: 14 },
-        { en: "Joel", ar: "يوئيل", c: 3 }, { en: "Amos", ar: "عاموس", c: 9 },
-        { en: "Obadiah", ar: "عوبديا", c: 1 }, { en: "Jonah", ar: "يونان", c: 4 },
-        { en: "Micah", ar: "ميخا", c: 7 }, { en: "Nahum", ar: "ناحوم", c: 3 },
-        { en: "Habakkuk", ar: "حبقوق", c: 3 }, { en: "Zephaniah", ar: "صفنيا", c: 3 },
-        { en: "Haggai", ar: "حجي", c: 2 }, { en: "Zechariah", ar: "زكريا", c: 14 },
+        { en: "Isaiah", ar: "إشعياء", c: 66 }, 
+        { en: "Jeremiah", ar: "إرميا", c: 52 },
+        { en: "Lamentations", ar: "مراثي إرميا", c: 5 }, 
+        { en: "Baruch", ar: "باروخ", c: 6 },       // Added
+        { en: "Ezekiel", ar: "حزقيال", c: 48 },
+        { en: "Daniel", ar: "دانيال", c: 12 }, 
+        { en: "Hosea", ar: "هوشع", c: 14 },
+        { en: "Joel", ar: "يوئيل", c: 3 }, 
+        { en: "Amos", ar: "عاموس", c: 9 },
+        { en: "Obadiah", ar: "عوبديا", c: 1 }, 
+        { en: "Jonah", ar: "يونان", c: 4 },
+        { en: "Micah", ar: "ميخا", c: 7 }, 
+        { en: "Nahum", ar: "ناحوم", c: 3 },
+        { en: "Habakkuk", ar: "حبقوق", c: 3 }, 
+        { en: "Zephaniah", ar: "صفنيا", c: 3 },
+        { en: "Haggai", ar: "حجي", c: 2 }, 
+        { en: "Zechariah", ar: "زكريا", c: 14 },
         { en: "Malachi", ar: "ملاخي", c: 4 }
     ],
+    // TRACK 3: WISDOM (Psalms + Wisdom of Solomon + Sirach)
     wisdom: [
-        { en: "Job", ar: "أيوب", c: 42 }, { en: "Psalms", ar: "المزامير", c: 150 },
-        { en: "Proverbs", ar: "الأمثال", c: 31 }, { en: "Ecclesiastes", ar: "الجامعة", c: 12 },
-        { en: "Song of Solomon", ar: "نشيد الأنشاد", c: 8 }
+        { en: "Job", ar: "أيوب", c: 42 }, 
+        { en: "Psalms", ar: "المزامير", c: 150 },
+        { en: "Proverbs", ar: "الأمثال", c: 31 }, 
+        { en: "Ecclesiastes", ar: "الجامعة", c: 12 },
+        { en: "Song of Solomon", ar: "نشيد الأنشاد", c: 8 },
+        { en: "Wisdom of Solomon", ar: "الحكمة", c: 19 },    // Added
+        { en: "Sirach", ar: "يشوع بن سيراخ", c: 51 }         // Added
     ],
+    // TRACK 4: NEW TESTAMENT (27 Books)
     nt: [
-        { en: "Matthew", ar: "متى", c: 28 }, { en: "Mark", ar: "مرقس", c: 16 },
-        { en: "Luke", ar: "لوقا", c: 24 }, { en: "John", ar: "يوحنا", c: 21 },
-        { en: "Acts", ar: "أعمال الرسل", c: 28 }, { en: "Romans", ar: "رومية", c: 16 },
-        { en: "1 Corinthians", ar: "كورنثوس الأولى", c: 16 }, { en: "2 Corinthians", ar: "كورنثوس الثانية", c: 13 },
-        { en: "Galatians", ar: "غلاطية", c: 6 }, { en: "Ephesians", ar: "أفسس", c: 6 },
-        { en: "Philippians", ar: "فيلبي", c: 4 }, { en: "Colossians", ar: "كولوسي", c: 4 },
-        { en: "1 Thessalonians", ar: "تسالونيكي الأولى", c: 5 }, { en: "2 Thessalonians", ar: "تسالونيكي الثانية", c: 3 },
-        { en: "1 Timothy", ar: "تيموثاوس الأولى", c: 6 }, { en: "2 Timothy", ar: "تيموثاوس الثانية", c: 4 },
-        { en: "Titus", ar: "تيطس", c: 3 }, { en: "Philemon", ar: "فليمون", c: 1 },
-        { en: "Hebrews", ar: "العبرانيين", c: 13 }, { en: "James", ar: "يعقوب", c: 5 },
-        { en: "1 Peter", ar: "بطرس الأولى", c: 5 }, { en: "2 Peter", ar: "بطرس الثانية", c: 3 },
-        { en: "1 John", ar: "يوحنا الأولى", c: 5 }, { en: "2 John", ar: "يوحنا الثانية", c: 1 },
-        { en: "3 John", ar: "يوحنا الثالثة", c: 1 }, { en: "Jude", ar: "يهوذا", c: 1 },
+        { en: "Matthew", ar: "متى", c: 28 }, 
+        { en: "Mark", ar: "مرقس", c: 16 },
+        { en: "Luke", ar: "لوقا", c: 24 }, 
+        { en: "John", ar: "يوحنا", c: 21 },
+        { en: "Acts", ar: "أعمال الرسل", c: 28 }, 
+        { en: "Romans", ar: "رومية", c: 16 },
+        { en: "1 Corinthians", ar: "كورنثوس الأولى", c: 16 }, 
+        { en: "2 Corinthians", ar: "كورنثوس الثانية", c: 13 },
+        { en: "Galatians", ar: "غلاطية", c: 6 }, 
+        { en: "Ephesians", ar: "أفسس", c: 6 },
+        { en: "Philippians", ar: "فيلبي", c: 4 }, 
+        { en: "Colossians", ar: "كولوسي", c: 4 },
+        { en: "1 Thessalonians", ar: "تسالونيكي الأولى", c: 5 }, 
+        { en: "2 Thessalonians", ar: "تسالونيكي الثانية", c: 3 },
+        { en: "1 Timothy", ar: "تيموثاوس الأولى", c: 6 }, 
+        { en: "2 Timothy", ar: "تيموثاوس الثانية", c: 4 },
+        { en: "Titus", ar: "تيطس", c: 3 }, 
+        { en: "Philemon", ar: "فليمون", c: 1 },
+        { en: "Hebrews", ar: "العبرانيين", c: 13 }, 
+        { en: "James", ar: "يعقوب", c: 5 },
+        { en: "1 Peter", ar: "بطرس الأولى", c: 5 }, 
+        { en: "2 Peter", ar: "بطرس الثانية", c: 3 },
+        { en: "1 John", ar: "يوحنا الأولى", c: 5 }, 
+        { en: "2 John", ar: "يوحنا الثانية", c: 1 },
+        { en: "3 John", ar: "يوحنا الثالثة", c: 1 }, 
+        { en: "Jude", ar: "يهوذا", c: 1 },
         { en: "Revelation", ar: "رؤيا يوحنا", c: 22 }
     ]
 };
 
-// UI Translations
+// UI Dictionary
 const DICTIONARY = {
     en: {
-        subtitle: "Daily Orthodox Bible Plan",
+        subtitle: "Daily Reading Plan",
         prev: "Prev", next: "Next", today: "Today",
-        hint: "(Tap date to change)",
-        sec_hist: "History & Law", sec_proph: "The Prophets",
-        sec_wis: "Wisdom & Psalms", sec_nt: "New Testament",
-        finished: "Reading Plan Complete!",
+        sec_hist: "History", sec_proph: "Prophets",
+        sec_wis: "Wisdom", sec_nt: "New Testament",
+        finished: "Complete",
         catchup: "Rest / Catch-up Day"
     },
     ar: {
-        subtitle: "خطة قراءة الكتاب المقدس اليومية",
+        subtitle: "خطة القراءة اليومية",
         prev: "السابق", next: "التالي", today: "اليوم",
-        hint: "(اضغط على التاريخ للتغيير)",
-        sec_hist: "التاريخ والشريعة", sec_proph: "الأنبياء",
-        sec_wis: "الحكمة والمزامير", sec_nt: "العهد الجديد",
-        finished: "تم الانتهاء من الخطة!",
-        catchup: "يوم راحة / استدراك"
+        sec_hist: "التاريخ", sec_proph: "الأنبياء",
+        sec_wis: "الحكمة", sec_nt: "العهد الجديد",
+        finished: "تم الانتهاء",
+        catchup: "يوم راحة"
     }
 };
 
-// State
 let currentDate = new Date();
 let currentLang = 'en';
 
 // ==========================================
-// 2. LOGIC: Absolute Range Calculation
+// 2. LOGIC: Range Calculator
 // ==========================================
 
-// Pre-calculate total chapters per section to ensure exact finishing
 function getTotalChapters(section) {
     return section.reduce((sum, book) => sum + book.c, 0);
 }
 
-// Maps an absolute chapter number (e.g., 51) to a Book/Chapter (e.g., Exodus 1)
 function getChapterFromAbsolute(section, absoluteIndex) {
     let current = 0;
     for (let book of section) {
@@ -95,58 +132,46 @@ function getChapterFromAbsolute(section, absoluteIndex) {
         }
         current += book.c;
     }
-    // Fallback for end of year
+    // Safety fallback
     let lastBook = section[section.length - 1];
     return { bookEn: lastBook.en, bookAr: lastBook.ar, chapter: lastBook.c };
 }
 
 function getReadingForSection(section, sectionTitle, dayOfYear) {
     const totalChapters = getTotalChapters(section);
+    
+    // Auto-adjust speed based on book count
     const dailyRate = totalChapters / 365;
 
-    // Calculate Start and End for Today
-    // Day 1: start 1, end ~1.2
+    // Range Logic: 
+    // Day 1: Starts at >0 and ends at Rate
     const startAbsolute = Math.floor((dayOfYear - 1) * dailyRate) + 1;
     const endAbsolute = Math.floor(dayOfYear * dailyRate);
 
-    // If start > end, it means we don't finish a full chapter today (rare/rest day)
-    // or the math implies a very slow pace. For Bible reading, we force at least 1 
-    // if the gap is small, but usually this logic handles "skipping" days for shorter sections.
+    // If gap is too small (Start > End), skip (Rest Day)
     if (startAbsolute > endAbsolute) return null;
 
     const startRead = getChapterFromAbsolute(section, startAbsolute);
     const endRead = getChapterFromAbsolute(section, endAbsolute);
 
-    // Formatting the output string
-    let rangeString = "";
+    let displayRef = "";
     let searchString = "";
 
+    // Same Book
     if (startRead.bookEn === endRead.bookEn) {
-        // Same Book (e.g., Genesis 1 to Genesis 2)
         if (startRead.chapter === endRead.chapter) {
-            rangeString = `${startRead.chapter}`; // Just "1"
+            displayRef = `${currentLang === 'ar' ? startRead.bookAr : startRead.bookEn} ${startRead.chapter}`;
             searchString = `${startRead.bookEn} ${startRead.chapter}`;
         } else {
-            rangeString = `${startRead.chapter}-${endRead.chapter}`; // "1-2"
+            displayRef = `${currentLang === 'ar' ? startRead.bookAr : startRead.bookEn} ${startRead.chapter}-${endRead.chapter}`;
             searchString = `${startRead.bookEn} ${startRead.chapter}-${endRead.chapter}`;
         }
     } else {
-        // Across Books (e.g., Genesis 50 - Exodus 1)
-        // Note: For simplicity in the UI, we show the range, 
-        // but the search link might default to the first book or we instruct user.
-        rangeString = `${startRead.chapter} — ${endRead.bookEn} ${endRead.chapter}`;
-        // Complex search query
+        // Cross Books
+        const b1 = currentLang === 'ar' ? startRead.bookAr : startRead.bookEn;
+        const b2 = currentLang === 'ar' ? endRead.bookAr : endRead.bookEn;
+        displayRef = `${b1} ${startRead.chapter} — ${b2} ${endRead.chapter}`;
         searchString = `${startRead.bookEn} ${startRead.chapter} ${endRead.bookEn} ${endRead.chapter}`;
-    }
-
-    const bookName = currentLang === 'ar' ? startRead.bookAr : startRead.bookEn;
-    const endBookName = currentLang === 'ar' ? endRead.bookAr : endRead.bookEn;
-
-    let displayRef = "";
-    if (startRead.bookEn === endRead.bookEn) {
-        displayRef = `${bookName} ${rangeString}`;
-    } else {
-        displayRef = `${bookName} ${startRead.chapter} — ${endBookName} ${endRead.chapter}`;
     }
 
     return {
@@ -157,16 +182,15 @@ function getReadingForSection(section, sectionTitle, dayOfYear) {
 }
 
 // ==========================================
-// 3. INITIALIZATION & EVENTS
+// 3. RENDER & EVENTS
 // ==========================================
+
 document.addEventListener('DOMContentLoaded', () => {
-    // Set Date Input min/max to ensure user stays within valid range if needed
-    // or just let it float.
     renderPage(currentDate);
     setupDatePicker();
-    setupNotifications();
 });
 
+// Lang Toggle
 document.getElementById('lang-btn').addEventListener('click', (e) => {
     currentLang = currentLang === 'en' ? 'ar' : 'en';
     e.target.innerText = currentLang === 'en' ? 'عربي' : 'English';
@@ -174,17 +198,18 @@ document.getElementById('lang-btn').addEventListener('click', (e) => {
     renderPage(currentDate);
 });
 
+// Date Picker
 function setupDatePicker() {
     const picker = document.getElementById('date-picker');
     picker.addEventListener('change', (e) => {
         if(e.target.value) {
-            // T00:00:00 ensures we don't get timezone shifts
             currentDate = new Date(e.target.value + 'T00:00:00');
             renderPage(currentDate);
         }
     });
 }
 
+// Nav
 document.getElementById('prev-btn').addEventListener('click', () => {
     currentDate.setDate(currentDate.getDate() - 1);
     renderPage(currentDate);
@@ -198,21 +223,18 @@ document.getElementById('today-btn').addEventListener('click', () => {
     renderPage(currentDate);
 });
 
-// ==========================================
-// 4. RENDERING
-// ==========================================
+// Render Function
 function renderPage(date) {
     const t = DICTIONARY[currentLang];
     
-    // Translations
+    // UI Text
     document.getElementById('subtitle').innerText = t.subtitle;
-    document.getElementById('tap-hint').innerText = t.hint;
     document.querySelector('[data-i18n="prev"]').innerText = t.prev;
     document.querySelector('[data-i18n="next"]').innerText = t.next;
     document.querySelector('[data-i18n="today"]').innerText = t.today;
 
-    // Date Format
-    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+    // Date
+    const options = { weekday: 'short', month: 'short', day: 'numeric' };
     const locale = currentLang === 'ar' ? 'ar-EG' : 'en-US';
     document.getElementById('date-display').innerText = date.toLocaleDateString(locale, options);
     
@@ -220,15 +242,14 @@ function renderPage(date) {
     const isoDate = date.getFullYear() + '-' + String(date.getMonth()+1).padStart(2,'0') + '-' + String(date.getDate()).padStart(2,'0');
     document.getElementById('date-picker').value = isoDate;
 
-    // Generate Readings
+    // Logic
     const list = document.getElementById('readings-list');
     list.innerHTML = '';
     
     const dayOfYear = getDayOfYear(date);
 
-    // Safety check for day 366 (leap years) or bounds
     if (dayOfYear > 365) {
-        list.innerHTML = `<p style="text-align:center; color:#888;">${t.finished}</p>`;
+        list.innerHTML = `<p style="text-align:center; color:#999;">${t.finished}</p>`;
         return;
     }
 
@@ -243,14 +264,10 @@ function renderPage(date) {
         readings.forEach(r => {
             const card = document.createElement('a');
             card.className = 'reading-card';
-            
-            // Build Search Link
-            // Note: We append "Coptic Reader" to ensure Orthodox context
-            const searchTerm = `${r.searchQuery} Coptic Reader`;
-            card.href = `https://www.google.com/search?q=${encodeURIComponent(searchTerm)}`;
+            // Link to Coptic Reader via Google Search Wrapper
+            card.href = `https://www.google.com/search?q=${encodeURIComponent(r.searchQuery + " Coptic Reader")}`;
             card.target = "_blank";
             
-            // Render
             card.innerHTML = `
                 <span class="reading-section">${r.section}</span>
                 <span class="reading-ref">${r.displayRef}</span>
@@ -258,7 +275,7 @@ function renderPage(date) {
             list.appendChild(card);
         });
     } else {
-        list.innerHTML = `<p style="text-align:center; color:#888; padding:2rem;">${t.catchup}</p>`;
+        list.innerHTML = `<p style="text-align:center; color:#999; padding:2rem;">${t.catchup}</p>`;
     }
 }
 
@@ -267,21 +284,4 @@ function getDayOfYear(date) {
     const diff = date - start;
     const oneDay = 1000 * 60 * 60 * 24;
     return Math.floor(diff / oneDay);
-}
-
-// ==========================================
-// 5. NOTIFICATIONS
-// ==========================================
-function setupNotifications() {
-    const btn = document.getElementById('notify-btn');
-    if (!("Notification" in window)) { btn.style.display = 'none'; return; }
-
-    btn.addEventListener('click', () => {
-        Notification.requestPermission().then(permission => {
-            if (permission === "granted") {
-                const msg = currentLang === 'en' ? "Reminders Enabled" : "تم تفعيل التذكيرات";
-                new Notification("Coptic Bible Plan", { body: msg, icon: 'icons/icon-192.png' });
-            }
-        });
-    });
 }
