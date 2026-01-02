@@ -1,6 +1,3 @@
-// ==========================================
-// 1. DATA: 73 Books (Orthodox Canon)
-// ==========================================
 const BIBLE_DATA = {
     history: [
         { en: "Genesis", ar: "التكوين", c: 50 }, { en: "Exodus", ar: "الخروج", c: 40 },
@@ -50,7 +47,6 @@ const BIBLE_DATA = {
     ]
 };
 
-// UI Translations
 const DICTIONARY = {
     en: {
         tap_text: "Tap to Change Date",
@@ -70,7 +66,6 @@ const DICTIONARY = {
     }
 };
 
-// Daily Greetings (Cycles Randomly)
 const GREETINGS = {
     en: [
         "Good Morning! Let's start with the Word.", 
@@ -91,9 +86,50 @@ const GREETINGS = {
 let currentDate = new Date();
 let currentLang = 'en';
 
-// ==========================================
-// 2. LOGIC: Reading Engine
-// ==========================================
+document.addEventListener('DOMContentLoaded', () => {
+    renderPage(currentDate);
+    showDailyGreeting();
+    setupDatePicker();
+});
+
+document.getElementById('lang-btn').addEventListener('click', (e) => {
+    currentLang = currentLang === 'en' ? 'ar' : 'en';
+    e.target.innerText = currentLang === 'en' ? 'عربي' : 'English';
+    document.body.classList.toggle('rtl', currentLang === 'ar');
+    renderPage(currentDate);
+    showDailyGreeting();
+});
+
+function setupDatePicker() {
+    const picker = document.getElementById('date-picker');
+    picker.addEventListener('change', (e) => {
+        if(e.target.value) {
+            currentDate = new Date(e.target.value + 'T00:00:00');
+            renderPage(currentDate);
+        }
+    });
+}
+
+document.getElementById('prev-btn').addEventListener('click', () => {
+    currentDate.setDate(currentDate.getDate() - 1);
+    renderPage(currentDate);
+});
+document.getElementById('next-btn').addEventListener('click', () => {
+    currentDate.setDate(currentDate.getDate() + 1);
+    renderPage(currentDate);
+});
+document.getElementById('today-btn').addEventListener('click', () => {
+    currentDate = new Date();
+    renderPage(currentDate);
+});
+
+function showDailyGreeting() {
+    const banner = document.getElementById('daily-message');
+    const msgs = GREETINGS[currentLang];
+    const dayIndex = new Date().getDate() % msgs.length;
+    banner.innerText = msgs[dayIndex];
+    banner.style.display = 'block';
+}
 
 function getTotalChapters(section) {
     return section.reduce((sum, book) => sum + book.c, 0);
@@ -148,77 +184,20 @@ function getReadingForSection(section, sectionTitle, dayOfYear) {
     return { section: sectionTitle, displayRef: displayRef, searchQuery: searchString };
 }
 
-// ==========================================
-// 3. RENDER & EVENTS
-// ==========================================
-
-document.addEventListener('DOMContentLoaded', () => {
-    renderPage(currentDate);
-    showDailyGreeting();
-    setupDatePicker();
-});
-
-document.getElementById('lang-btn').addEventListener('click', (e) => {
-    currentLang = currentLang === 'en' ? 'ar' : 'en';
-    e.target.innerText = currentLang === 'en' ? 'عربي' : 'English';
-    document.body.classList.toggle('rtl', currentLang === 'ar');
-    renderPage(currentDate);
-    showDailyGreeting();
-});
-
-function setupDatePicker() {
-    const picker = document.getElementById('date-picker');
-    picker.addEventListener('change', (e) => {
-        if(e.target.value) {
-            currentDate = new Date(e.target.value + 'T00:00:00');
-            renderPage(currentDate);
-        }
-    });
-}
-
-// Navigation
-document.getElementById('prev-btn').addEventListener('click', () => {
-    currentDate.setDate(currentDate.getDate() - 1);
-    renderPage(currentDate);
-});
-document.getElementById('next-btn').addEventListener('click', () => {
-    currentDate.setDate(currentDate.getDate() + 1);
-    renderPage(currentDate);
-});
-document.getElementById('today-btn').addEventListener('click', () => {
-    currentDate = new Date();
-    renderPage(currentDate);
-});
-
-// Cool Greeting Logic
-function showDailyGreeting() {
-    const banner = document.getElementById('daily-message');
-    const msgs = GREETINGS[currentLang];
-    // Pick based on day of month so it rotates daily
-    const dayIndex = new Date().getDate() % msgs.length;
-    banner.innerText = msgs[dayIndex];
-    banner.style.display = 'block';
-}
-
 function renderPage(date) {
     const t = DICTIONARY[currentLang];
-    
-    // UI Update
     document.getElementById('change-date-text').innerText = t.tap_text;
     document.querySelector('[data-i18n="prev"]').innerText = t.prev;
     document.querySelector('[data-i18n="next"]').innerText = t.next;
     document.querySelector('[data-i18n="today"]').innerText = t.today;
 
-    // Date Format
     const options = { weekday: 'short', month: 'short', day: 'numeric' };
     const locale = currentLang === 'ar' ? 'ar-EG' : 'en-US';
     document.getElementById('date-display').innerText = date.toLocaleDateString(locale, options);
     
-    // Sync Picker
     const isoDate = date.getFullYear() + '-' + String(date.getMonth()+1).padStart(2,'0') + '-' + String(date.getDate()).padStart(2,'0');
     document.getElementById('date-picker').value = isoDate;
 
-    // Render List
     const list = document.getElementById('readings-list');
     list.innerHTML = '';
     
