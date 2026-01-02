@@ -63,10 +63,6 @@ const DICTIONARY = {
         finished: "Plan complete for today!",
         catchup: "Rest / Catch-up Day",
         greeting: "Hello! Below are your readings for today.",
-        // NOTIFICATIONS
-        notify_btn: "🔔 Tap to enable reading reminders",
-        notify_title: "Daily Reminder",
-        notify_body: "It is time to read your daily chapters."
     },
     ar: {
         date_label: "قراءات اليوم:",
@@ -77,10 +73,6 @@ const DICTIONARY = {
         finished: "تمت قراءة اليوم!",
         catchup: "يوم راحة",
         greeting: "أهلاً بك! إليك قراءاتك لليوم.",
-        // NOTIFICATIONS
-        notify_btn: "🔔 اضغط لتفعيل تذكير القراءة",
-        notify_title: "تذكير يومي",
-        notify_body: "حان وقت قراءة وردك اليومي."
     }
 };
 
