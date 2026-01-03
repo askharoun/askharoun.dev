@@ -1,0 +1,20 @@
+{
+  "name": "Deacon",
+  "short_name": "Deacon",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#f2f1e8",
+  "theme_color": "#7a1c1c",
+  "icons": [
+    {
+      "src": "images/deacon-icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "images/deacon-icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
