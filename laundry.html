@@ -4,21 +4,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title>Laundry Scout</title>
     <style>
         :root {
             --bg-color: #0c0c0c;
+            --surface: #1c1c1e;
             --text-main: #ffffff;
-            --text-dim: #666666;
-            --blue: #3b82f6;
-            --orange: #f97316;
-            --green: #22c55e;
+            --text-dim: #8e8e93;
+            --blue: #0a84ff;
+            --orange: #ff9f0a;
+            --green: #30d158;
+            --red: #ff453a;
         }
 
         body {
             background-color: var(--bg-color);
             color: var(--text-main);
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", Helvetica, Arial, sans-serif;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -26,6 +29,19 @@
             height: 100vh;
             margin: 0;
             -webkit-tap-highlight-color: transparent;
+            overflow: hidden;
+        }
+
+        /* Settings Button */
+        .settings-icon {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 1.5rem;
+            opacity: 0.5;
+            cursor: pointer;
+            padding: 10px;
+            z-index: 10;
         }
 
         /* The Big Ring */
@@ -33,7 +49,7 @@
             width: 260px;
             height: 260px;
             border-radius: 50%;
-            border: 6px solid var(--text-dim);
+            border: 6px solid #333;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -63,40 +79,83 @@
             margin-top: 10px;
             max-width: 80%;
             text-align: center;
-            line-height: 1.5;
+            line-height: 1.4;
         }
 
-        /* Hidden Reset Button */
-        .reset-btn {
-            position: absolute;
-            bottom: 40px;
-            background: transparent;
-            border: 1px solid var(--text-dim);
-            color: var(--text-dim);
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            cursor: pointer;
+        /* Settings Modal */
+        .modal {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.9);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(10px);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+            z-index: 100;
         }
+        .modal.open { opacity: 1; pointer-events: auto; }
+
+        .modal-content {
+            background: var(--surface);
+            padding: 30px;
+            border-radius: 20px;
+            width: 80%;
+            max-width: 320px;
+        }
+
+        .modal h2 { margin: 0 0 20px 0; font-size: 1.5rem; }
+
+        .input-group { margin-bottom: 20px; text-align: left; }
+        .input-group label { display: block; color: var(--text-dim); margin-bottom: 8px; font-size: 0.9rem; }
+        .input-group input { 
+            width: 100%; 
+            background: #000; 
+            border: 1px solid #333; 
+            color: #fff; 
+            padding: 12px; 
+            border-radius: 10px; 
+            font-size: 1rem;
+            box-sizing: border-box;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 15px;
+            border-radius: 12px;
+            border: none;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin-bottom: 10px;
+        }
+        .btn-save { background: var(--blue); color: white; }
+        .btn-close { background: transparent; color: var(--text-dim); }
+        .btn-notify { background: var(--surface); border: 1px solid var(--blue); color: var(--blue); margin-bottom: 20px;}
 
         /* STATES */
-        body.washing .status-ring { border-color: var(--blue); box-shadow: 0 0 30px rgba(59, 130, 246, 0.2); }
+        body.washing .status-ring { border-color: var(--blue); box-shadow: 0 0 30px rgba(10, 132, 255, 0.2); }
         body.washing .label { color: var(--blue); }
         
-        body.drying .status-ring { border-color: var(--orange); box-shadow: 0 0 30px rgba(249, 115, 22, 0.2); }
+        body.drying .status-ring { border-color: var(--orange); box-shadow: 0 0 30px rgba(255, 159, 10, 0.2); }
         body.drying .label { color: var(--orange); }
 
         body.done .status-ring { border-color: var(--green); animation: pulse 2s infinite; }
         body.done .label { color: var(--green); }
 
         @keyframes pulse {
-            0% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.4); }
-            70% { box-shadow: 0 0 0 20px rgba(34, 197, 94, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); }
+            0% { box-shadow: 0 0 0 0 rgba(48, 209, 88, 0.4); }
+            70% { box-shadow: 0 0 0 20px rgba(48, 209, 88, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(48, 209, 88, 0); }
         }
     </style>
 </head>
 <body>
+
+    <div class="settings-icon" onclick="toggleSettings()">⚙️</div>
 
     <div class="status-ring" id="ring">
         <div class="label" id="label">READY</div>
@@ -104,26 +163,57 @@
     </div>
 
     <div class="message" id="msg">
-        Scan your Master Key to start.
+        Scan your Key Tag to start.
     </div>
 
-    <button class="reset-btn" onclick="forceReset()">Reset Cycle</button>
+    <div class="modal" id="settingsModal">
+        <div class="modal-content">
+            <h2>Settings</h2>
+
+            <button class="btn btn-notify" id="notifyBtn" onclick="requestNotify()">Enable Notifications 🔔</button>
+
+            <div class="input-group">
+                <label>Washer Time (mins)</label>
+                <input type="number" id="washInput" value="35">
+            </div>
+
+            <div class="input-group">
+                <label>Dryer Time (mins)</label>
+                <input type="number" id="dryInput" value="60">
+            </div>
+
+            <button class="btn btn-save" onclick="saveSettings()">Save & Close</button>
+            <button class="btn btn-close" onclick="forceReset()">Reset Cycle</button>
+        </div>
+    </div>
 
     <script>
-        // --- CONFIGURATION ---
-        const WASHER_MIN = 35; 
-        const DRYER_MIN = 60;
-
         // --- STATE MANAGEMENT ---
         const States = { IDLE: 'idle', WASHING: 'washing', DRYING: 'drying', DONE: 'done' };
         
+        // Load Config or Defaults
+        let config = {
+            washerTime: parseInt(localStorage.getItem('ls_cfg_wash') || 35),
+            dryerTime: parseInt(localStorage.getItem('ls_cfg_dry') || 60),
+            notifyEnabled: localStorage.getItem('ls_cfg_notify') === 'true'
+        };
+
         const ring = document.getElementById('ring');
         const label = document.getElementById('label');
         const timer = document.getElementById('timer');
         const msg = document.getElementById('msg');
         const body = document.body;
+        
+        // Flags to prevent spamming notifications
+        let alerted10 = false;
+        let alertedDone = false;
 
         function init() {
+            // Populate Inputs
+            document.getElementById('washInput').value = config.washerTime;
+            document.getElementById('dryInput').value = config.dryerTime;
+            updateNotifyButton();
+
             // 1. Get Stored State
             let state = localStorage.getItem('ls_state') || States.IDLE;
             let endTime = parseInt(localStorage.getItem('ls_endTime') || 0);
@@ -133,16 +223,21 @@
             const isKey = params.get('action') === 'trigger';
 
             if (isKey) {
-                // HANDLE KEY SCAN
+                // RESET ALERTS ON NEW SCAN
+                alerted10 = false;
+                alertedDone = false;
+
                 if (state === States.IDLE) {
                     state = States.WASHING;
-                    endTime = Date.now() + (WASHER_MIN * 60 * 1000);
+                    endTime = Date.now() + (config.washerTime * 60 * 1000);
                     alert("Key Accepted: Starting Washer");
+                    sendLocalNotification("Washer Started", `Timer set for ${config.washerTime} mins`);
                 } 
                 else if (state === States.WASHING) {
                     if(confirm("Washer finished? Switch to Dryer?")) {
                         state = States.DRYING;
-                        endTime = Date.now() + (DRYER_MIN * 60 * 1000);
+                        endTime = Date.now() + (config.dryerTime * 60 * 1000);
+                        sendLocalNotification("Dryer Started", `Timer set for ${config.dryerTime} mins`);
                     }
                 }
                 else if (state === States.DRYING || state === States.DONE) {
@@ -152,28 +247,50 @@
                     }
                 }
                 
-                // Save and Clean URL
                 save(state, endTime);
                 window.history.replaceState({}, document.title, window.location.pathname);
             }
 
-            // 3. Render
+            // 3. Render Loop
             render(state, endTime);
-            setInterval(() => render(localStorage.getItem('ls_state') || States.IDLE, parseInt(localStorage.getItem('ls_endTime') || 0)), 1000);
+            setInterval(() => {
+                let s = localStorage.getItem('ls_state') || States.IDLE;
+                let e = parseInt(localStorage.getItem('ls_endTime') || 0);
+                checkAlerts(s, e);
+                render(s, e);
+            }, 1000);
+        }
+
+        function checkAlerts(state, endTime) {
+            if (state === States.IDLE || state === States.DONE) return;
+
+            const now = Date.now();
+            const timeLeft = endTime - now;
+            const minutesLeft = Math.floor(timeLeft / 60000);
+
+            // 10 Minute Warning
+            if (minutesLeft <= 10 && minutesLeft > 0 && !alerted10) {
+                sendLocalNotification("Heads Up!", "10 minutes remaining.");
+                alerted10 = true;
+            }
+
+            // Completion
+            if (timeLeft <= 0 && !alertedDone) {
+                sendLocalNotification("Laundry Done", "Time to switch your clothes!");
+                alertedDone = true;
+            }
         }
 
         function render(state, endTime) {
             const now = Date.now();
             const timeLeft = endTime - now;
 
-            // Auto-complete logic
-            if (state === States.WASHING && timeLeft <= 0) state = States.DONE; 
-            if (state === States.DRYING && timeLeft <= 0) state = States.DONE;
+            if ((state === States.WASHING || state === States.DRYING) && timeLeft <= 0) {
+                state = States.DONE; 
+            }
 
-            // Apply Classes
             body.className = state;
 
-            // Update Text
             if (state === States.IDLE) {
                 label.innerText = "READY";
                 timer.innerText = "IDLE";
@@ -185,7 +302,7 @@
             } else {
                 label.innerText = state.toUpperCase();
                 timer.innerText = format(timeLeft);
-                msg.innerText = state === States.WASHING ? "Washing... Relax." : "Drying... Almost there.";
+                msg.innerText = state === States.WASHING ? "Washing cycle active." : "Drying cycle active.";
             }
         }
 
@@ -201,10 +318,64 @@
             localStorage.setItem('ls_endTime', e);
         }
 
+        // --- SETTINGS LOGIC ---
+
+        function toggleSettings() {
+            document.getElementById('settingsModal').classList.toggle('open');
+        }
+
+        function saveSettings() {
+            const w = document.getElementById('washInput').value;
+            const d = document.getElementById('dryInput').value;
+            
+            config.washerTime = parseInt(w);
+            config.dryerTime = parseInt(d);
+            
+            localStorage.setItem('ls_cfg_wash', config.washerTime);
+            localStorage.setItem('ls_cfg_dry', config.dryerTime);
+            
+            toggleSettings();
+            alert("Settings Saved!");
+        }
+
         function forceReset() {
             if(confirm("Reset everything to IDLE?")) {
                 save(States.IDLE, 0);
+                toggleSettings();
                 window.location.reload();
+            }
+        }
+
+        // --- NOTIFICATIONS ---
+
+        function requestNotify() {
+            if (!("Notification" in window)) {
+                alert("This browser does not support notifications.");
+                return;
+            }
+            Notification.requestPermission().then((permission) => {
+                if (permission === "granted") {
+                    config.notifyEnabled = true;
+                    localStorage.setItem('ls_cfg_notify', 'true');
+                    new Notification("Laundry Scout", { body: "Notifications Enabled!" });
+                    updateNotifyButton();
+                } else {
+                    alert("Permission denied. Check phone settings.");
+                }
+            });
+        }
+
+        function sendLocalNotification(title, bodyText) {
+            if (config.notifyEnabled && Notification.permission === "granted") {
+                new Notification(title, { body: bodyText });
+            }
+        }
+
+        function updateNotifyButton() {
+            const btn = document.getElementById('notifyBtn');
+            if (Notification.permission === "granted") {
+                btn.innerText = "Notifications Active ✅";
+                btn.style.opacity = "0.5";
             }
         }
 
