@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <title>Laundry Scout</title>
+    <style>
+        :root {
+            --bg-color: #0c0c0c;
+            --text-main: #ffffff;
+            --text-dim: #666666;
+            --blue: #3b82f6;
+            --orange: #f97316;
+            --green: #22c55e;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* The Big Ring */
+        .status-ring {
+            width: 260px;
+            height: 260px;
+            border-radius: 50%;
+            border: 6px solid var(--text-dim);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 30px;
+            transition: all 0.4s ease;
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+        }
+
+        .label {
+            font-size: 1.2rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--text-dim);
+            margin-bottom: 5px;
+        }
+
+        .timer {
+            font-size: 4.5rem;
+            font-weight: 700;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .message {
+            font-size: 1rem;
+            color: var(--text-dim);
+            margin-top: 10px;
+            max-width: 80%;
+            text-align: center;
+            line-height: 1.5;
+        }
+
+        /* Hidden Reset Button */
+        .reset-btn {
+            position: absolute;
+            bottom: 40px;
+            background: transparent;
+            border: 1px solid var(--text-dim);
+            color: var(--text-dim);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            cursor: pointer;
+        }
+
+        /* STATES */
+        body.washing .status-ring { border-color: var(--blue); box-shadow: 0 0 30px rgba(59, 130, 246, 0.2); }
+        body.washing .label { color: var(--blue); }
+        
+        body.drying .status-ring { border-color: var(--orange); box-shadow: 0 0 30px rgba(249, 115, 22, 0.2); }
+        body.drying .label { color: var(--orange); }
+
+        body.done .status-ring { border-color: var(--green); animation: pulse 2s infinite; }
+        body.done .label { color: var(--green); }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.4); }
+            70% { box-shadow: 0 0 0 20px rgba(34, 197, 94, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="status-ring" id="ring">
+        <div class="label" id="label">READY</div>
+        <div class="timer" id="timer">--:--</div>
+    </div>
+
+    <div class="message" id="msg">
+        Scan your Master Key to start.
+    </div>
+
+    <button class="reset-btn" onclick="forceReset()">Reset Cycle</button>
+
+    <script>
+        // --- CONFIGURATION ---
+        const WASHER_MIN = 35; 
+        const DRYER_MIN = 60;
+
+        // --- STATE MANAGEMENT ---
+        const States = { IDLE: 'idle', WASHING: 'washing', DRYING: 'drying', DONE: 'done' };
+        
+        const ring = document.getElementById('ring');
+        const label = document.getElementById('label');
+        const timer = document.getElementById('timer');
+        const msg = document.getElementById('msg');
+        const body = document.body;
+
+        function init() {
+            // 1. Get Stored State
+            let state = localStorage.getItem('ls_state') || States.IDLE;
+            let endTime = parseInt(localStorage.getItem('ls_endTime') || 0);
+
+            // 2. Check for Master Key Scan
+            const params = new URLSearchParams(window.location.search);
+            const isKey = params.get('action') === 'trigger';
+
+            if (isKey) {
+                // HANDLE KEY SCAN
+                if (state === States.IDLE) {
+                    state = States.WASHING;
+                    endTime = Date.now() + (WASHER_MIN * 60 * 1000);
+                    alert("Key Accepted: Starting Washer");
+                } 
+                else if (state === States.WASHING) {
+                    if(confirm("Washer finished? Switch to Dryer?")) {
+                        state = States.DRYING;
+                        endTime = Date.now() + (DRYER_MIN * 60 * 1000);
+                    }
+                }
+                else if (state === States.DRYING || state === States.DONE) {
+                    if(confirm("Laundry done? Clear cycle?")) {
+                        state = States.IDLE;
+                        endTime = 0;
+                    }
+                }
+                
+                // Save and Clean URL
+                save(state, endTime);
+                window.history.replaceState({}, document.title, window.location.pathname);
+            }
+
+            // 3. Render
+            render(state, endTime);
+            setInterval(() => render(localStorage.getItem('ls_state') || States.IDLE, parseInt(localStorage.getItem('ls_endTime') || 0)), 1000);
+        }
+
+        function render(state, endTime) {
+            const now = Date.now();
+            const timeLeft = endTime - now;
+
+            // Auto-complete logic
+            if (state === States.WASHING && timeLeft <= 0) state = States.DONE; 
+            if (state === States.DRYING && timeLeft <= 0) state = States.DONE;
+
+            // Apply Classes
+            body.className = state;
+
+            // Update Text
+            if (state === States.IDLE) {
+                label.innerText = "READY";
+                timer.innerText = "IDLE";
+                msg.innerText = "Washer available. Scan Key to start.";
+            } else if (state === States.DONE) {
+                label.innerText = "FINISHED";
+                timer.innerText = "DONE";
+                msg.innerText = "Cycle complete. Move laundry or clear.";
+            } else {
+                label.innerText = state.toUpperCase();
+                timer.innerText = format(timeLeft);
+                msg.innerText = state === States.WASHING ? "Washing... Relax." : "Drying... Almost there.";
+            }
+        }
+
+        function format(ms) {
+            if (ms < 0) return "00:00";
+            const m = Math.floor(ms / 60000);
+            const s = Math.floor((ms % 60000) / 1000);
+            return `${m}:${s.toString().padStart(2, '0')}`;
+        }
+
+        function save(s, e) {
+            localStorage.setItem('ls_state', s);
+            localStorage.setItem('ls_endTime', e);
+        }
+
+        function forceReset() {
+            if(confirm("Reset everything to IDLE?")) {
+                save(States.IDLE, 0);
+                window.location.reload();
+            }
+        }
+
+        init();
+    </script>
+</body>
+</html>
