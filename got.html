@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dragonstone Digital | Archive</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;700&family=JetBrains+Mono&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --obsidian: #0d0d0e;
+            --stone-slab: #161618;
+            --dragonglass: #00f2ff;
+            --valyrian-steel: #f2f2f2;
+            --ash: #707070;
+            --glow: rgba(0, 242, 255, 0.3);
+        }
+
+        body {
+            background-color: var(--obsidian);
+            color: var(--valyrian-steel);
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Subtle Stone Texture Overlay */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: url('https://www.transparenttextures.com/patterns/asfalt-dark.png');
+            opacity: 0.2;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        header {
+            width: 100%;
+            padding: 40px 0;
+            text-align: center;
+            z-index: 2;
+        }
+
+        .logo-container {
+            font-family: 'JetBrains Mono', monospace;
+            letter-spacing: 5px;
+            text-transform: uppercase;
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: var(--dragonglass);
+            text-shadow: 0 0 15px var(--glow);
+        }
+
+        .main-container {
+            position: relative;
+            z-index: 2;
+            width: 90%;
+            max-width: 1000px;
+            background: var(--stone-slab);
+            border: 1px solid #2d2d30;
+            border-radius: 4px;
+            padding: 20px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            margin-bottom: 50px;
+        }
+
+        .video-wrapper {
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+            height: 0;
+            overflow: hidden;
+            border: 1px solid var(--dragonglass);
+            box-shadow: 0 0 20px rgba(0, 242, 255, 0.1);
+        }
+
+        .video-wrapper iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+        }
+
+        .info-panel {
+            margin-top: 20px;
+            border-left: 3px solid var(--dragonglass);
+            padding-left: 20px;
+        }
+
+        h1 {
+            font-size: 1.2rem;
+            margin: 0;
+            color: var(--valyrian-steel);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        p {
+            color: var(--ash);
+            font-size: 0.9rem;
+            margin: 10px 0 0 0;
+        }
+
+        .footer {
+            z-index: 2;
+            margin-top: auto;
+            padding: 20px;
+            font-size: 0.7rem;
+            color: var(--ash);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo-container">Dragonstone Digital</div>
+    </header>
+
+    <div class="main-container">
+        <div class="video-wrapper">
+            <iframe 
+                src="https://vidrock.net/966fb9cd-7cbe-490f-a095-4dd49a1fbb49" 
+                frameborder="0" 
+                allowfullscreen>
+            </iframe>
+        </div>
+
+        <div class="info-panel">
+            <h1>ARCHIVE_FILE: S01E01</h1>
+            <p>DRAGONSTONE DIGITAL SECURITY ENCRYPTION ACTIVE // PROTOCOL 7-KINGDOMS</p>
+        </div>
+    </div>
+
+    <div class="footer">
+        Powered by Obsidian Tech // 2026
+    </div>
+
+</body>
+</html>
