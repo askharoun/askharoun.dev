@@ -1,0 +1,206 @@
+<html><head>
+    <TITLE>BCC Unit Cell - Premium Model</TITLE>
+    
+    <script src="CanvasMatrix.js" type="text/javascript"></script>
+    <script src="Controls.js" type="text/javascript"></script>
+    
+    <script id="shader-vs" type="x-shader/x-vertex"> 
+      attribute vec3 aPos;
+      attribute vec3 aNorm;
+      uniform mat4 mvMatrix;
+      uniform mat4 prMatrix;
+      uniform vec4 u_color;
+      varying vec4 color;
+      const vec3 dirDif = vec3(0., 0., 1.);
+      const vec3 dirHalf = vec3(-.4034, .259, .8776);
+    void main(void) {
+       gl_Position = prMatrix * mvMatrix * vec4(aPos, 1.);
+       vec3 rotNorm = (mvMatrix * vec4(aNorm, .0)).xyz;
+       float i = abs( dot(rotNorm, dirDif) );
+       color = vec4(i*u_color.rgb, u_color.a);
+       i = .5*pow( max( 0., dot(rotNorm, dirHalf) ), 40.);
+       color += vec4(i, i, i, 0.);
+    }
+    </script> 
+     
+    <script id="shader-fs" type="x-shader/x-fragment"> 
+    precision mediump float;
+    varying vec4 color;
+    void main(void) {
+       gl_FragColor = color;
+    }
+    </script> 
+     
+    <script type="text/javascript"> 
+    var nn, nTheta = 12, colorLoc, gl, canvas, mvMatLoc;
+    var mvMatrix = new CanvasMatrix4();
+    var rotMat = new CanvasMatrix4();
+
+    function webGLStart() {
+       canvas = document.getElementById("canvas");
+       try { gl = canvas.getContext("webgl") || canvas.getContext("experimental-webgl"); } catch(e) {}
+       if (!gl) { alert("Could not initialise WebGL"); return; }
+
+       initGL();
+       resizeCanvas();
+    
+       var prog  = gl.createProgram();
+       gl.attachShader(prog, getShader( gl, "shader-vs" ));
+       gl.attachShader(prog, getShader( gl, "shader-fs" ));
+       var posLoc = 0;
+       gl.bindAttribLocation(prog, posLoc, "aPos");
+       var normLoc = 1;
+       gl.bindAttribLocation(prog, normLoc, "aNorm");
+       gl.linkProgram(prog);
+       gl.useProgram(prog);
+    
+       var a = 1;
+       var pt = [-a,-a,a, a,-a,a, -a,a,a, a,a,a, -a,a,a, a,a,a, -a,a,-a, a,a,-a,
+         -a,a,-a, a,a,-a, -a,-a,-a, a,-a,-a, -a,-a,-a, a,-a,-a, -a,-a,a, a,-a,a,
+         a,a,a, a,a,-a, a,-a,a, a,-a,-a, -a,a,a, -a,a,-a, -a,-a,a, -a,-a,-a];
+       var nt = [0,0,1, 0,0,1, 0,0,1, 0,0,1, 0,1,0, 0,1,0, 0,1,0, 0,1,0,
+         0,0,-1, 0,0,-1, 0,0,-1, 0,0,-1, 0,-1,0, 0,-1,0, 0,-1,0, 0,-1,0,
+         1,0,0, 1,0,0, 1,0,0, 1,0,0, -1,0,0, -1,0,0, -1,0,0, -1,0,0];
+       var ind = [0,1,2,1,2,3, 4,5,6,5,6,7, 8,9,10,9,10,11,
+         12,13,14,13,14,15, 16,17,18,17,18,19, 20,21,22,21,22,23];
+    
+       var nPhi = 25, r = .20, // Slightly larger atoms for visibility
+         dPhi = 2*Math.PI/nPhi, dTheta = Math.PI/nTheta;
+       for (var j = 0; j <= nTheta; j++ ){
+          var Theta = j * dTheta;
+          var cosTheta = Math.cos(Theta);
+          var sinTheta = Math.sin(Theta);
+          for (var i = 0; i <= nPhi; i++ ){
+             var Phi = i * dPhi;
+             var cosPhi = Math.cos(Phi);
+             var sinPhi = Math.sin(Phi);
+             pt.push( r*cosPhi*sinTheta, -r*sinPhi*sinTheta, r*cosTheta );
+             nt.push( cosPhi * sinTheta, -sinPhi * sinTheta, cosTheta );
+          }
+       }
+       var n1 = nPhi + 1, off = 24;
+       for ( i = 0; i < nTheta; i++ )
+         for ( j = 0; j < nPhi; j++ )
+           ind.push (i*n1+j+off, (i+1)*n1+j+1+off, i*n1+j+1+off, i*n1+j+off,
+             (i+1)*n1+j+off, (i+1)*n1+j+1+off );
+    
+       gl.enableVertexAttribArray( posLoc );
+       gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
+       gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(pt), gl.STATIC_DRAW);
+       gl.vertexAttribPointer(posLoc, 3, gl.FLOAT, false, 0, 0);
+    
+       gl.enableVertexAttribArray( normLoc );
+       gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
+       gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(nt), gl.STATIC_DRAW);
+       gl.vertexAttribPointer(normLoc, 3, gl.FLOAT, false, 0, 0);
+    
+       gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, gl.createBuffer());
+       gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(ind), gl.STATIC_DRAW);
+    
+       var prMatrix = new CanvasMatrix4();
+       prMatrix.perspective(45, 1, .1, 100);
+       gl.uniformMatrix4fv( gl.getUniformLocation(prog,"prMatrix"), false, new Float32Array(prMatrix.getAsArray()) );
+       rotMat.makeIdentity();
+       mvMatLoc = gl.getUniformLocation(prog,"mvMatrix");
+       colorLoc = gl.getUniformLocation(prog,"u_color");
+    
+       gl.enable(gl.DEPTH_TEST);
+       gl.depthFunc(gl.LEQUAL);
+       gl.clearDepth(1.0);
+       gl.clearColor(0.05, 0.05, 0.05, 1);
+       transl = -5;
+       nn = 6*nPhi*nTheta;
+       drawScene();
+    }
+
+    function resizeCanvas() {
+        if (!canvas) canvas = document.getElementById("canvas");
+        var size = Math.min(window.innerWidth, window.innerHeight) * 0.75;
+        canvas.width = size;
+        canvas.height = size;
+        if (gl) gl.viewport(0, 0, size, size);
+        drawScene();
+    }
+
+    function toggleFullScreen() {
+        if (!document.fullscreenElement) {
+            canvas.requestFullscreen();
+        } else {
+            document.exitFullscreen();
+        }
+    }
+
+    function drawScene(){
+        if (!gl) return;
+        rotMat.rotate(xRot/5, 1,0,0);  rotMat.rotate(yRot/5, 0,1,0);
+        rotMat.rotate(zRot, 0,0,1);
+        yRot = xRot = zRot = 0;
+    
+        gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+    
+        // ATOM COLOR (Bright Gold)
+        gl.uniform4f( colorLoc, 1.0, 0.8, 0.0, 1.0 );
+        drawBall(1, 1, 1);   drawBall(-1, 1, 1);   drawBall(1, -1, 1);
+        drawBall(1, 1, -1);  drawBall(-1, -1, 1);  drawBall(-1, 1, -1);
+        drawBall(1, -1, -1); drawBall(-1, -1, -1);
+        drawBall(0, 0, 0); // Center atom
+    
+        mvMatrix.load( rotMat );
+        mvMatrix.translate(0, 0, transl);
+        gl.uniformMatrix4fv( mvMatLoc, false, new Float32Array(mvMatrix.getAsArray()) );
+    
+        // CUBE BOX COLOR (Ruby Red)
+        gl.enable(gl.BLEND);
+        gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+        gl.uniform4f( colorLoc, 0.8, 0.0, 0.2, 0.3 );
+        gl.depthMask(false);
+        gl.drawElements(gl.TRIANGLES, 36, gl.UNSIGNED_SHORT, 0);
+        gl.depthMask(true);
+        gl.disable(gl.BLEND);
+        gl.flush();
+    }
+
+    function drawBall(x, y, z){
+        mvMatrix.makeIdentity();
+        mvMatrix.translate(x, y, z);
+        mvMatrix.multRight( rotMat );
+        mvMatrix.translate(0, 0, transl);
+        gl.uniformMatrix4fv( mvMatLoc, false, new Float32Array(mvMatrix.getAsArray()) );
+        gl.drawElements(gl.TRIANGLES, nn, gl.UNSIGNED_SHORT, 72);
+    }
+    </script> 
+    <style>
+        body { 
+            background: #0d0d0d; 
+            color: #d4af37; 
+            font-family: 'Georgia', serif; 
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+        h3 { margin: 10px 0; }
+        canvas { border: 1px solid #333; border-radius: 8px; cursor: move; }
+        .controls { margin: 15px 0; }
+        button {
+            background: #d4af37;
+            color: #0d0d0d;
+            border: none;
+            padding: 8px 16px;
+            font-family: inherit;
+            font-weight: bold;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+    </style>
+    </head>
+    <body onload="webGLStart();" onresize="resizeCanvas();"> 
+       <h3>Body Centered Cubic (BCC) Unit Cell</h3>
+       <canvas id="canvas"></canvas> 
+       <div class="controls">
+           <button onclick="toggleFullScreen()">Full Screen Model</button>
+       </div>
+    </body></html>
