@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spotify AudioMotion (Secure)</title>
+    <style>
+        /* --- CORE STYLES --- */
+        body { 
+            margin: 0; overflow: hidden; background-color: #050505; 
+            font-family: 'Segoe UI', sans-serif; color: white;
+            display: flex; justify-content: center; align-items: center; height: 100vh;
+        }
+
+        /* --- VISUALIZER CONTAINER --- */
+        #container {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 1;
+        }
+        #audiomotion-wrap, #custom-wrap {
+            position: absolute; inset: 0; width: 100%; height: 100%;
+        }
+        #custom-wrap { display: none; }
+        #custom-wrap.active { display: block; }
+        #audiomotion-wrap.hidden { display: none; }
+
+        /* --- UI OVERLAY --- */
+        #ui-layer {
+            position: absolute; z-index: 100; text-align: center; width: 480px;
+            background: rgba(15, 15, 18, 0.95); padding: 40px; border-radius: 20px;
+            backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.08);
+            box-shadow: 0 30px 80px rgba(0,0,0,0.9);
+            transition: opacity 0.5s ease;
+        }
+
+        h1 { font-weight: 800; margin: 0 0 10px 0; font-size: 26px; color: white; }
+        
+        .privacy-alert {
+            background: rgba(255, 171, 64, 0.1); border: 1px solid rgba(255, 171, 64, 0.3);
+            color: #ffab40; font-size: 13px; padding: 12px; border-radius: 8px;
+            margin-bottom: 20px; text-align: left; line-height: 1.5;
+        }
+        .privacy-link { color: #ffab40; text-decoration: underline; cursor: pointer; font-weight: bold; }
+
+        /* INPUTS */
+        input[type="text"] {
+            width: 100%; padding: 14px; margin-bottom: 15px;
+            background: rgba(255,255,255,0.05); border: 1px solid #333; color: #fff;
+            border-radius: 10px; box-sizing: border-box; font-family: monospace; font-size: 14px;
+            outline: none; transition: 0.3s;
+        }
+        input[type="text"]:focus { border-color: #1DB954; background: rgba(255,255,255,0.1); }
+
+        /* BUTTONS */
+        button.primary-btn {
+            width: 100%; padding: 16px; font-size: 15px; 
+            background: #1DB954; color: #000;
+            border: none; border-radius: 50px; cursor: pointer; font-weight: 700;
+            text-transform: uppercase; letter-spacing: 1px;
+            transition: transform 0.2s, background 0.2s;
+        }
+        button.primary-btn:hover { transform: scale(1.02); background: #1ed760; }
+        button:disabled { background: #333; color: #777; cursor: not-allowed; }
+
+        /* --- PRIVACY MODAL --- */
+        #privacy-modal {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8); z-index: 200; display: none;
+            justify-content: center; align-items: center;
+        }
+        .modal-content {
+            background: #1a1a1a; padding: 40px; border-radius: 15px; width: 500px;
+            border: 1px solid #333; text-align: left;
+        }
+        .modal-content h2 { margin-top: 0; color: #1DB954; }
+        .modal-content p { color: #ccc; font-size: 14px; line-height: 1.6; }
+        .close-btn {
+            background: #333; color: white; border: none; padding: 10px 20px;
+            border-radius: 5px; cursor: pointer; margin-top: 20px; float: right;
+        }
+
+        /* --- HUD --- */
+        #hud {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; z-index: 50; opacity: 0; transition: opacity 1s;
+        }
+        #hud > * { pointer-events: auto; }
+        .hud-reveal { transition: opacity 0.35s; }
+        body.fullscreen-ui-hidden .hud-reveal {
+            opacity: 0; pointer-events: none; visibility: hidden;
+        }
+        #track-info { position: absolute; bottom: 40px; left: 40px; display: flex; align-items: flex-end; gap: 25px; }
+        #album-art { width: 120px; height: 120px; border-radius: 8px; box-shadow: 0 10px 40px rgba(0,0,0,0.6); }
+        #track-text h2 { margin: 0; font-size: 36px; font-weight: 800; text-shadow: 0 2px 20px rgba(0,0,0,1); }
+        #track-text h3 { margin: 5px 0 0; color: #ddd; font-weight: 500; font-size: 20px; text-shadow: 0 2px 20px rgba(0,0,0,1); }
+        #controls { position: absolute; top: 30px; right: 30px; display: flex; flex-wrap: wrap; gap: 10px; align-items: center; max-width: 420px; }
+        #screensaver-select {
+            padding: 8px 14px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.15);
+            color: #fff; border-radius: 20px; font-size: 13px; font-weight: 600; cursor: pointer;
+            backdrop-filter: blur(10px); min-width: 160px;
+        }
+        .hud-btn {
+            background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.1);
+            color: white; padding: 10px 18px; border-radius: 30px; cursor: pointer;
+            backdrop-filter: blur(10px); font-weight: 600; font-size: 13px;
+        }
+        .hud-btn:hover { background: rgba(255,255,255,0.25); }
+        #status-msg {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            font-size: 24px; font-weight: 300; letter-spacing: 2px;
+            color: rgba(255,255,255,0.5); text-transform: uppercase;
+        }
+        #error-log { color: #ff5555; font-size: 12px; margin-top: 15px; font-weight: bold; min-height: 20px;}
+    </style>
+</head>
+<body>
+
+    <div id="privacy-modal">
+        <div class="modal-content">
+            <h2>Privacy Statement</h2>
+            <p><strong>Why do we need Microphone access?</strong></p>
+            <p>This visualizer runs entirely in your browser. Spotify does not provide "raw audio data" to websites due to copyright restrictions. To bypass this and create real visualizations, we listen to your system's audio output (loopback) via the microphone permission.</p>
+            <p><strong>Data Safety:</strong></p>
+            <ul>
+                <li>No audio is ever recorded.</li>
+                <li>No audio is ever sent to a server.</li>
+                <li>The data is processed instantly for visuals and discarded immediately (Real-time FFT).</li>
+            </ul>
+            <button class="close-btn" onclick="document.getElementById('privacy-modal').style.display='none'">Close</button>
+        </div>
+    </div>
+
+    <div id="container">
+        <div id="audiomotion-wrap"></div>
+        <div id="custom-wrap"></div>
+    </div>
+
+    <div id="ui-layer">
+        <h1>Spotify AudioMotion</h1>
+        
+        <div class="privacy-alert">
+            ⚠️ <strong>Microphone Access Required</strong><br>
+            We use the microphone to "hear" the music frequencies for the visualization. 
+            <span class="privacy-link" onclick="document.getElementById('privacy-modal').style.display='flex'">Read Privacy Statement</span>
+        </div>
+
+        <label style="display:block; text-align:left; margin-bottom:8px; color:#ccc; font-size:13px;">Audio input:</label>
+        <div style="display:flex; gap:8px; margin-bottom:6px;">
+            <select id="audio-source" style="flex:1; padding:10px; background:rgba(255,255,255,0.05); border:1px solid #333; border-radius:8px; color:#fff;">
+                <option value="default">Default microphone</option>
+            </select>
+            <button type="button" class="hud-btn" id="refresh-inputs" style="padding:10px 16px;">Refresh</button>
+        </div>
+        <p style="margin:0 0 15px 0; font-size:11px; color:#888; text-align:left;">Headphones? The mic cannot hear system audio. Use a loopback: <strong>BlackHole</strong> (Mac) or <strong>Stereo Mix</strong> (Windows), then select it above and click Refresh.</p>
+
+        <p style="margin-bottom: 15px; color: #ccc;">
+            1. <a href="https://developer.spotify.com/documentation/web-playback-sdk/tutorials/getting-started" target="_blank" style="color:#1DB954; font-weight:bold;">Open Token Page ↗</a><br>
+            2. Scroll to the purple "Reveal" button.<br>
+            3. Paste token below.
+        </p>
+        
+        <input type="text" id="token-input" placeholder="Paste BQ... token here">
+        <button class="primary-btn" id="btn-start">Connect & Visualize</button>
+        <div id="error-log"></div>
+    </div>
+
+    <div id="hud">
+        <div id="status-msg" class="hud-reveal">Waiting for music...</div>
+        <div id="controls" class="hud-reveal">
+            <select id="screensaver-select">
+                <optgroup label="With microphone">
+                    <option value="bars">Bars (mic)</option>
+                    <option value="waves">Waves (mic)</option>
+                    <option value="radial">Radial (mic)</option>
+                    <option value="3d-particles">3D Particles (mic)</option>
+                    <option value="3d-rings">3D Rings (mic)</option>
+                </optgroup>
+                <optgroup label="Screensaver only">
+                    <option value="relaxed">Relaxed</option>
+                    <option value="spiral">Spiral</option>
+                    <option value="flowing">Flowing</option>
+                </optgroup>
+            </select>
+            <button class="hud-btn" id="prev-btn" title="Previous">&#9664;</button>
+            <button class="hud-btn" id="play-pause-btn" title="Play/Pause">&#9658;</button>
+            <button class="hud-btn" id="next-btn" title="Next">&#9654;</button>
+            <button class="hud-btn" onclick="toggleFullscreen()">&#9974; Fullscreen</button>
+        </div>
+        <div id="track-info" class="hud-reveal">
+            <img id="album-art" src="" style="display:none;">
+            <div id="track-text">
+                <h2 id="track-name"></h2>
+                <h3 id="artist-name"></h3>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://sdk.scdn.co/spotify-player.js"></script>
+    <script type="module">
+        import AudioMotionAnalyzer from "https://cdn.skypack.dev/audiomotion-analyzer@4";
+        import * as THREE from "https://unpkg.com/three@0.160.0/build/three.module.js";
+
+        let player;
+        let token = "";
+        let audioMotion;
+        let audioCtx, sourceNode, ourAnalyser;
+        let scene3d, camera3d, renderer3d, customMesh, particleSystem, spiralMesh, flowLines = [];
+        let screensaverMode = "bars";
+        let customAnimId = 0;
+        let fullscreenHideTimeout = null;
+        let isPlaying = false;
+
+        const themes = [
+            { mode: 2, gradient: 'prism', showPeaks: false, radial: true, reflexRatio: 0.5, reflexAlpha: 1, smoothing: 0.8 }, 
+            { mode: 10, channelLayout: 'dual-vertical', gradient: 'rainbow', smoothing: 0.8, showScaleX: false }, 
+            { mode: 6, ledBars: true, gradient: 'classic', showPeaks: true, radial: false, smoothing: 0.8 },
+            { mode: 3, barSpace: 0.6, mirror: -1, gradient: 'orangered', reflexRatio: 0.3, smoothing: 0.8 }, 
+            { mode: 5, radial: true, spinSpeed: 3, gradient: 'steel', showPeaks: true, smoothing: 0.8 }, 
+            { mode: 1, fillAlpha: 0.3, lineWidth: 3, gradient: 'cold', showPeaks: false, smoothing: 0.9 }, 
+        ];
+
+        // --- AUDIO INPUT LIST ---
+        async function populateInputs() {
+            const sel = document.getElementById('audio-source');
+            if (!sel) return;
+            try {
+                const devs = await navigator.mediaDevices.enumerateDevices();
+                const inputs = devs.filter(d => d.kind === 'audioinput');
+                sel.innerHTML = '<option value="default">Default microphone</option>';
+                inputs.forEach((d, i) => {
+                    const opt = document.createElement('option');
+                    opt.value = d.deviceId;
+                    opt.text = d.label || ('Audio input ' + (i + 1));
+                    sel.appendChild(opt);
+                });
+            } catch (e) {
+                console.warn('Could not enumerate devices:', e);
+            }
+        }
+
+        document.getElementById('refresh-inputs').onclick = () => populateInputs();
+
+        // Populate on load; labels may be empty until mic permission is granted once
+        populateInputs();
+
+        // getUserMedia requires HTTPS or localhost
+        if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+            document.getElementById('error-log').innerText = 'Microphone API not available. Use HTTPS or localhost.';
+        } else if (location.protocol === 'file:') {
+            document.getElementById('error-log').innerText = 'Open this page via a local server (e.g. "npx serve .") or HTTPS. file:// does not allow microphone access.';
+        }
+
+        // --- CONNECT BUTTON ---
+        document.getElementById('btn-start').onclick = async () => {
+            const btn = document.getElementById('btn-start');
+            const errLog = document.getElementById('error-log');
+            token = document.getElementById('token-input').value.trim();
+            
+            errLog.innerText = ""; // Clear errors
+
+            if(token.length < 30) {
+                errLog.innerText = "Error: Token looks too short.";
+                return;
+            }
+
+            btn.disabled = true;
+            btn.innerText = "Requesting Audio...";
+
+            try {
+                await initVisualizer();
+                
+                btn.innerText = "Connecting to Spotify...";
+                initSpotify();
+
+            } catch (err) {
+                console.error(err);
+                
+                let friendlyMsg = "Error: " + (err.name || "Unknown");
+                if (err.message) friendlyMsg += " — " + err.message;
+                if (err.code) friendlyMsg += " (" + err.code + ")";
+                
+                if (err.name === 'NotAllowedError' || err.name === 'PermissionDeniedError') {
+                    friendlyMsg = "Access Denied: Check System Preferences (Privacy > Microphone) and browser microphone permission.";
+                } else if (err.name === 'NotFoundError') {
+                    friendlyMsg = "No Microphone Found: Plug in a mic or enable Stereo Mix / BlackHole.";
+                } else if (err.name === 'NotReadableError') {
+                    friendlyMsg = "Hardware Error: Mic is busy or another app is using it.";
+                } else if (err.name === 'AudioMotionError') {
+                    if (err.code === 'ERR_AUDIO_CONTEXT_FAIL' || (err.message && err.message.includes('context'))) {
+                        friendlyMsg = "AudioContext blocked: Use HTTPS or localhost, allow mic, and try in Chrome or Firefox.";
+                    } else if (err.code === 'ERR_INVALID_AUDIO_SOURCE' || (err.message && err.message.includes('source'))) {
+                        friendlyMsg = "Invalid audio source: Try another browser (Chrome/Firefox) or a different input above.";
+                    } else {
+                        friendlyMsg = "Visualizer: " + (err.message || err.code || err.name);
+                    }
+                }
+
+                errLog.innerText = friendlyMsg;
+                alert(friendlyMsg);
+                
+                btn.disabled = false;
+                btn.innerText = "Connect & Visualize";
+            }
+        };
+
+        // --- VISUALIZER SETUP ---
+        async function initVisualizer() {
+            const constraints = {
+                audio: {
+                    echoCancellation: true,
+                    noiseSuppression: false,
+                    autoGainControl: false
+                },
+                video: false
+            };
+
+            // Use selected device if user picked one (e.g. Stereo Mix, BlackHole for system audio)
+            const deviceId = document.getElementById('audio-source')?.value;
+            if (deviceId && deviceId !== 'default') {
+                constraints.audio.deviceId = { ideal: deviceId };
+            }
+
+            let stream;
+            try {
+                stream = await navigator.mediaDevices.getUserMedia(constraints);
+            } catch (err) {
+                // Fallback: try with minimal constraints if the above fails (older browsers)
+                if (err.name === 'OverconstrainedError' || err.name === 'ConstraintNotSatisfiedError') {
+                    stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
+                } else {
+                    throw err;
+                }
+            }
+
+            if (!stream || !stream.getAudioTracks().length) {
+                throw new Error('No audio track in stream. Microphone may not be working.');
+            }
+
+            // Refresh device list so labels appear (e.g. Stereo Mix, BlackHole) for next time
+            populateInputs();
+
+            const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+            if (!AudioContextClass) throw new Error('Web Audio API not supported.');
+            audioCtx = new AudioContextClass();
+            if (audioCtx.state === 'suspended') await audioCtx.resume();
+            sourceNode = audioCtx.createMediaStreamSource(stream);
+            ourAnalyser = audioCtx.createAnalyser();
+            ourAnalyser.fftSize = 256;
+            sourceNode.connect(ourAnalyser);
+
+            const wrap = document.getElementById('audiomotion-wrap');
+            if (!wrap) throw new Error('audiomotion-wrap not found.');
+
+            audioMotion = new AudioMotionAnalyzer(wrap, {
+                source: sourceNode,
+                height: window.innerHeight,
+                width: window.innerWidth,
+                mode: 1,
+                barSpace: 0.5,
+                bgAlpha: 0,
+                overlay: true,
+                showScaleX: false,
+                showScaleY: false
+            });
+
+            try { applyTheme(0); } catch (e) {}
+            audioMotion.toggleAnalyzer(false);
+
+            initCustomThree();
+            document.getElementById('screensaver-select').onchange = (e) => {
+                screensaverMode = e.target.value;
+                switchScreensaver();
+            };
+            switchScreensaver();
+            animateCustom();
+        }
+
+        function applyTheme(index) {
+            if (!audioMotion) return;
+            const t = themes[index];
+            for (const key in t) audioMotion[key] = t[key];
+            audioMotion.setOptions(t);
+        }
+
+        const modeToTheme = { bars: 0, waves: 1, radial: 4 };
+        function switchScreensaver() {
+            const aw = document.getElementById('audiomotion-wrap');
+            const cw = document.getElementById('custom-wrap');
+            const isCustom = ['3d-particles','3d-rings','relaxed','spiral','flowing'].includes(screensaverMode);
+            if (isCustom) {
+                if (aw) aw.classList.add('hidden');
+                if (cw) cw.classList.add('active');
+                if (audioMotion) audioMotion.toggleAnalyzer(false);
+            } else {
+                if (aw) aw.classList.remove('hidden');
+                if (cw) cw.classList.remove('active');
+                const ti = modeToTheme[screensaverMode] ?? 0;
+                applyTheme(ti);
+                if (audioMotion) audioMotion.toggleAnalyzer(isPlaying);
+            }
+        }
+
+        function initCustomThree() {
+            const wrap = document.getElementById('custom-wrap');
+            if (!wrap || scene3d) return;
+            scene3d = new THREE.Scene();
+            camera3d = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera3d.position.z = 20;
+            renderer3d = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            renderer3d.setSize(window.innerWidth, window.innerHeight);
+            renderer3d.setPixelRatio(Math.min(devicePixelRatio, 2));
+            wrap.appendChild(renderer3d.domElement);
+
+            const g = new THREE.TorusKnotGeometry(5, 1.5, 100, 16);
+            customMesh = new THREE.Mesh(g, new THREE.MeshNormalMaterial({ wireframe: true, transparent: true, opacity: 0.85 }));
+            scene3d.add(customMesh);
+
+            const pc = 4000, pos = new Float32Array(pc * 3);
+            for (let i = 0; i < pc * 3; i++) pos[i] = (Math.random() - 0.5) * 60;
+            const pg = new THREE.BufferGeometry();
+            pg.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+            particleSystem = new THREE.Points(pg, new THREE.PointsMaterial({ color: 0x00aaff, size: 0.2, blending: THREE.AdditiveBlending }));
+            particleSystem.visible = false;
+            scene3d.add(particleSystem);
+
+            const sg = new THREE.TubeGeometry(
+                new THREE.CatmullRomCurve3([
+                    new THREE.Vector3(0,0,0), new THREE.Vector3(4,4,4),
+                    new THREE.Vector3(-4,8,-4), new THREE.Vector3(4,12,4)
+                ]), 120, 0.4, 8, false);
+            spiralMesh = new THREE.Mesh(sg, new THREE.MeshPhongMaterial({ color: 0x8844ff, wireframe: true, transparent: true, opacity: 0.9 }));
+            spiralMesh.visible = false;
+            scene3d.add(spiralMesh);
+
+            for (let i = 0; i < 30; i++) {
+                const g2 = new THREE.BufferGeometry();
+                const p = new Float32Array(50 * 3);
+                for (let j = 0; j < 50; j++) {
+                    p[j*3] = (j/50 - 0.5) * 30; p[j*3+1] = 0; p[j*3+2] = 0;
+                }
+                g2.setAttribute('position', new THREE.BufferAttribute(p, 3));
+                const l = new THREE.Line(g2, new THREE.LineBasicMaterial({ color: 0x00ccff, transparent: true, opacity: 0.6 }));
+                scene3d.add(l);
+                flowLines.push({ line: l, phase: i * 0.3, speed: 0.5 + Math.random() * 0.5 });
+            }
+            flowLines.forEach(f => f.line.visible = false);
+        }
+
+        const freqData = new Uint8Array(128);
+        function animateCustom() {
+            customAnimId = requestAnimationFrame(animateCustom);
+            const cw = document.getElementById('custom-wrap');
+            if (!cw || !cw.classList.contains('active') || !renderer3d) return;
+
+            const t = performance.now() * 0.001;
+            const useMic = ourAnalyser && ['3d-particles','3d-rings'].includes(screensaverMode);
+            if (useMic && ourAnalyser) ourAnalyser.getByteFrequencyData(freqData);
+            const level = useMic ? freqData.slice(0, 16).reduce((a,b)=>a+b,0) / (16*255) : 0.3;
+
+            customMesh.visible = screensaverMode === 'relaxed';
+            particleSystem.visible = screensaverMode === '3d-particles';
+            spiralMesh.visible = (screensaverMode === '3d-rings' || screensaverMode === 'spiral');
+            flowLines.forEach(f => { f.line.visible = screensaverMode === 'flowing'; });
+
+            if (screensaverMode === 'relaxed') {
+                customMesh.rotation.x = Math.sin(t * 0.2) * 0.3;
+                customMesh.rotation.y += 0.008;
+                const s = 1 + Math.sin(t * 0.6) * 0.06;
+                customMesh.scale.set(s, s, s);
+            } else if (screensaverMode === '3d-particles') {
+                particleSystem.rotation.y = t * (0.15 + level * 0.2);
+                particleSystem.rotation.x = Math.sin(t * 0.2) * 0.2;
+            } else if (screensaverMode === '3d-rings' || screensaverMode === 'spiral') {
+                spiralMesh.rotation.x = t * 0.2; spiralMesh.rotation.y = t * 0.15;
+                spiralMesh.scale.setScalar(1 + level * 0.4);
+            } else if (screensaverMode === 'flowing') {
+                flowLines.forEach((f, i) => {
+                    const pos = f.line.geometry.attributes.position.array;
+                    for (let j = 0; j < 50; j++) {
+                        const x = (j/50 - 0.5) * 30;
+                        pos[j*3+1] = Math.sin(x * 0.2 + t * f.speed + f.phase) * 4;
+                        pos[j*3+2] = Math.cos(x * 0.15 + t * 0.8) * 3;
+                    }
+                    f.line.geometry.attributes.position.needsUpdate = true;
+                });
+            }
+            renderer3d.render(scene3d, camera3d);
+        }
+
+        // --- SPOTIFY SETUP ---
+        window.onSpotifyWebPlaybackSDKReady = () => {};
+
+        function initSpotify() {
+            player = new Spotify.Player({
+                name: 'AudioMotion Visualizer',
+                getOAuthToken: cb => { cb(token); },
+                volume: 0.5
+            });
+
+            player.addListener('authentication_error', ({ message }) => {
+                document.getElementById('error-log').innerText = "Auth Error: Token Invalid/Expired.";
+                document.getElementById('btn-start').disabled = false;
+                document.getElementById('btn-start').innerText = "Connect & Visualize";
+            });
+
+            player.addListener('ready', ({ device_id }) => {
+                console.log('Ready with Device ID', device_id);
+                document.getElementById('ui-layer').style.opacity = 0;
+                setTimeout(() => document.getElementById('ui-layer').style.display = 'none', 500);
+                document.getElementById('hud').style.opacity = 1;
+                document.getElementById('status-msg').innerHTML = `Connected.<br><br>Open Spotify & Select:<br><b>"AudioMotion Visualizer"</b>`;
+            });
+
+            player.addListener('player_state_changed', state => {
+                if (!state) return;
+                const track = state.track_window.current_track;
+                isPlaying = !state.paused;
+
+                document.getElementById('track-name').innerText = track.name;
+                document.getElementById('artist-name').innerText = track.artists[0].name;
+                document.getElementById('album-art').src = track.album.images[0].url;
+                document.getElementById('album-art').style.display = 'block';
+
+                const playBtn = document.getElementById('play-pause-btn');
+                if (playBtn) playBtn.textContent = isPlaying ? '\u23F8' : '\u25B6';
+
+                if (state.paused) {
+                    document.getElementById('status-msg').innerText = "PAUSED";
+                    document.getElementById('status-msg').style.opacity = 1;
+                    if (audioMotion) audioMotion.toggleAnalyzer(false);
+                } else {
+                    document.getElementById('status-msg').style.opacity = 0;
+                    if (audioMotion) audioMotion.toggleAnalyzer(true);
+                }
+            });
+
+            player.connect();
+        }
+
+        window.toggleFullscreen = () => {
+            if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+                const el = document.documentElement;
+                if (el.requestFullscreen) el.requestFullscreen();
+                else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
+            } else {
+                if (document.exitFullscreen) document.exitFullscreen();
+                else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
+            }
+        };
+
+        function onFullscreenChange() {
+            const inFs = !!(document.fullscreenElement || document.webkitFullscreenElement);
+            if (inFs) {
+                document.body.classList.add('fullscreen-ui-hidden');
+                document.addEventListener('mousemove', onFsMousemove);
+            } else {
+                document.body.classList.remove('fullscreen-ui-hidden');
+                document.removeEventListener('mousemove', onFsMousemove);
+                if (fullscreenHideTimeout) { clearTimeout(fullscreenHideTimeout); fullscreenHideTimeout = null; }
+            }
+        }
+        function onFsMousemove() {
+            document.body.classList.remove('fullscreen-ui-hidden');
+            if (fullscreenHideTimeout) clearTimeout(fullscreenHideTimeout);
+            fullscreenHideTimeout = setTimeout(() => {
+                document.body.classList.add('fullscreen-ui-hidden');
+                fullscreenHideTimeout = null;
+            }, 2200);
+        }
+        document.addEventListener('fullscreenchange', onFullscreenChange);
+        document.addEventListener('webkitfullscreenchange', onFullscreenChange);
+
+        document.getElementById('prev-btn').onclick = () => { if (player) player.previousTrack(); };
+        document.getElementById('play-pause-btn').onclick = () => { if (player) player.togglePlay(); };
+        document.getElementById('next-btn').onclick = () => { if (player) player.nextTrack(); };
+
+        window.addEventListener('resize', () => {
+            if (audioMotion) audioMotion.setCanvasSize(window.innerWidth, window.innerHeight);
+            if (camera3d) { camera3d.aspect = window.innerWidth / window.innerHeight; camera3d.updateProjectionMatrix(); }
+            if (renderer3d) renderer3d.setSize(window.innerWidth, window.innerHeight);
+        });
+    </script>
+</body>
+</html>
