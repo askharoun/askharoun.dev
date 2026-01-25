@@ -7,7 +7,7 @@
     <meta name="theme-color" content="#050505">
     <title>Triangle Philanthropy | Penn State</title>
     <link rel="manifest" href="./manifest.json">
-    <link rel="apple-touch-icon" href="images/logo.png">
+    <link rel="apple-touch-icon" href="images/triangle.png">
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -30,7 +30,7 @@
             --psu-blue: #041E42;
             --radius: 14px;
             --font: 'Inter', sans-serif;
-            --font-display: 'Anton', sans-serif; /* NEW FONT */
+            --font-display: 'Anton', sans-serif;
             --error: #FF3333;
         }
 
@@ -53,7 +53,7 @@
 
         /* WIDER CONTAINER FOR MAC DASHBOARD FEEL */
         .container { 
-            max-width: 1400px; /* Wider for desktop */
+            max-width: 1400px;
             width: 95%; 
             margin: 0 auto; 
             padding: 0 20px; 
@@ -116,12 +116,12 @@
         }
 
         /* * =========================================
-         * STATS DASHBOARD (FIXED MARGINS)
+         * STATS DASHBOARD
          * =========================================
          */
         .stats-grid {
             display: grid;
-            grid-template-columns: 1fr; /* Mobile default */
+            grid-template-columns: 1fr;
             gap: 20px; 
             margin: 40px 0;
             width: 100%;
@@ -129,7 +129,7 @@
         
         @media (min-width: 768px) {
             .stats-grid {
-                grid-template-columns: 1fr 1fr; /* Strict 50/50 split */
+                grid-template-columns: 1fr 1fr;
                 gap: 30px;
             }
         }
@@ -151,15 +151,15 @@
         .stat-sub { font-size: 0.9rem; color: var(--text-muted); }
 
         /* * =========================================
-         * EVENTS GRID & HEADER (FIXED MARGINS)
+         * EVENTS GRID
          * =========================================
          */
         .section-head {
-            display: flex; justify-content: space-between; align-items: center; /* Better alignment */
+            display: flex; justify-content: space-between; align-items: center;
             margin: 60px 0 30px; 
             padding-bottom: 20px; 
             border-bottom: 1px solid var(--border);
-            flex-wrap: wrap; /* Handle small screens */
+            flex-wrap: wrap; 
             gap: 20px;
         }
         .section-title { font-size: 2rem; font-weight: 800; letter-spacing: -0.5px; margin: 0; }
@@ -220,7 +220,6 @@
         .event-title { font-size: 1.4rem; font-weight: 800; margin-bottom: 10px; line-height: 1.2; }
         .event-desc { color: var(--text-muted); font-size: 0.95rem; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; margin-bottom: 20px; flex: 1; }
         
-        /* Links & Footer */
         .event-footer { 
             padding-top: 16px; 
             border-top: 1px solid var(--border); 
@@ -248,7 +247,7 @@
         .btn-txt.delete:hover { color: var(--brand); background: rgba(217,4,41,0.1); }
 
         /* * =========================================
-         * INFINITE MARQUEE (SOLID FONT - ANTON)
+         * INFINITE MARQUEE
          * =========================================
          */
         footer { margin-top: auto; padding: 60px 0 20px; background: linear-gradient(to top, #000 20%, transparent); overflow: hidden; }
@@ -282,9 +281,9 @@
         .m-text {
             font-family: var(--font-display); /* ANTON FONT */
             font-size: 4rem;
-            font-weight: 400; /* Anton is bold by default */
+            font-weight: 400;
             text-transform: uppercase;
-            color: white; /* Solid White */
+            color: white;
             letter-spacing: 2px;
             transition: all 0.3s;
         }
