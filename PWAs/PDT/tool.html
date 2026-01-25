@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Slides Background Generator</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        :root {
+            --ui-bg: #121212;
+            --ui-panel: #1e1e1e;
+            --ui-border: #333;
+            --text-white: #ffffff;
+            --text-gray: #a1a1aa;
+            
+            --accent-glow: #8a1538; 
+            --accent-glow-soft: rgba(138, 21, 56, 0.4);
+        }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background-color: var(--ui-bg);
+            color: var(--text-white);
+            margin: 0;
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* --- SIDEBAR --- */
+        .sidebar {
+            width: 340px;
+            background-color: var(--ui-panel);
+            border-right: 1px solid var(--ui-border);
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            overflow-y: auto;
+            z-index: 100;
+            box-shadow: 4px 0 20px rgba(0,0,0,0.5);
+        }
+
+        .sidebar h2 { margin-top: 0; font-size: 1.1rem; letter-spacing: 0.05em; text-transform: uppercase; color: var(--text-gray); }
+
+        .control-group { display: flex; flex-direction: column; gap: 8px; }
+        .control-group label { font-size: 0.8rem; color: var(--text-gray); font-weight: 600; }
+        
+        input[type="text"], textarea {
+            background: #2a2a2a;
+            border: 1px solid #444;
+            color: white;
+            padding: 12px;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 0.9rem;
+            transition: 0.2s;
+        }
+        input:focus, textarea:focus { outline: none; border-color: var(--accent-glow); }
+
+        .btn-upload {
+            background: #2a2a2a;
+            border: 2px dashed #444;
+            padding: 30px;
+            text-align: center;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.2s;
+            color: var(--text-gray);
+            font-size: 0.9rem;
+        }
+        .btn-upload:hover { background: #333; color: white; border-color: #666; }
+
+        .btn-download {
+            background: white;
+            color: black;
+            border: none;
+            padding: 15px;
+            font-weight: 700;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: auto;
+            transition: transform 0.1s;
+        }
+        .btn-download:active { transform: scale(0.98); }
+        .btn-download:disabled { background: #555; cursor: wait; }
+
+        /* --- PREVIEW AREA --- */
+        .workspace {
+            flex-grow: 1;
+            background-color: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            position: relative;
+        }
+
+        /* --- SLIDE CANVAS (16:9 Aspect Ratio) --- */
+        #slide {
+            width: 1280px;
+            height: 720px;
+            position: relative;
+            background: #050505;
+            overflow: hidden;
+            display: flex; 
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 100px rgba(0,0,0,0.8);
+            transform-origin: center center;
+        }
+
+        /* Background Layers */
+        .bg-img-container {
+            position: absolute;
+            top: -10%; left: -10%;
+            width: 120%; height: 120%;
+            z-index: 1;
+        }
+        
+        #baked-blur-bg {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .bg-overlay {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.7); 
+            z-index: 2;
+        }
+
+        /* --- CONTENT CARD --- */
+        .content-card {
+            position: relative;
+            z-index: 10;
+            width: 900px;
+            /* Bottom-up gradient for that "blended" float effect */
+            background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0) 90%);
+            padding: 60px 50px;
+            display: flex;
+            gap: 60px;
+            align-items: center;
+            border-radius: 30px;
+        }
+
+        .logo-box {
+            width: 300px;
+            height: 300px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        .logo-box img {
+            max-width: 95%;
+            max-height: 95%;
+            object-fit: contain;
+            /* Floating shadow */
+            filter: drop-shadow(0 30px 50px rgba(0,0,0,0.7));
+        }
+
+        .text-box {
+            display: flex;
+            flex-direction: column;
+            gap: 22px;
+            text-shadow: 0 5px 20px rgba(0,0,0,0.9); /* Stronger text shadow for readability */
+        }
+
+        .tags { display: flex; gap: 12px; }
+        .pill {
+            padding: 8px 14px;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.15);
+        }
+        .pill-neutral { color: #ccc; }
+        .pill-goal { 
+            background: var(--accent-glow-soft);
+            color: #ff8fa3; 
+            border: 1px solid rgba(255, 143, 163, 0.3); 
+        }
+
+        h1 { 
+            font-size: 3.6rem;
+            font-weight: 900; 
+            margin: 0; 
+            line-height: 1.05; 
+            letter-spacing: -0.02em;
+        }
+        
+        p { 
+            font-size: 1.4rem; 
+            line-height: 1.5; 
+            color: #ddd;
+            margin: 0; 
+            font-weight: 400;
+            max-width: 95%;
+        }
+
+        /* --- BLENDED FOOTER GLOW --- */
+        .footer-container {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 20;
+            width: 250px; height: 250px; /* Wide area for glow spread */
+            pointer-events: none; 
+        }
+
+        .glow-effect {
+            position: absolute;
+            width: 5px; height: 5px; /* Tiny origin point */
+            border-radius: 50%;
+            background: transparent;
+            z-index: 1;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            
+            /* Layered shadows for seamless blend */
+            box-shadow: 
+                0 0 50px 15px var(--accent-glow),          /* Hot Core */
+                0 0 100px 40px var(--accent-glow-soft),    /* Mid Range */
+                0 0 180px 80px rgba(138, 21, 56, 0.15);    /* Atmosphere */
+                
+            opacity: 1;
+        }
+
+        .footer-logo {
+            width: 45px; height: auto;
+            position: relative; z-index: 2;
+            filter: drop-shadow(0 10px 20px rgba(0,0,0,0.8));
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="sidebar">
+        <h2>Google Slides Designer</h2>
+        
+        <div class="control-group">
+            <label>Image Source</label>
+            <div class="btn-upload" onclick="document.getElementById('fileIn').click()">
+                Click to Upload Logo
+                <input type="file" id="fileIn" hidden accept="image/*" onchange="handleImage(event)">
+            </div>
+        </div>
+
+        <div class="control-group">
+            <label>Company / Title</label>
+            <input type="text" id="inTitle" value="Chipotle Mexican Grill" oninput="render()">
+        </div>
+
+        <div class="control-group">
+            <label>Description</label>
+            <textarea id="inDesc" rows="4" oninput="render()">Applied & received confirmation regarding an event. We can expect a response soon.</textarea>
+        </div>
+
+        <div style="display: flex; gap: 10px;">
+            <div class="control-group" style="flex: 1;">
+                <label>Date</label>
+                <input type="text" id="inDate" value="APR 1, 2026" oninput="render()">
+            </div>
+            <div class="control-group" style="flex: 1;">
+                <label>Time</label>
+                <input type="text" id="inTime" value="14:00 EST" oninput="render()">
+            </div>
+        </div>
+
+        <div class="control-group">
+            <label>Goal Amount</label>
+            <input type="text" id="inGoal" value="$250.00" oninput="render()">
+        </div>
+
+        <button id="dlBtn" class="btn-download" onclick="saveSlide()">Download 5K (Slides Ready)</button>
+        <p style="font-size: 10px; color:#555; text-align: center;">Requires images/triangle.png</p>
+    </div>
+
+    <div class="workspace">
+        <div id="slide">
+            
+            <div class="bg-img-container">
+                <img id="baked-blur-bg" src="" style="display:none">
+            </div>
+            <div class="bg-overlay"></div>
+
+            <div class="content-card">
+                <div class="logo-box">
+                    <img id="main-img" src="" alt="" style="display:none">
+                    <span id="placeholder" style="color: rgba(255,255,255,0.3); font-weight: 800; font-size: 2rem; letter-spacing: 0.1em;">LOGO</span>
+                </div>
+                <div class="text-box">
+                    <div class="tags">
+                        <div class="pill pill-neutral" id="outDate">APR 1, 2026</div>
+                        <div class="pill pill-neutral" id="outTime">14:00 EST</div>
+                        <div class="pill pill-goal">GOAL: <span id="outGoal">$250.00</span></div>
+                    </div>
+                    <h1 id="outTitle">Chipotle Mexican Grill</h1>
+                    <p id="outDesc">Applied & received confirmation regarding an event. We can expect a response soon.</p>
+                </div>
+            </div>
+
+            <div class="footer-container">
+                <div class="glow-effect"></div> 
+                <img src="images/triangle.png" class="footer-logo">
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        function render() {
+            document.getElementById('outTitle').innerText = document.getElementById('inTitle').value;
+            document.getElementById('outDesc').innerText = document.getElementById('inDesc').value;
+            document.getElementById('outDate').innerText = document.getElementById('inDate').value.toUpperCase();
+            document.getElementById('outTime').innerText = document.getElementById('inTime').value.toUpperCase();
+            document.getElementById('outGoal').innerText = document.getElementById('inGoal').value;
+        }
+
+        function handleImage(e) {
+            const file = e.target.files[0];
+            if(!file) return;
+
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                const url = event.target.result;
+                
+                const mainImg = document.getElementById('main-img');
+                mainImg.src = url;
+                mainImg.style.display = 'block';
+                document.getElementById('placeholder').style.display = 'none';
+
+                generateHighResBlur(url);
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // Optimized Blur for Standard Screens
+        function generateHighResBlur(srcUrl) {
+            const img = new Image();
+            img.onload = () => {
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                canvas.width = 1920; 
+                canvas.height = 1080; 
+                
+                // Slightly stronger brightness for background visibility
+                ctx.filter = 'blur(60px) brightness(0.65) saturate(1.1)';
+                
+                ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                const blurredUrl = canvas.toDataURL('image/jpeg', 0.9);
+                const bgImg = document.getElementById('baked-blur-bg');
+                bgImg.src = blurredUrl;
+                bgImg.style.display = 'block';
+            };
+            img.src = srcUrl;
+        }
+
+        function resizePreview() {
+            const workspace = document.querySelector('.workspace');
+            const slide = document.getElementById('slide');
+            const pad = 60;
+            const scale = Math.min(
+                (workspace.clientWidth - pad) / 1280,
+                (workspace.clientHeight - pad) / 720
+            );
+            slide.style.transform = `scale(${scale})`;
+        }
+        window.addEventListener('resize', resizePreview);
+        window.addEventListener('load', resizePreview);
+
+        function saveSlide() {
+            const btn = document.getElementById('dlBtn');
+            const slide = document.getElementById('slide');
+            
+            btn.disabled = true;
+            btn.innerText = "Rendering 5K Image...";
+
+            setTimeout(() => {
+                const currentTransform = slide.style.transform;
+                slide.style.transform = 'none';
+
+                html2canvas(slide, {
+                    scale: 4, // 1280x4 = 5120px Width (5K) - Perfect for Slides
+                    useCORS: true,
+                    allowTaint: true,
+                    backgroundColor: null,
+                    logging: false,
+                }).then(canvas => {
+                    slide.style.transform = currentTransform;
+                    
+                    const link = document.createElement('a');
+                    link.download = 'presentation-slide-5k.png';
+                    link.href = canvas.toDataURL('image/png');
+                    link.click();
+
+                    btn.disabled = false;
+                    btn.innerText = "Download 5K (Slides Ready)";
+                });
+            }, 250);
+        }
+    </script>
+</body>
+</html>
