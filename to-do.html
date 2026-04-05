@@ -2,17 +2,14 @@
  * Project: EE 200 Project 3 - Robotic Vacuum FSM
  */
 
-// Define clock frequency for __delay_ms()
 #define FCY 3685000UL
 
 #include "xc.h"
 #include <stdint.h>
 #include "libpic30.h"
 
-// Communication Channel 2 for debugger
 #pragma config ICS = PGD2
 
-// Enum for system states based on PS2 Problem 5
 typedef enum {
     S0, // Initial state (Lights Off)
     S1, // Moving (M on, N off)
@@ -20,136 +17,108 @@ typedef enum {
     S3  // Dirty Patch (N on, M on)
 } StateType;
 
-// Global state variable for interrupt access
 volatile StateType current_state = S0;
 
 // Hardware Interrupt for Asynchronous Reset (Button R / Pin 5)
 void __attribute__((__interrupt__, auto_psv)) _INT1Interrupt(void) {
-    LATBbits.LATB15 = 0;        // Turn off N (Red LED)
-    LATBbits.LATB14 = 0;        // Turn off M (Green LED)
-    current_state = S0;         // Force state back to S0
-    IFS1bits.INT1IF = 0;        // Clear the interrupt flag
+    LATBbits.LATB15 = 0;        
+    LATBbits.LATB14 = 0;        
+    current_state = S0;         
+    IFS1bits.INT1IF = 0;        
 }
 
 void initialize_system(void) {
-    // 1. Configure Pins for Digital I/O
+    // 1. Turn OFF Analog 
     ANSELAbits.ANSA0 = 0; // Pin 2 (D)
     ANSELAbits.ANSA1 = 0; // Pin 3 (O)
     ANSELBbits.ANSB0 = 0; // Pin 4 (S)
+    ANSELBbits.ANSB1 = 0; // Pin 5 (R) - Critical for Reset!
     
     // 2. Set Directions (1 = Input, 0 = Output)
-    TRISAbits.TRISA0 = 1; // D: Input
-    TRISAbits.TRISA1 = 1; // O: Input
-    TRISBbits.TRISB0 = 1; // S: Input
-    TRISBbits.TRISB15 = 0; // N (Red LED): Output
-    TRISBbits.TRISB14 = 0; // M (Green LED): Output
+    TRISAbits.TRISA0 = 1; // D
+    TRISAbits.TRISA1 = 1; // O
+    TRISBbits.TRISB0 = 1; // S
+    TRISBbits.TRISB1 = 1; // R
+    TRISBbits.TRISB15 = 0; // N (Red LED)
+    TRISBbits.TRISB14 = 0; // M (Green LED)
     
-    // Ensure LEDs are off initially
+    // 3. Enable Internal Pull-up Resistors for all 4 buttons
+    CNPUAbits.CNPUA0 = 1; // D
+    CNPUAbits.CNPUA1 = 1; // O
+    CNPUBbits.CNPUB0 = 1; // S
+    CNPUBbits.CNPUB1 = 1; // R
+    
     LATBbits.LATB15 = 0;
     LATBbits.LATB14 = 0;
     
-    // 3. Setup INT1 for Reset Button R (RPI33 / Pin 5)
-    RPINR0bits.INT1R = 33;      // Map INT1 to RPI33
-    INTCON2bits.INT1EP = 1;     // Interrupt on negative edge (button press)
-    IFS1bits.INT1IF = 0;        // Clear flag before enabling
-    IEC1bits.INT1IE = 1;        // Enable INT1 interrupt
+    // 4. Setup INT1 for Reset Button R
+    RPINR0bits.INT1R = 33;      
+    INTCON2bits.INT1EP = 1;     
+    IFS1bits.INT1IF = 0;        
+    IEC1bits.INT1IE = 1;        
 }
 
 int main(void) {
-    
     initialize_system();
     int i;
 
     while(1) {
-        
-        // Read S, O, and D inputs. 
-        // Buttons are active low, so we invert them with '!' to make 1 = pushed.
-        // Shift S to bit 2, O to bit 1, and keep D at bit 0 to form integer 0-7.
+        // Read inputs (0-7 integer)
         uint16_t input = (!PORTBbits.RB0 << 2) | (!PORTAbits.RA1 << 1) | (!PORTAbits.RA0);
 
-        // OUTER SWITCH: Check Current State
         switch(current_state) {
-            
             case S0: 
-                LATBbits.LATB15 = 0; // N = 0
-                LATBbits.LATB14 = 0; // M = 0
-                
-                // INNER SWITCH: Check Input
+                LATBbits.LATB15 = 0; 
+                LATBbits.LATB14 = 0; 
                 switch(input) {
-                    case 4: case 5: case 6: case 7: // If S = 1
-                        current_state = S1;
-                        break;
-                    default:                        // If S = 0
-                        current_state = S0;
-                        break;
+                    case 4: case 5: case 6: case 7: current_state = S1; break;
+                    default:                        current_state = S0; break;
                 }
                 break;
 
             case S1: 
-                LATBbits.LATB15 = 0; // N = 0
-                LATBbits.LATB14 = 1; // M = 1
-                
-                // INNER SWITCH: Check Input
+                LATBbits.LATB15 = 0; 
+                LATBbits.LATB14 = 1; 
                 switch(input) {
-                    case 4: case 5: case 6: case 7: // If S = 1
-                        current_state = S0; 
-                        break;
-                    case 2: case 3:                 // If S = 0, O = 1
-                        current_state = S2; 
-                        break;
-                    case 1:                         // If S = 0, O = 0, D = 1
-                        current_state = S3; 
-                        break;
-                    case 0:                         // If S = 0, O = 0, D = 0
-                        current_state = S1; 
-                        break;
+                    case 4: case 5: case 6: case 7: current_state = S0; break;
+                    case 2: case 3:                 current_state = S2; break;
+                    case 1:                         current_state = S3; break;
+                    case 0:                         current_state = S1; break;
                 }
                 break;
                 
             case S2: 
-                LATBbits.LATB15 = 1; // N = 1
-                LATBbits.LATB14 = 0; // M = 0
-                
-                // INNER SWITCH: Check Input
+                LATBbits.LATB15 = 1; 
+                LATBbits.LATB14 = 0; 
                 switch(input) {
-                    case 4: case 5: case 6: case 7: // If S = 1
-                        current_state = S0; 
-                        break;
-                    case 2: case 3:                 // If S = 0, O = 1
-                        current_state = S2; 
-                        break;
-                    case 0: case 1:                 // If S = 0, O = 0
-                        current_state = S1; 
-                        break;
+                    case 4: case 5: case 6: case 7: current_state = S0; break;
+                    case 2: case 3:                 current_state = S2; break;
+                    case 0: case 1:                 current_state = S1; break;
                 }
                 break;
 
             case S3: 
-                LATBbits.LATB15 = 1; // N = 1
-                LATBbits.LATB14 = 1; // M = 1
-                
-                // INNER SWITCH: Check Input
+                LATBbits.LATB15 = 1; 
+                LATBbits.LATB14 = 1; 
                 switch(input) {
-                    case 4: case 5: case 6: case 7: // If S = 1
-                        current_state = S0; 
-                        break;
-                    case 1: case 3:                 // If S = 0, D = 1
-                        current_state = S3; 
-                        break;
-                    case 0: case 2:                 // If S = 0, D = 0
-                        current_state = S1; 
-                        break;
+                    case 4: case 5: case 6: case 7: current_state = S0; break;
+                    case 1: case 3:                 current_state = S3; break;
+                    case 0: case 2:                 current_state = S1; break;
                 }
                 break;
         }
 
-        // Delay exactly 1 second while petting the Watchdog Timer 
-        // so the chip doesn't crash/flicker while waiting.
+        // Delay loop
         for (i = 0; i < 100; i++) {
+            // FIXED SAFETY NET: Checking RB1 (Pin 5) for Reset
+            if (PORTBbits.RB1 == 0) { 
+                current_state = S0;
+                LATBbits.LATB15 = 0;
+                LATBbits.LATB14 = 0;
+            }
             __delay_ms(10); 
             ClrWdt();       
         }
     }
-    
     return 0; 
 }
