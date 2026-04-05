@@ -1,108 +1,155 @@
 /* * File:   main.c
  * Project: EE 200 Project 3 - Robotic Vacuum FSM
- * Date: April 4, 2026
  */
 
 // Define clock frequency for __delay_ms()
-[span_5](start_span)[span_6](start_span)#define FCY 3685000UL[span_5](end_span)[span_6](end_span)
+#define FCY 3685000UL
 
-[span_7](start_span)[span_8](start_span)#include "xc.h"[span_7](end_span)[span_8](end_span)
+#include "xc.h"
 #include <stdint.h>
-[span_9](start_span)[span_10](start_span)#include "libpic30.h"[span_9](end_span)[span_10](end_span)
+#include "libpic30.h"
 
 // Communication Channel 2 for debugger
-[span_11](start_span)[span_12](start_span)[span_13](start_span)#pragma config ICS = PGD2[span_11](end_span)[span_12](end_span)[span_13](end_span)
+#pragma config ICS = PGD2
 
 // Enum for system states based on PS2 Problem 5
 typedef enum {
-    [span_14](start_span)S0, // Off/Initial[span_14](end_span)
-    [span_15](start_span)S1, // Moving Forward[span_15](end_span)
-    [span_16](start_span)S2, // Obstacle Avoidance[span_16](end_span)
-    [span_17](start_span)S3  // Dirty Patch[span_17](end_span)
+    S0, // Initial state (Lights Off)
+    S1, // Moving (M on, N off)
+    S2, // Obstacle (N on, M off)
+    S3  // Dirty Patch (N on, M on)
 } StateType;
 
 // Global state variable for interrupt access
-[span_18](start_span)volatile StateType current_state = S0;[span_18](end_span)
+volatile StateType current_state = S0;
 
-// Hardware Interrupt for Reset (R) Button (Pin 5 / RPI33)
+// Hardware Interrupt for Asynchronous Reset (Button R / Pin 5)
 void __attribute__((__interrupt__, auto_psv)) _INT1Interrupt(void) {
-    LATBbits.LATB15 = 0;        [span_19](start_span)[span_20](start_span)// Turn off Red LED (N)[span_19](end_span)[span_20](end_span)
-    LATBbits.LATB14 = 0;        [span_21](start_span)[span_22](start_span)// Turn off Green LED (M)[span_21](end_span)[span_22](end_span)
-    current_state = S0;         [span_23](start_span)[span_24](start_span)// Reset to initial state[span_23](end_span)[span_24](end_span)
-    IFS1bits.INT1IF = 0;        // Clear interrupt flag
+    LATBbits.LATB15 = 0;        // Turn off N (Red LED)
+    LATBbits.LATB14 = 0;        // Turn off M (Green LED)
+    current_state = S0;         // Force state back to S0
+    IFS1bits.INT1IF = 0;        // Clear the interrupt flag
 }
 
 void initialize_system(void) {
-    [span_25](start_span)[span_26](start_span)// Configure Pins for Digital I/O[span_25](end_span)[span_26](end_span)
-    ANSELAbits.ANSA0 = 0; [span_27](start_span)[span_28](start_span)// Pin 2 (D)[span_27](end_span)[span_28](end_span)
-    ANSELAbits.ANSA1 = 0; [span_29](start_span)[span_30](start_span)// Pin 3 (O)[span_29](end_span)[span_30](end_span)
-    ANSELBbits.ANSB0 = 0; [span_31](start_span)// Pin 4 (S)[span_31](end_span)
+    // 1. Configure Pins for Digital I/O
+    ANSELAbits.ANSA0 = 0; // Pin 2 (D)
+    ANSELAbits.ANSA1 = 0; // Pin 3 (O)
+    ANSELBbits.ANSB0 = 0; // Pin 4 (S)
     
-    [span_32](start_span)[span_33](start_span)// Set Directions (1=Input, 0=Output)[span_32](end_span)[span_33](end_span)
-    TRISAbits.TRISA0 = 1; [span_34](start_span)[span_35](start_span)// D: Input[span_34](end_span)[span_35](end_span)
-    TRISAbits.TRISA1 = 1; [span_36](start_span)[span_37](start_span)// O: Input[span_36](end_span)[span_37](end_span)
-    TRISBbits.TRISB0 = 1; [span_38](start_span)// S: Input[span_38](end_span)
-    TRISBbits.TRISB15 = 0; [span_39](start_span)// N: Output[span_39](end_span)
-    TRISBbits.TRISB14 = 0; [span_40](start_span)// M: Output[span_40](end_span)
+    // 2. Set Directions (1 = Input, 0 = Output)
+    TRISAbits.TRISA0 = 1; // D: Input
+    TRISAbits.TRISA1 = 1; // O: Input
+    TRISBbits.TRISB0 = 1; // S: Input
+    TRISBbits.TRISB15 = 0; // N (Red LED): Output
+    TRISBbits.TRISB14 = 0; // M (Green LED): Output
     
-    // Setup INT1 for Reset Button R (RPI33 / Pin 5)
+    // Ensure LEDs are off initially
+    LATBbits.LATB15 = 0;
+    LATBbits.LATB14 = 0;
+    
+    // 3. Setup INT1 for Reset Button R (RPI33 / Pin 5)
     RPINR0bits.INT1R = 33;      // Map INT1 to RPI33
-    INTCON2bits.INT1EP = 1;     // Negative edge (Active Low)
-    IFS1bits.INT1IF = 0;        // Clear flag
-    IEC1bits.INT1IE = 1;        // Enable interrupt
+    INTCON2bits.INT1EP = 1;     // Interrupt on negative edge (button press)
+    IFS1bits.INT1IF = 0;        // Clear flag before enabling
+    IEC1bits.INT1IE = 1;        // Enable INT1 interrupt
 }
 
 int main(void) {
-    [span_41](start_span)[span_42](start_span)initialize_system();[span_41](end_span)[span_42](end_span)
-    [span_43](start_span)int counter;[span_43](end_span)
+    
+    initialize_system();
+    int i;
 
-    [span_44](start_span)[span_45](start_span)while(1) {[span_44](end_span)[span_45](end_span)
-        [span_46](start_span)[span_47](start_span)// Read and combine S, O, and D into an integer[span_46](end_span)[span_47](end_span)
-        [span_48](start_span)// Note: Buttons are Active Low (! operator flips 0 to 1)[span_48](end_span)
+    while(1) {
+        
+        // Read S, O, and D inputs. 
+        // Buttons are active low, so we invert them with '!' to make 1 = pushed.
+        // Shift S to bit 2, O to bit 1, and keep D at bit 0 to form integer 0-7.
         uint16_t input = (!PORTBbits.RB0 << 2) | (!PORTAbits.RA1 << 1) | (!PORTAbits.RA0);
 
-        [span_49](start_span)[span_50](start_span)[span_51](start_span)// Outer Switch: Current State[span_49](end_span)[span_50](end_span)[span_51](end_span)
+        // OUTER SWITCH: Check Current State
         switch(current_state) {
+            
             case S0: 
-                LATBbits.LATB15 = 0; [span_52](start_span)// N=0[span_52](end_span)
-                LATBbits.LATB14 = 0; [span_53](start_span)// M=0[span_53](end_span)
-                if (input >= 4) current_state = S1; [span_54](start_span)// Transition if S=1[span_54](end_span)
+                LATBbits.LATB15 = 0; // N = 0
+                LATBbits.LATB14 = 0; // M = 0
+                
+                // INNER SWITCH: Check Input
+                switch(input) {
+                    case 4: case 5: case 6: case 7: // If S = 1
+                        current_state = S1;
+                        break;
+                    default:                        // If S = 0
+                        current_state = S0;
+                        break;
+                }
                 break;
 
             case S1: 
-                LATBbits.LATB15 = 0; [span_55](start_span)// N=0[span_55](end_span)
-                LATBbits.LATB14 = 1; [span_56](start_span)// M=1[span_56](end_span)
-                if (input >= 4) current_state = S0; [span_57](start_span)// S=1[span_57](end_span)
-                else if (input == 2 || input == 3) current_state = S2; [span_58](start_span)// O=1[span_58](end_span)
-                else if (input == 1) current_state = S3; [span_59](start_span)// D=1[span_59](end_span)
+                LATBbits.LATB15 = 0; // N = 0
+                LATBbits.LATB14 = 1; // M = 1
+                
+                // INNER SWITCH: Check Input
+                switch(input) {
+                    case 4: case 5: case 6: case 7: // If S = 1
+                        current_state = S0; 
+                        break;
+                    case 2: case 3:                 // If S = 0, O = 1
+                        current_state = S2; 
+                        break;
+                    case 1:                         // If S = 0, O = 0, D = 1
+                        current_state = S3; 
+                        break;
+                    case 0:                         // If S = 0, O = 0, D = 0
+                        current_state = S1; 
+                        break;
+                }
                 break;
                 
             case S2: 
-                LATBbits.LATB15 = 1; [span_60](start_span)// N=1[span_60](end_span)
-                LATBbits.LATB14 = 0; [span_61](start_span)// M=0[span_61](end_span)
-                if (input >= 4) current_state = S0; [span_62](start_span)// S=1[span_62](end_span)
-                else if (input == 0 || input == 1) current_state = S1; [span_63](start_span)// O=0[span_63](end_span)
+                LATBbits.LATB15 = 1; // N = 1
+                LATBbits.LATB14 = 0; // M = 0
+                
+                // INNER SWITCH: Check Input
+                switch(input) {
+                    case 4: case 5: case 6: case 7: // If S = 1
+                        current_state = S0; 
+                        break;
+                    case 2: case 3:                 // If S = 0, O = 1
+                        current_state = S2; 
+                        break;
+                    case 0: case 1:                 // If S = 0, O = 0
+                        current_state = S1; 
+                        break;
+                }
                 break;
 
             case S3: 
-                LATBbits.LATB15 = 1; [span_64](start_span)// N=1[span_64](end_span)
-                LATBbits.LATB14 = 1; [span_65](start_span)// M=1[span_65](end_span)
-                if (input >= 4) current_state = S0; [span_66](start_span)// S=1[span_66](end_span)
-                else if (input == 0 || input == 2) current_state = S1; [span_67](start_span)// D=0[span_67](end_span)
+                LATBbits.LATB15 = 1; // N = 1
+                LATBbits.LATB14 = 1; // M = 1
+                
+                // INNER SWITCH: Check Input
+                switch(input) {
+                    case 4: case 5: case 6: case 7: // If S = 1
+                        current_state = S0; 
+                        break;
+                    case 1: case 3:                 // If S = 0, D = 1
+                        current_state = S3; 
+                        break;
+                    case 0: case 2:                 // If S = 0, D = 0
+                        current_state = S1; 
+                        break;
+                }
                 break;
         }
 
-        [span_68](start_span)[span_69](start_span)[span_70](start_span)// Responsive Delay Loop: check Reset every 10ms[span_68](end_span)[span_69](end_span)[span_70](end_span)
-        [span_71](start_span)for (counter = 0; counter < 100; counter++) {[span_71](end_span)
-            [span_72](start_span)// Extra safety: manual check for Reset button[span_72](end_span)
-            if (PORTBbits.RB15 == 0) { 
-                [span_73](start_span)current_state = S0;[span_73](end_span)
-                [span_74](start_span)LATBbits.LATB15 = 0;[span_74](end_span)
-                LATBbits.LATB14 = 0;
-            }
-            __delay_ms(10); [span_75](start_span)// Wait 10ms[span_75](end_span)
-            ClrWdt();       [span_76](start_span)[span_77](start_span)[span_78](start_span)// Restart the Watchdog Timer[span_76](end_span)[span_77](end_span)[span_78](end_span)
+        // Delay exactly 1 second while petting the Watchdog Timer 
+        // so the chip doesn't crash/flicker while waiting.
+        for (i = 0; i < 100; i++) {
+            __delay_ms(10); 
+            ClrWdt();       
         }
     }
-    [span_79](start_span)[span_80](start_span)return 0;[span_79](end_span)[span_80](end_span)
+    
+    return 0; 
 }
