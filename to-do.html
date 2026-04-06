@@ -1,165 +1,140 @@
-// dsPIC33EP64MC502 FSM Robotic Vacuum Controller
-// Written for XC16 Compiler
+// dsPIC33EP Controller for Automated Vacuum System
+// Target Compiler: XC16
 
-#define FCY 3685000UL // Updated clock frequency for __delay_ms
+#define FCY 3685000UL // System instruction clock for delay functions
 
 #include <xc.h>
 #include <libpic30.h>
 #include <stdint.h>
+#include <stdbool.h>
 
-// --- Configuration Bits ---
-// (Add any specific #pragma config statements required by your board/bootloader here)
+// --- Pin Mappings & Macros ---
+#define SENSOR_DIRT       PORTAbits.RA0
+#define SENSOR_OBSTACLE   PORTAbits.RA1
+#define BTN_START         PORTBbits.RB0
 
-// --- State Definitions ---
+#define LED_RED           LATBbits.LATB15
+#define LED_GREEN         LATBbits.LATB14
+
+// --- System Modes (FSM States) ---
 typedef enum {
-    S0 = 0, // Reset/Initial: Both LEDs OFF
-    S1,     // Green ON (M)
-    S2,     // Red ON (N)
-    S3      // Both ON
-} FSM_State;
+    MODE_HALTED = 0,  // Standby: Both LEDs off
+    MODE_NORMAL,      // Cleaning: Green LED on
+    MODE_EVADE,       // Obstacle: Red LED on
+    MODE_HEAVY        // Dirty Patch: Both LEDs on
+} SysMode_t;
 
-volatile FSM_State currentState = S0; // Volatile because it is altered inside an ISR
+volatile SysMode_t activeMode = MODE_HALTED;
 
-// --- Interrupt Service Routine for INT1 (Reset Button) ---
+// --- Hardware Reset Interrupt (INT1) ---
 void __attribute__((__interrupt__, no_auto_psv)) _INT1Interrupt(void) {
-    // 1. Reset the state to S0
-    currentState = S0;
+    // 1. Force system back to standby state
+    activeMode = MODE_HALTED;
     
-    // 2. Set both LEDs low (OFF)
-    LATBbits.LATB15 = 0; // N (Red LED) OFF
-    LATBbits.LATB14 = 0; // M (Green LED) OFF
+    // 2. Turn off indicators immediately
+    LED_RED = 0;
+    LED_GREEN = 0;
     
-    // 3. Clear the interrupt flag
+    // 3. Clear interrupt flag to prevent re-triggering
     IFS1bits.INT1IF = 0;
 }
 
-int main(void) {
-    // --- 1. Peripheral & I/O Configuration ---
-    
-    // Disable analog features on PORTA and PORTB to use as digital I/O
+// --- System Setup Routine ---
+void initHardware(void) {
+    // Disable analog functions on PORTA and PORTB
     ANSELA = 0x0000;
     ANSELB = 0x0000;
 
-    // Configure Inputs (1 = Input): D (RA0), O (RA1), S (RB0)
-    TRISAbits.TRISA0 = 1; // D - Dirty Patch
-    TRISAbits.TRISA1 = 1; // O - Obstacle
-    TRISBbits.TRISB0 = 1; // S - Start
+    // Configure Input Pins (1 = Input)
+    TRISAbits.TRISA0 = 1; // Dirt sensor
+    TRISAbits.TRISA1 = 1; // Obstacle sensor
+    TRISBbits.TRISB0 = 1; // Start button
     
-    // Configure Outputs (0 = Output): N (RB15), M (RB14)
-    TRISBbits.TRISB15 = 0; // N - Red LED
-    TRISBbits.TRISB14 = 0; // M - Green LED
+    // Configure Output Pins (0 = Output)
+    TRISBbits.TRISB15 = 0; // Red LED
+    TRISBbits.TRISB14 = 0; // Green LED
     
-    // Initialize outputs to LOW (State S0)
-    LATBbits.LATB15 = 0;
-    LATBbits.LATB14 = 0;
+    // Default state is OFF
+    LED_RED = 0;
+    LED_GREEN = 0;
 
-    // --- 2. Interrupt INT1 Configuration (Reset Button R on RPI33) ---
-    // Map External Interrupt 1 to Peripheral Pin 33 (RPI33)
+    // External Interrupt Setup (INT1 on Peripheral Pin 33)
     RPINR0bits.INT1R = 33;    
-    
-    INTCON2bits.INT1EP = 1;   // Trigger INT1 on falling edge (button pressed pulls voltage low)
-    IFS1bits.INT1IF = 0;      // Clear the INT1 interrupt flag
+    INTCON2bits.INT1EP = 1;   // Trigger on falling edge
+    IFS1bits.INT1IF = 0;      // Clear initial flag
     IEC1bits.INT1IE = 1;      // Enable INT1 interrupt
+}
 
-    // --- 3. Main FSM Loop ---
+int main(void) {
+    // Initialize registers and I/O
+    initHardware();
+
+    // --- Main FSM Loop ---
     while(1) {
         
-        // A. Read inputs and logically invert due to physical pull-up resistors
-        // (If pin is low/0, button is pressed -> logic is TRUE/1)
-        uint16_t S_logic = !PORTBbits.RB0;
-        uint16_t O_logic = !PORTAbits.RA1;
-        uint16_t D_logic = !PORTAbits.RA0;
+        // 1. Read active-low inputs (A low signal means the sensor/button is active)
+        bool start_pressed     = (BTN_START == 0);
+        bool obstacle_detected = (SENSOR_OBSTACLE == 0);
+        bool dirt_detected     = (SENSOR_DIRT == 0);
 
-        // B. Construct the 16-bit input variable
-        // Bit 2: S | Bit 1: O | Bit 0: D
-        // Values range from 0 (0b000) to 7 (0b111)
-        uint16_t input = (S_logic << 2) | (O_logic << 1) | (D_logic);
-
-        // C. Evaluate FSM Transitions based on Truth Table
-        switch(currentState) {
-            case S0:
-                switch(input) {
-                    case 4: case 5: case 6: case 7: // S=1, O=X, D=X
-                        currentState = S1;
-                        break;
-                    case 0: case 1: case 2: case 3: // S=0, O=X, D=X
-                    default: 
-                        currentState = S0;
-                        break; 
+        // 2. Evaluate State Transitions
+        switch(activeMode) {
+            case MODE_HALTED:
+                if (start_pressed) {
+                    activeMode = MODE_NORMAL;
                 }
                 break;
                 
-            case S1:
-                switch(input) {
-                    case 4: case 5: case 6: case 7: // S=1, O=X, D=X
-                        currentState = S0;
-                        break;
-                    case 2: case 3:                 // S=0, O=1, D=X
-                        currentState = S2;
-                        break;
-                    case 1:                         // S=0, O=0, D=1
-                        currentState = S3;
-                        break;
-                    case 0:                         // S=0, O=0, D=0
-                    default: 
-                        currentState = S1;
-                        break;
+            case MODE_NORMAL:
+                if (start_pressed) {
+                    activeMode = MODE_HALTED;
+                } else if (obstacle_detected) {
+                    activeMode = MODE_EVADE;
+                } else if (dirt_detected) {
+                    activeMode = MODE_HEAVY;
                 }
                 break;
                 
-            case S2:
-                switch(input) {
-                    case 4: case 5: case 6: case 7: // S=1, O=X, D=X
-                        currentState = S0;
-                        break;
-                    case 2: case 3:                 // S=0, O=1, D=X
-                        currentState = S2;
-                        break;
-                    case 0: case 1:                 // S=0, O=0, D=X
-                    default: 
-                        currentState = S1;
-                        break;
+            case MODE_EVADE:
+                if (start_pressed) {
+                    activeMode = MODE_HALTED;
+                } else if (obstacle_detected) {
+                    activeMode = MODE_EVADE; // Remain in evade
+                } else {
+                    activeMode = MODE_NORMAL; // Obstacle cleared
                 }
                 break;
                 
-            case S3:
-                switch(input) {
-                    case 4: case 5: case 6: case 7: // S=1, O=X, D=X
-                        currentState = S0;
-                        break;
-                    case 0: case 2:                 // S=0, O=X, D=0 (0b000 and 0b010)
-                        currentState = S1;
-                        break;
-                    case 1: case 3:                 // S=0, O=X, D=1 (0b001 and 0b011)
-                    default: 
-                        currentState = S3;
-                        break;
+            case MODE_HEAVY:
+                if (start_pressed) {
+                    activeMode = MODE_HALTED;
+                } else if (!dirt_detected) {
+                    activeMode = MODE_NORMAL; // Dirt cleared
                 }
+                // Else remain in heavy cleaning mode
+                break;
+                
+            default:
+                activeMode = MODE_HALTED; // Fallback
                 break;
         }
 
-        // D. Update Outputs based on the newly evaluated state
-        // Outputs: N = RB15 (Red), M = RB14 (Green)
-        switch(currentState) {
-            case S0:
-                LATBbits.LATB15 = 0; // N OFF
-                LATBbits.LATB14 = 0; // M OFF
-                break;
-            case S1:
-                LATBbits.LATB15 = 0; // N OFF
-                LATBbits.LATB14 = 1; // M ON
-                break;
-            case S2:
-                LATBbits.LATB15 = 1; // N ON
-                LATBbits.LATB14 = 0; // M OFF
-                break;
-            case S3:
-                LATBbits.LATB15 = 1; // N ON
-                LATBbits.LATB14 = 1; // M ON
-                break;
+        // 3. Update Hardware Outputs
+        if (activeMode == MODE_HALTED) {
+            LED_RED = 0;
+            LED_GREEN = 0;
+        } else if (activeMode == MODE_NORMAL) {
+            LED_RED = 0;
+            LED_GREEN = 1;
+        } else if (activeMode == MODE_EVADE) {
+            LED_RED = 1;
+            LED_GREEN = 0;
+        } else if (activeMode == MODE_HEAVY) {
+            LED_RED = 1;
+            LED_GREEN = 1;
         }
 
-        // E. 1-Second Loop Delay
+        // 4. Execution Delay
         __delay_ms(1000);
     }
 
