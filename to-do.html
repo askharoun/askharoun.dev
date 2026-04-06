@@ -1,7 +1,7 @@
 // dsPIC33EP64MC502 FSM Robotic Vacuum Controller
 // Written for XC16 Compiler
 
-#define FCY 40000000UL // Required for __delay_ms. Adjust to match actual clock frequency.
+#define FCY 3685000UL // Updated clock frequency for __delay_ms
 
 #include <xc.h>
 #include <libpic30.h>
@@ -26,8 +26,8 @@ void __attribute__((__interrupt__, no_auto_psv)) _INT1Interrupt(void) {
     currentState = S0;
     
     // 2. Set both LEDs low (OFF)
-    LATBbits.LATB15 = 0; // N (Red LED)
-    LATBbits.LATB14 = 0; // M (Green LED)
+    LATBbits.LATB15 = 0; // N (Red LED) OFF
+    LATBbits.LATB14 = 0; // M (Green LED) OFF
     
     // 3. Clear the interrupt flag
     IFS1bits.INT1IF = 0;
@@ -72,45 +72,74 @@ int main(void) {
 
         // B. Construct the 16-bit input variable
         // Bit 2: S | Bit 1: O | Bit 0: D
+        // Values range from 0 (0b000) to 7 (0b111)
         uint16_t input = (S_logic << 2) | (O_logic << 1) | (D_logic);
 
-        // C. Evaluate FSM Transitions
+        // C. Evaluate FSM Transitions based on Truth Table
         switch(currentState) {
             case S0:
                 switch(input) {
-                    // TODO: Replace with logic from Problem Set 2
-                    // Example: case 4: currentState = S1; break; 
+                    case 4: case 5: case 6: case 7: // S=1, O=X, D=X
+                        currentState = S1;
+                        break;
+                    case 0: case 1: case 2: case 3: // S=0, O=X, D=X
                     default: 
+                        currentState = S0;
                         break; 
                 }
                 break;
                 
             case S1:
                 switch(input) {
-                    // TODO: Replace with logic from Problem Set 2
+                    case 4: case 5: case 6: case 7: // S=1, O=X, D=X
+                        currentState = S0;
+                        break;
+                    case 2: case 3:                 // S=0, O=1, D=X
+                        currentState = S2;
+                        break;
+                    case 1:                         // S=0, O=0, D=1
+                        currentState = S3;
+                        break;
+                    case 0:                         // S=0, O=0, D=0
                     default: 
+                        currentState = S1;
                         break;
                 }
                 break;
                 
             case S2:
                 switch(input) {
-                    // TODO: Replace with logic from Problem Set 2
+                    case 4: case 5: case 6: case 7: // S=1, O=X, D=X
+                        currentState = S0;
+                        break;
+                    case 2: case 3:                 // S=0, O=1, D=X
+                        currentState = S2;
+                        break;
+                    case 0: case 1:                 // S=0, O=0, D=X
                     default: 
+                        currentState = S1;
                         break;
                 }
                 break;
                 
             case S3:
                 switch(input) {
-                    // TODO: Replace with logic from Problem Set 2
+                    case 4: case 5: case 6: case 7: // S=1, O=X, D=X
+                        currentState = S0;
+                        break;
+                    case 0: case 2:                 // S=0, O=X, D=0 (0b000 and 0b010)
+                        currentState = S1;
+                        break;
+                    case 1: case 3:                 // S=0, O=X, D=1 (0b001 and 0b011)
                     default: 
+                        currentState = S3;
                         break;
                 }
                 break;
         }
 
         // D. Update Outputs based on the newly evaluated state
+        // Outputs: N = RB15 (Red), M = RB14 (Green)
         switch(currentState) {
             case S0:
                 LATBbits.LATB15 = 0; // N OFF
