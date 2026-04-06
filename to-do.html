@@ -1,75 +1,138 @@
-#define FCY 3685000UL
-#include "xc.h"
+// dsPIC33EP64MC502 FSM Robotic Vacuum Controller
+// Written for XC16 Compiler
+
+#define FCY 40000000UL // Required for __delay_ms. Adjust to match actual clock frequency.
+
+#include <xc.h>
+#include <libpic30.h>
 #include <stdint.h>
-#include "libpic30.h"
 
-#pragma config ICS = PGD2
+// --- Configuration Bits ---
+// (Add any specific #pragma config statements required by your board/bootloader here)
 
-typedef enum { S0, S1, S2, S3 } StateType;
-volatile StateType current_state = S0;
+// --- State Definitions ---
+typedef enum {
+    S0 = 0, // Reset/Initial: Both LEDs OFF
+    S1,     // Green ON (M)
+    S2,     // Red ON (N)
+    S3      // Both ON
+} FSM_State;
+
+volatile FSM_State currentState = S0; // Volatile because it is altered inside an ISR
+
+// --- Interrupt Service Routine for INT1 (Reset Button) ---
+void __attribute__((__interrupt__, no_auto_psv)) _INT1Interrupt(void) {
+    // 1. Reset the state to S0
+    currentState = S0;
+    
+    // 2. Set both LEDs low (OFF)
+    LATBbits.LATB15 = 0; // N (Red LED)
+    LATBbits.LATB14 = 0; // M (Green LED)
+    
+    // 3. Clear the interrupt flag
+    IFS1bits.INT1IF = 0;
+}
 
 int main(void) {
-    // 1. Setup Pins
-    ANSELAbits.ANSA0 = 0; ANSELAbits.ANSA1 = 0; 
-    ANSELBbits.ANSB0 = 0; ANSELBbits.ANSB1 = 0; 
+    // --- 1. Peripheral & I/O Configuration ---
     
-    TRISAbits.TRISA0 = 1; TRISAbits.TRISA1 = 1; 
-    TRISBbits.TRISB0 = 1; TRISBbits.TRISB1 = 1; 
-    TRISBbits.TRISB15 = 0; TRISBbits.TRISB14 = 0; 
+    // Disable analog features on PORTA and PORTB to use as digital I/O
+    ANSELA = 0x0000;
+    ANSELB = 0x0000;
+
+    // Configure Inputs (1 = Input): D (RA0), O (RA1), S (RB0)
+    TRISAbits.TRISA0 = 1; // D - Dirty Patch
+    TRISAbits.TRISA1 = 1; // O - Obstacle
+    TRISBbits.TRISB0 = 1; // S - Start
     
-    // 2. Enable Internal Pull-ups
-    CNPUAbits.CNPUA0 = 1; CNPUAbits.CNPUA1 = 1; 
-    CNPUBbits.CNPUB0 = 1; CNPUBbits.CNPUB1 = 1; 
+    // Configure Outputs (0 = Output): N (RB15), M (RB14)
+    TRISBbits.TRISB15 = 0; // N - Red LED
+    TRISBbits.TRISB14 = 0; // M - Green LED
     
-    LATBbits.LATB15 = 0; 
+    // Initialize outputs to LOW (State S0)
+    LATBbits.LATB15 = 0;
     LATBbits.LATB14 = 0;
 
+    // --- 2. Interrupt INT1 Configuration (Reset Button R on RPI33) ---
+    // Map External Interrupt 1 to Peripheral Pin 33 (RPI33)
+    RPINR0bits.INT1R = 33;    
+    
+    INTCON2bits.INT1EP = 1;   // Trigger INT1 on falling edge (button pressed pulls voltage low)
+    IFS1bits.INT1IF = 0;      // Clear the INT1 interrupt flag
+    IEC1bits.INT1IE = 1;      // Enable INT1 interrupt
+
+    // --- 3. Main FSM Loop ---
     while(1) {
-        // Read Inputs
-        uint16_t input = (!PORTBbits.RB0 << 2) | (!PORTAbits.RA1 << 1) | (!PORTAbits.RA0);
+        
+        // A. Read inputs and logically invert due to physical pull-up resistors
+        // (If pin is low/0, button is pressed -> logic is TRUE/1)
+        uint16_t S_logic = !PORTBbits.RB0;
+        uint16_t O_logic = !PORTAbits.RA1;
+        uint16_t D_logic = !PORTAbits.RA0;
 
-        // State Machine
-        switch(current_state) {
-            case S0: 
-                LATBbits.LATB15 = 0; LATBbits.LATB14 = 0; 
-                switch(input) {
-                    case 4: case 5: case 6: case 7: current_state = S1; break;
-                    default:                        current_state = S0; break;
-                }
-                break;
+        // B. Construct the 16-bit input variable
+        // Bit 2: S | Bit 1: O | Bit 0: D
+        uint16_t input = (S_logic << 2) | (O_logic << 1) | (D_logic);
 
-            case S1: 
-                LATBbits.LATB15 = 0; LATBbits.LATB14 = 1; 
+        // C. Evaluate FSM Transitions
+        switch(currentState) {
+            case S0:
                 switch(input) {
-                    case 4: case 5: case 6: case 7: current_state = S0; break;
-                    case 2: case 3:                 current_state = S2; break;
-                    case 1:                         current_state = S3; break;
-                    case 0:                         current_state = S1; break;
+                    // TODO: Replace with logic from Problem Set 2
+                    // Example: case 4: currentState = S1; break; 
+                    default: 
+                        break; 
                 }
                 break;
                 
-            case S2: 
-                LATBbits.LATB15 = 1; LATBbits.LATB14 = 0; 
+            case S1:
                 switch(input) {
-                    case 4: case 5: case 6: case 7: current_state = S0; break;
-                    case 2: case 3:                 current_state = S2; break;
-                    case 0: case 1:                 current_state = S1; break;
+                    // TODO: Replace with logic from Problem Set 2
+                    default: 
+                        break;
                 }
                 break;
-
-            case S3: 
-                LATBbits.LATB15 = 1; LATBbits.LATB14 = 1; 
+                
+            case S2:
                 switch(input) {
-                    case 4: case 5: case 6: case 7: current_state = S0; break;
-                    case 1: case 3:                 current_state = S3; break;
-                    case 0: case 2:                 current_state = S1; break;
+                    // TODO: Replace with logic from Problem Set 2
+                    default: 
+                        break;
+                }
+                break;
+                
+            case S3:
+                switch(input) {
+                    // TODO: Replace with logic from Problem Set 2
+                    default: 
+                        break;
                 }
                 break;
         }
 
-        // Tiny delay so the chip doesn't flicker wildly
-        __delay_ms(50);
-        ClrWdt();
+        // D. Update Outputs based on the newly evaluated state
+        switch(currentState) {
+            case S0:
+                LATBbits.LATB15 = 0; // N OFF
+                LATBbits.LATB14 = 0; // M OFF
+                break;
+            case S1:
+                LATBbits.LATB15 = 0; // N OFF
+                LATBbits.LATB14 = 1; // M ON
+                break;
+            case S2:
+                LATBbits.LATB15 = 1; // N ON
+                LATBbits.LATB14 = 0; // M OFF
+                break;
+            case S3:
+                LATBbits.LATB15 = 1; // N ON
+                LATBbits.LATB14 = 1; // M ON
+                break;
+        }
+
+        // E. 1-Second Loop Delay
+        __delay_ms(1000);
     }
-    return 0; 
+
+    return 0;
 }
